@@ -5,7 +5,7 @@
         static void Main()
         {
             Console.CursorVisible = false;
-            GameCore.GameField field = new GameCore.GameField(20, 10);
+            GameCore.GameField field = new GameCore.GameField(78, 28);
             field.GenerateField();
             GameCore.Player player = new GameCore.Player(1, 1);
             Renderer renderer = new Renderer();

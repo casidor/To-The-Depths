@@ -9,7 +9,7 @@ namespace GameCore
         private char[,] Field;
         public int Width;
         public int Height;
-        public GameField(int width, int height)
+        public GameField(int width, int height )
         {
             this.Width = width;
             this.Height = height;

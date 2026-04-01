@@ -1,4 +1,4 @@
 <Solution>
   <Project Path="ConsoleUI/ConsoleUI.csproj" Id="e262bbce-7997-499d-8d51-683a2c4b4512" />
-  <Project Path="Dungeon/GameCore.csproj" />
+  <Project Path="Core/GameCore.csproj" />
 </Solution>
