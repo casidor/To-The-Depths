@@ -6,6 +6,7 @@ namespace GameCore
 {
     public class GameSymbols
     {
+        //█☺
         public const char Wall = '█';
         public const char Floor = '.';
         public const char Door = '+';
@@ -14,5 +15,6 @@ namespace GameCore
         public const char Exit = '>';
         public const char Player = '☺';
         public const char Fog = '░';
+        public const char Empty = ' ';
     }
 }

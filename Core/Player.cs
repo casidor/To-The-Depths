@@ -17,7 +17,7 @@ namespace GameCore
         {
             int newX = X + dX;
             int newY = Y + dY;
-            if(field.GetCell(newX, newY) != '#')
+            if(field.GetCell(newX, newY) != GameSymbols.Wall)
             {
                 X = newX;
                 Y = newY;

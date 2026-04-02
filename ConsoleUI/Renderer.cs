@@ -16,7 +16,7 @@ namespace ConsoleUI
                 {
                     if (x == player.X && y == player.Y)
                     {
-                        Console.Write('@');
+                        Console.Write(GameSymbols.Player);
                     }
                     else
                     {

@@ -15,21 +15,6 @@ namespace GameCore
             this.Height = height;
             Field = new char[height, width];
         }
-        public void GenerateField()
-        {
-            for (int y = 0; y < Height; y++)
-            {
-                for (int x = 0; x < Width; x++)
-                {
-                    if (y == 0 || y == Height - 1 || x == 0 || x == Width - 1)
-                    {
-                        Field[y, x] = '#';
-                    }
-                    else
-                        Field[y, x] = '.';
-                }
-            }
-        }
         public char GetCell(int x, int y)
         {
             return Field[y, x];
