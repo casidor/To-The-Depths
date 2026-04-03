@@ -6,13 +6,6 @@ namespace GameCore
 {
     public class LevelGenerator
     {
-        private const int MaxRooms = 10;
-        private const int GenAttempts = 300;
-        private const int MinRoomSize = 3;
-        private const int MaxRoomSize = 8;
-        private const int GoldChance = 10;
-        private const int KeysAmount = 3;
-        private const int ExitAmount = 1;
         private int[] _roomX = new int[10];
         private int[] _roomY = new int[10];
         private int[] _roomW = new int[10];
@@ -25,9 +18,9 @@ namespace GameCore
             PlaceRooms(field, random);
             ConnectRooms(field, random);
             AddWalls(field);
-            PlaceItemsByChance(field, random,GoldChance, GameSymbols.Gold);
-            PlaceFixedItems(field, random, KeysAmount, GameSymbols.Key);
-            PlaceFixedItems(field, random, ExitAmount, GameSymbols.Exit);
+            PlaceItemsByChance(field, random,Config.GoldChance, GameSymbols.Gold);
+            PlaceFixedItems(field, random, Config.KeysAmount, GameSymbols.Key);
+            PlaceFixedItems(field, random, Config.ExitAmount, GameSymbols.Exit);
             return (field, _roomX[0] + _roomW[0] / 2, _roomY[0] + _roomH[0] / 2);
         }
         private bool RoomsOverlap(int x, int y, int w, int h)// Check if the new room overlaps with existing rooms
@@ -56,11 +49,11 @@ namespace GameCore
         }
         public void PlaceRooms(GameField field, Random random) // Generate random rooms
         {
-            for (int i = 0; i < GenAttempts; i++)
+            for (int i = 0; i < Config.GenAttempts; i++)
             {
-                if (RoomCount >= MaxRooms) break;
-                int rw = random.Next(MinRoomSize, MaxRoomSize);
-                int rh = random.Next(MinRoomSize, MaxRoomSize);
+                if (RoomCount >= Config.MaxRooms) break;
+                int rw = random.Next(Config.MinRoomSize, Config.MaxRoomSize);
+                int rh = random.Next(Config.MinRoomSize, Config.MaxRoomSize);
                 int rx = random.Next(1, field.Width - rw - 1);
                 int ry = random.Next(1, field.Height - rh - 1);
                 if (!RoomsOverlap(rx, ry, rw, rh))

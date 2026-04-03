@@ -32,12 +32,12 @@ namespace GameCore
                     field.SetCell(newX, newY, GameSymbols.Floor);
                     break;
                 case GameSymbols.Gold:
-                    Score += 10;
+                    Score += Config.ScoreAmount;
                     canMove = true;
                     field.SetCell(newX, newY, GameSymbols.Floor);
                     break;
                 case GameSymbols.Exit:
-                    if(KeysCollected == 3)
+                    if(KeysCollected == Config.KeysAmount)
                     {
                         isExited = true;
                     }
