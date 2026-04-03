@@ -8,6 +8,9 @@ namespace GameCore
     {
         public int X;
         public int Y;
+        private int KeysCollected = 0;
+        public int Score = 0;
+        public bool isExited = false;
         public Player(int x, int y)
         {
             this.X = x;
@@ -17,7 +20,34 @@ namespace GameCore
         {
             int newX = X + dX;
             int newY = Y + dY;
-            if(field.GetCell(newX, newY) != GameSymbols.Wall)
+            char cell = field.GetCell(newX, newY);
+            bool canMove = false;
+            switch (cell)
+            {
+                case GameSymbols.Wall:
+                    break;
+                case GameSymbols.Key:
+                    KeysCollected++;
+                    canMove = true;
+                    field.SetCell(newX, newY, GameSymbols.Floor);
+                    break;
+                case GameSymbols.Gold:
+                    Score += 10;
+                    canMove = true;
+                    field.SetCell(newX, newY, GameSymbols.Floor);
+                    break;
+                case GameSymbols.Exit:
+                    if(KeysCollected == 3)
+                    {
+                        isExited = true;
+                    }
+                    canMove = true;
+                    break;
+                default:
+                    canMove = true;
+                    break;
+            }
+            if (canMove)
             {
                 X = newX;
                 Y = newY;

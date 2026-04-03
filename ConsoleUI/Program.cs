@@ -18,7 +18,7 @@ namespace ConsoleUI
             Input input = new Input();
             bool running = true;
             Console.Clear();
-            while (running)
+            while (running && !player.isExited)
             {
                 renderer.Render(field, player);
                 running = input.ProcessInput(player, field);
