@@ -12,9 +12,10 @@ namespace GameCore
         public const char Door = '+';
         public const char Gold = '$';
         public const char Trap = '^';
-        public const char Exit = '>';
+        public const char Exit = '▥';
         public const char Player = '☺';
         public const char Fog = '░';
         public const char Empty = ' ';
+        public const char Key = '⚷';
     }
 }

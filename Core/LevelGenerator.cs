@@ -10,6 +10,9 @@ namespace GameCore
         private const int GenAttempts = 300;
         private const int MinRoomSize = 3;
         private const int MaxRoomSize = 8;
+        private const int GoldChance = 10;
+        private const int KeysAmount = 3;
+        private const int ExitAmount = 1;
         private int[] _roomX = new int[10];
         private int[] _roomY = new int[10];
         private int[] _roomW = new int[10];
@@ -22,6 +25,9 @@ namespace GameCore
             PlaceRooms(field, random);
             ConnectRooms(field, random);
             AddWalls(field);
+            PlaceItemsByChance(field, random,GoldChance, GameSymbols.Gold);
+            PlaceFixedItems(field, random, KeysAmount, GameSymbols.Key);
+            PlaceFixedItems(field, random, ExitAmount, GameSymbols.Exit);
             return (field, _roomX[0] + _roomW[0] / 2, _roomY[0] + _roomH[0] / 2);
         }
         private bool RoomsOverlap(int x, int y, int w, int h)// Check if the new room overlaps with existing rooms
@@ -133,6 +139,42 @@ namespace GameCore
                             }
                         }
                     }
+                }
+            }
+        }
+        public void PlaceItemsByChance (GameField field, Random random,int chance, char symbol)// Place items based on a chance
+        {
+            for (int i = 0; i < RoomCount; i++)
+            {
+                for (int y = _roomY[i]; y < _roomY[i] + _roomH[i]; y++)
+                {
+                    for(int x = _roomX[i]; x < _roomX[i] + _roomW[i]; x++)
+                    {
+                        if(field.GetCell(x, y) == GameSymbols.Floor)
+                        {
+                            int roll = random.Next(1,101);
+                            if(roll <= chance)
+                            {
+                                field.SetCell(x, y, symbol);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        public void PlaceFixedItems(GameField field, Random random,int amount, char symbol)// Place a fixed number of items in random locations within rooms
+        {
+            int placed = 0;
+            while (placed < amount)
+            {
+                int roomIndex = random.Next(RoomCount);
+                int x = random.Next(_roomX[roomIndex], _roomX[roomIndex] + _roomW[roomIndex]);
+                int y = random.Next(_roomY[roomIndex], _roomY[roomIndex] + _roomH[roomIndex]);
+
+                if (field.GetCell(x, y) == GameSymbols.Floor)
+                {
+                    field.SetCell(x, y, symbol);
+                    placed++;
                 }
             }
         }
