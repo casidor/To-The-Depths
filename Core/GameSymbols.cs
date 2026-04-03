@@ -8,7 +8,7 @@ namespace GameCore
     {
         //█☺
         public const char Wall = '█';
-        public const char Floor = '.';
+        public const char Floor = '·';
         public const char Door = '+';
         public const char Gold = '$';
         public const char Trap = '^';

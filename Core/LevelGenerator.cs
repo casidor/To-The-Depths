@@ -6,6 +6,10 @@ namespace GameCore
 {
     public class LevelGenerator
     {
+        private const int MaxRooms = 10;
+        private const int GenAttempts = 300;
+        private const int MinRoomSize = 3;
+        private const int MaxRoomSize = 8;
         private int[] _roomX = new int[10];
         private int[] _roomY = new int[10];
         private int[] _roomW = new int[10];
@@ -46,11 +50,11 @@ namespace GameCore
         }
         public void PlaceRooms(GameField field, Random random) // Generate random rooms
         {
-            for (int i = 0; i < 300; i++)
+            for (int i = 0; i < GenAttempts; i++)
             {
-                if (RoomCount >= 10) break;
-                int rw = random.Next(3, 8);
-                int rh = random.Next(3, 8);
+                if (RoomCount >= MaxRooms) break;
+                int rw = random.Next(MinRoomSize, MaxRoomSize);
+                int rh = random.Next(MinRoomSize, MaxRoomSize);
                 int rx = random.Next(1, field.Width - rw - 1);
                 int ry = random.Next(1, field.Height - rh - 1);
                 if (!RoomsOverlap(rx, ry, rw, rh))
