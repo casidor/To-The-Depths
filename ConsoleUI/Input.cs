@@ -8,7 +8,9 @@ namespace ConsoleUI
     {
         public bool ProcessInput(GameCore.Player player, GameCore.GameField field)
         {
+            if (!Console.KeyAvailable) return true;
             var key = Console.ReadKey(true).Key;
+            while (Console.KeyAvailable) Console.ReadKey(true);
             switch (key)
             {
                 case ConsoleKey.W:

@@ -6,10 +6,10 @@ namespace GameCore
 {
     public class LevelGenerator
     {
-        private int[] _roomX = new int[10];
-        private int[] _roomY = new int[10];
-        private int[] _roomW = new int[10];
-        private int[] _roomH = new int[10];
+        private int[] _roomX = new int[Config.MaxRooms];
+        private int[] _roomY = new int[Config.MaxRooms];
+        private int[] _roomW = new int[Config.MaxRooms];
+        private int[] _roomH = new int[Config.MaxRooms];
         private int RoomCount = 0;
         public (GameField, int x,int y) Generate (int w, int h, Random random)
         {
