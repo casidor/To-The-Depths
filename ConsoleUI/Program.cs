@@ -4,32 +4,62 @@ namespace ConsoleUI
 {
     internal class Program
     {
+        enum GameState
+        {
+            MainMenu,
+            Running,
+            Win,
+            Exit
+        }
         static void InitConsole() 
         {
             if (OperatingSystem.IsWindows())
             {
                 Console.SetWindowSize(Config.ConsoleWidth, Config.ConsoleHeight);
                 Console.SetBufferSize(Config.ConsoleWidth, Config.ConsoleHeight);
+                Console.CursorVisible = false;
+                Console.OutputEncoding = System.Text.Encoding.UTF8;
             }
         }
         static void Main()
         {
             InitConsole();
-            Console.CursorVisible = false;
-            Console.OutputEncoding = System.Text.Encoding.UTF8;
             Random random = new Random();
-            LevelGenerator levelGenerator = new LevelGenerator();
-            var (field, x, y) = levelGenerator.Generate(Config.FieldWidth, Config.FieldHeight, random);
-            Player player = new Player(x, y);
             Renderer renderer = new Renderer();
             Input input = new Input();
-            bool running = true;
             Console.Clear();
-            while (running && !player.isExited)
+            GameState state = GameState.MainMenu;
+            do
             {
-                renderer.Render(field, player);
-                running = input.ProcessInput(player, field);
-            }
+                switch (state)
+                {
+                    case GameState.MainMenu:
+                        state = GameState.Running;
+                        break;
+                    case GameState.Running:
+                        {
+                            LevelGenerator levelGenerator = new LevelGenerator();
+                            var (field, x, y) = levelGenerator.Generate(Config.FieldWidth, Config.FieldHeight, random);
+                            Player player = new Player(x, y);
+                            while (!player.isExited)
+                            {
+                                renderer.Render(field, player);
+                                if (!input.ProcessInput(player, field))
+                                {
+                                    state = GameState.MainMenu;
+                                    break;
+                                }
+                                if(player.isExited) state = GameState.Win;
+                            }
+                            
+                        }
+                        break;
+                    case GameState.Win:
+                        Console.ReadKey(true);
+                        state = GameState.MainMenu;
+                        break;
+                }
+            } while (state != GameState.Exit);
         }
     }
 }
