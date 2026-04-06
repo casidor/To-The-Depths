@@ -4,8 +4,17 @@ namespace ConsoleUI
 {
     internal class Program
     {
+        static void InitConsole() 
+        {
+            if (OperatingSystem.IsWindows())
+            {
+                Console.SetWindowSize(Config.ConsoleWidth, Config.ConsoleHeight);
+                Console.SetBufferSize(Config.ConsoleWidth, Config.ConsoleHeight);
+            }
+        }
         static void Main()
         {
+            InitConsole();
             Console.CursorVisible = false;
             Console.OutputEncoding = System.Text.Encoding.UTF8;
             Random random = new Random();

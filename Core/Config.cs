@@ -6,8 +6,11 @@ namespace GameCore
 {
     public static class Config
     {
+        //Console settings
+        public const int ConsoleWidth = 110;
+        public const int ConsoleHeight = 30;
         //Field settings
-        public const int FieldWidth = 70;
+        public const int FieldWidth = 80;
         public const int FieldHeight = 25;
         //Player settings
         public const int ScoreAmount = 10;
