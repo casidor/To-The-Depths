@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameCore;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -29,6 +30,31 @@ namespace ConsoleUI
                     return false;
             }
             return true;
+        }
+        public GameState ProcessMenuInput(Renderer renderer)
+        {
+            int selected = 0;
+            int count = GameSymbols.Options.Length;
+            renderer.RenderMainMenu(selected);
+            while (true) {
+                var key = Console.ReadKey(true).Key;
+                switch (key)
+                {
+                    case ConsoleKey.W:
+                    case ConsoleKey.UpArrow:
+                        selected = (selected - 1 + count) % count;
+                        renderer.RenderMainMenu(selected);
+                        break;
+                    case ConsoleKey.S:
+                        selected = (selected + 1) % count;
+                        renderer.RenderMainMenu(selected);
+                        break;
+                    case ConsoleKey.Enter:
+                        if (selected == 0) return GameState.Running;
+                        if (selected == 1) return GameState.Exit;
+                        break;
+                }
+            }
         }
     }
 }

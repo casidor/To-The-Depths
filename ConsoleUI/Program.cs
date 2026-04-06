@@ -2,15 +2,15 @@
 
 namespace ConsoleUI
 {
+    public enum GameState
+    {
+        MainMenu,
+        Running,
+        Win,
+        Exit
+    }
     internal class Program
     {
-        enum GameState
-        {
-            MainMenu,
-            Running,
-            Win,
-            Exit
-        }
         static void InitConsole() 
         {
             if (OperatingSystem.IsWindows())
@@ -34,10 +34,11 @@ namespace ConsoleUI
                 switch (state)
                 {
                     case GameState.MainMenu:
-                        state = GameState.Running;
+                        state = input.ProcessMenuInput(renderer);
                         break;
                     case GameState.Running:
                         {
+                            Console.Clear();
                             LevelGenerator levelGenerator = new LevelGenerator();
                             var (field, x, y) = levelGenerator.Generate(Config.FieldWidth, Config.FieldHeight, random);
                             Player player = new Player(x, y);
