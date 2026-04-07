@@ -10,21 +10,23 @@ namespace ConsoleUI
         public void Render(GameField field, Player player)
         {
             Console.SetCursorPosition(0, 0);
+            StringBuilder sb = new StringBuilder(field.Width * field.Height + field.Height * 2);
             for (int y = 0; y < field.Height; y++)
             {
                 for (int x = 0; x < field.Width; x++)
                 {
                     if (x == player.X && y == player.Y)
                     {
-                        Console.Write(GameSymbols.Player);
+                        sb.Append(GameSymbols.Player);
                     }
                     else
                     {
-                        Console.Write(field.GetCell(x, y));
+                        sb.Append(field.GetCell(x, y));
                     }
                 }
-                Console.WriteLine();
+                sb.AppendLine();
             }
+            Console.Write(sb.ToString());
             RenderSideBar(player);
         }
         public void RenderSideBar(Player player)

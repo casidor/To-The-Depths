@@ -42,15 +42,16 @@ namespace ConsoleUI
                             LevelGenerator levelGenerator = new LevelGenerator();
                             var (field, x, y) = levelGenerator.Generate(Config.FieldWidth, Config.FieldHeight, random);
                             Player player = new Player(x, y);
+                            renderer.Render(field, player);
                             while (!player.isExited)
                             {
-                                renderer.Render(field, player);
                                 if (!input.ProcessInput(player, field))
                                 {
                                     state = GameState.MainMenu;
                                     break;
                                 }
-                                if(player.isExited)
+                                renderer.Render(field, player);
+                                if (player.isExited)
                                 {
                                     renderer.Render(field, player);
                                     renderer.RenderEscapePopup(player);
