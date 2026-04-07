@@ -37,12 +37,26 @@ namespace ConsoleUI
             Console.WriteLine($"{GameSymbols.Gold} Gold: {player.Gold}");
             Console.SetCursorPosition(x, 4);
             Console.WriteLine($"{GameSymbols.Key} Keys: {player.KeysCollected}/{Config.KeysAmount}");
+            //Missions
+            Console.SetCursorPosition(x, 6);
+            Console.Write("=== MISSION ===");
+            Console.SetCursorPosition(x, 8);
+            if (player.KeysCollected < Config.KeysAmount)
+            {
+                Console.Write($"Collect {Config.KeysAmount} keys!");
+            }
+            else
+            {
+                Console.Write("Exit is OPEN!    ");
+                Console.SetCursorPosition(x, 9);
+                Console.Write("Find the exit!   ");
+            }
             //Controls
-            Console.SetCursorPosition(x, 9);
-            Console.Write("=== CONTROLS ===");
             Console.SetCursorPosition(x, 11);
+            Console.Write("=== CONTROLS ===");
+            Console.SetCursorPosition(x, 13);
             Console.Write("W/A/S/D or Arrows - Move");
-            Console.SetCursorPosition(x, 12);
+            Console.SetCursorPosition(x, 14);
             Console.Write("ESC - Menu");
         }
         public void RenderMainMenu (int selected)

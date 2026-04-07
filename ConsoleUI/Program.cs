@@ -52,6 +52,7 @@ namespace ConsoleUI
                                 }
                                 if(player.isExited)
                                 {
+                                    renderer.Render(field, player);
                                     renderer.RenderEscapePopup(player);
                                     Console.ReadKey(true);
                                     state = GameState.MainMenu;
