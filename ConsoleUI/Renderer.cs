@@ -34,7 +34,7 @@ namespace ConsoleUI
             Console.SetCursorPosition(x, 0);
             Console.WriteLine("Player Stats:");
             Console.SetCursorPosition(x, 2);
-            Console.WriteLine($"{GameSymbols.Gold} Score: {player.Score}");
+            Console.WriteLine($"{GameSymbols.Gold} Gold: {player.Gold}");
             Console.SetCursorPosition(x, 4);
             Console.WriteLine($"{GameSymbols.Key} Keys: {player.KeysCollected}/{Config.KeysAmount}");
             //Controls
@@ -67,6 +67,36 @@ namespace ConsoleUI
                 Console.SetCursorPosition(x, startY + GameSymbols.Title.Length + 2 + i * 2);
                 Console.Write(line);
             }
+        }
+        public void RenderEscapePopup(Player player)
+        {
+            int popupWidth = 40;
+            int popupHeight = 9;
+            int startX = (Config.ConsoleWidth - popupWidth) / 2;
+            int startY = (Config.ConsoleHeight - popupHeight) / 2;
+            for (int y = 0; y < popupHeight; y++)
+            {
+                Console.SetCursorPosition(startX, startY + y);
+                for (int x = 0; x < popupWidth; x++)
+                {
+                    if (y == 0 && x == 0) Console.Write("╔");
+                    else if (y == 0 && x == popupWidth - 1) Console.Write("╗");
+                    else if (y == popupHeight - 1 && x == 0) Console.Write("╚");
+                    else if (y == popupHeight - 1 && x == popupWidth - 1) Console.Write("╝");
+                    else if (y == 0 || y == popupHeight - 1) Console.Write("═");
+                    else if (x == 0 || x == popupWidth - 1) Console.Write("║");
+                    else Console.Write(" ");
+                }
+            }
+            string title = "YOU ESCAPED!";
+            Console.SetCursorPosition(startX + (popupWidth - title.Length) / 2, startY + 2);
+            Console.Write(title);
+            string goldStr = $"Gold Collected: {player.Gold}";
+            Console.SetCursorPosition(startX + (popupWidth - goldStr.Length) / 2, startY + 4);
+            Console.Write(goldStr);
+            string prompt = "Press any key to exit...";
+            Console.SetCursorPosition(startX + (popupWidth - prompt.Length) / 2, startY + 6);
+            Console.Write(prompt);
         }
     }
 }

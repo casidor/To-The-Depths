@@ -13,7 +13,7 @@ namespace GameCore
         public const int FieldWidth = 80;
         public const int FieldHeight = 25;
         //Player settings
-        public const int ScoreAmount = 10;
+        public const int GoldAmount = 10;
         //Generation settings
         public const int MaxRooms = 10;
         public const int GenAttempts = 300;

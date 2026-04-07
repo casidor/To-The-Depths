@@ -6,7 +6,6 @@ namespace ConsoleUI
     {
         MainMenu,
         Running,
-        Win,
         Exit
     }
     internal class Program
@@ -50,14 +49,14 @@ namespace ConsoleUI
                                     state = GameState.MainMenu;
                                     break;
                                 }
-                                if(player.isExited) state = GameState.Win;
+                                if(player.isExited)
+                                {
+                                    renderer.RenderEscapePopup(player);
+                                    Console.ReadKey(true);
+                                    state = GameState.MainMenu;
+                                }
                             }
-                            
                         }
-                        break;
-                    case GameState.Win:
-                        Console.ReadKey(true);
-                        state = GameState.MainMenu;
                         break;
                 }
             } while (state != GameState.Exit);

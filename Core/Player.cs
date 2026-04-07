@@ -9,7 +9,7 @@ namespace GameCore
         public int X;
         public int Y;
         public int KeysCollected = 0;
-        public int Score = 0;
+        public int Gold = 0;
         public bool isExited = false;
         public Player(int x, int y)
         {
@@ -32,7 +32,7 @@ namespace GameCore
                     field.SetCell(newX, newY, GameSymbols.Floor);
                     break;
                 case GameSymbols.Gold:
-                    Score += Config.ScoreAmount;
+                    Gold += Config.GoldAmount;
                     canMove = true;
                     field.SetCell(newX, newY, GameSymbols.Floor);
                     break;
