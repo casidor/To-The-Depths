@@ -51,7 +51,8 @@ namespace ConsoleUI
                         break;
                     case ConsoleKey.Enter:
                         if (selected == 0) return GameState.Running;
-                        if (selected == 1) return GameState.Exit;
+                        if (selected == 1) return GameState.Help;
+                        if(selected == 2) return GameState.Exit;
                         break;
                 }
             }

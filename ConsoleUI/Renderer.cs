@@ -98,5 +98,39 @@ namespace ConsoleUI
             Console.SetCursorPosition(startX + (popupWidth - prompt.Length) / 2, startY + 6);
             Console.Write(prompt);
         }
+        public void RenderHelp()
+        {
+            Console.Clear();
+            string[] helpText = {
+                "=== HOW TO PLAY ===",
+                "",
+                $"Your goal is to collect all {Config.KeysAmount} keys to unlock the exit.",
+                $"Watch your steps and gather gold on your way!",
+                "",
+                "=== LEGEND ===",
+                $"{GameSymbols.Player} - You",
+                $"{GameSymbols.Key} - Key",
+                $"{GameSymbols.Gold} - Gold",
+                $"{GameSymbols.Exit} - Exit",
+                "",
+                "=== CONTROLS ===",
+                "W, A, S, D / Arrows - Move",
+                "ESC - Return to Menu",
+                "",
+                "Press any key to go back..."
+            };
+            int maxLen = 0;
+            foreach (var line in helpText)
+            {
+                if (line.Length > maxLen) maxLen = line.Length;
+            }
+            int startX = (Config.ConsoleWidth - maxLen) / 2;
+            int startY = (Config.ConsoleHeight - helpText.Length) / 2;
+            for (int i = 0; i < helpText.Length; i++)
+            {
+                Console.SetCursorPosition(startX, startY + i);
+                Console.WriteLine(helpText[i]);
+            }
+        }
     }
 }

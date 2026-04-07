@@ -26,6 +26,6 @@ namespace GameCore
           "  |_|\\___/   \\__|_| |_|\\___| |____/ \\___| .__/ \\__|_| |_|___/",
           "                                         |_|                  "
         };
-        public static readonly string[] Options = { "Start Game", "Exit" };
+        public static readonly string[] Options = { "Start Game", "Help", "Exit" };
     }
 }
