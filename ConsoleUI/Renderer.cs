@@ -25,6 +25,25 @@ namespace ConsoleUI
                 }
                 Console.WriteLine();
             }
+            RenderSideBar(player);
+        }
+        public void RenderSideBar(Player player)
+        {
+            int x = Config.FieldWidth + 3;
+            //Stats
+            Console.SetCursorPosition(x, 0);
+            Console.WriteLine("Player Stats:");
+            Console.SetCursorPosition(x, 2);
+            Console.WriteLine($"{GameSymbols.Gold} Score: {player.Score}");
+            Console.SetCursorPosition(x, 4);
+            Console.WriteLine($"{GameSymbols.Key} Keys: {player.KeysCollected}/{Config.KeysAmount}");
+            //Controls
+            Console.SetCursorPosition(x, 9);
+            Console.Write("=== CONTROLS ===");
+            Console.SetCursorPosition(x, 11);
+            Console.Write("W/A/S/D or Arrows - Move");
+            Console.SetCursorPosition(x, 12);
+            Console.Write("ESC - Menu");
         }
         public void RenderMainMenu (int selected)
         {

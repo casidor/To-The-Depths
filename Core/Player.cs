@@ -8,7 +8,7 @@ namespace GameCore
     {
         public int X;
         public int Y;
-        private int KeysCollected = 0;
+        public int KeysCollected = 0;
         public int Score = 0;
         public bool isExited = false;
         public Player(int x, int y)
