@@ -15,15 +15,19 @@ namespace ConsoleUI
             switch (key)
             {
                 case ConsoleKey.W:
+                case ConsoleKey.UpArrow:
                     player.Move(0, -1, field);
                     break;
                 case ConsoleKey.S:
+                case ConsoleKey.DownArrow:
                     player.Move(0, 1, field);
                     break;
                 case ConsoleKey.A:
+                case ConsoleKey.LeftArrow:
                     player.Move(-1, 0, field);
                     break;
                 case ConsoleKey.D:
+                case ConsoleKey.RightArrow:
                     player.Move(1, 0, field);
                     break;
                 case ConsoleKey.Escape:
@@ -46,6 +50,7 @@ namespace ConsoleUI
                         renderer.RenderMainMenu(selected);
                         break;
                     case ConsoleKey.S:
+                    case ConsoleKey.DownArrow:
                         selected = (selected + 1) % count;
                         renderer.RenderMainMenu(selected);
                         break;
