@@ -1,0 +1,20 @@
+﻿using GameCore.World;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace GameCore.Models
+{
+    public class Key : GameObject
+    {
+        public Key()
+        {
+            Symbol = GameSymbols.Key;
+            IsPassable = true;
+        }
+
+        public override void Interact(Player player, GameField field, int x, int y)
+        {
+        }
+    }
+}
