@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameCore.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,22 +7,19 @@ namespace GameCore.World
 {
     public class GameField
     {
-        private char[,] Field;
-        public int Width;
-        public int Height;
+        private GameObject[,] Field;
+        public int Width { get; private set; }
+        public int Height { get; private set; }
         public GameField(int width, int height )
         {
-            this.Width = width;
-            this.Height = height;
-            Field = new char[height, width];
+            Width = width;
+            Height = height;
+            Field = new GameObject[height, width];
         }
-        public char GetCell(int x, int y)
+        public GameObject this[int x, int y]
         {
-            return Field[y, x];
-        }
-        public void SetCell(int x, int y, char value)
-        {
-            Field[y, x] = value;
+            get { return Field[y, x]; }
+            set { Field[y, x] = value; }
         }
     }
 }

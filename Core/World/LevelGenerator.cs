@@ -1,6 +1,8 @@
-﻿using System;
+﻿using GameCore.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using Void = GameCore.Models.Void;
 
 namespace GameCore.World
 {
@@ -18,9 +20,9 @@ namespace GameCore.World
             PlaceRooms(field, random);
             ConnectRooms(field, random);
             AddWalls(field);
-            PlaceItemsByChance(field, random,Config.GoldChance, GameSymbols.Gold);
-            PlaceFixedItems(field, random, Config.KeysAmount, GameSymbols.Key);
-            PlaceFixedItems(field, random, Config.ExitAmount, GameSymbols.Exit);
+            PlaceItemsByChance<Gold>(field, random, Config.GoldChance);
+            PlaceFixedItems<Key>(field, random, Config.KeysAmount);
+            PlaceFixedItems<Exit>(field, random, Config.ExitAmount);
             return (field, _roomX[0] + _roomW[0] / 2, _roomY[0] + _roomH[0] / 2);
         }
         private bool RoomsOverlap(int x, int y, int w, int h)// Check if the new room overlaps with existing rooms
@@ -42,7 +44,7 @@ namespace GameCore.World
                 for (int x = 0; x < field.Width; x++)
                 {
                     {
-                        field.SetCell(x, y, GameSymbols.Empty);
+                        field[x, y] = new Void();
                     }
                 }
             }
@@ -62,7 +64,7 @@ namespace GameCore.World
                     {
                         for (int x = rx; x < rx + rw; x++)
                         {
-                            field.SetCell(x, y, GameSymbols.Floor);
+                            field[x, y] = new Floor();
                         }
                     }
                     _roomX[RoomCount] = rx;
@@ -89,12 +91,12 @@ namespace GameCore.World
                     while (curX != x2)
                     {
                         curX += Math.Sign(x2 - curX);
-                        field.SetCell(curX, curY, GameSymbols.Floor);
+                        field[curX, curY] = new Floor();
                     }
                     while (curY != y2)
                     {
                         curY += Math.Sign(y2 - curY);
-                        field.SetCell(curX, curY, GameSymbols.Floor);
+                        field[curX, curY] = new Floor();
                     }
                 }
                 else
@@ -103,12 +105,12 @@ namespace GameCore.World
                     while (curY != y2)
                     {
                         curY += Math.Sign(y2 - curY);
-                        field.SetCell(curX, curY, GameSymbols.Floor);
+                        field[curX, curY] = new Floor();
                     }
                     while (curX != x2)
                     {
                         curX += Math.Sign(x2 - curX);
-                        field.SetCell(curX, curY, GameSymbols.Floor);
+                        field[curX, curY] = new Floor();
                     }
                 }
             }
@@ -119,15 +121,15 @@ namespace GameCore.World
             {
                 for (int x = 1; x < field.Width - 1; x++)
                 {
-                    if (field.GetCell(x, y) == GameSymbols.Floor)
+                    if (field[x, y] is Floor)
                     {
                         for (int dy = -1; dy <= 1; dy++)
                         {
                             for (int dx = -1; dx <= 1; dx++)
                             {
-                                if (field.GetCell(x + dx, y + dy) == GameSymbols.Empty)
+                                if (field[x + dx, y + dy] is Void)
                                 {
-                                    field.SetCell(x + dx, y + dy, GameSymbols.Wall);
+                                    field[x + dx, y + dy] = new Wall();
                                 }
                             }
                         }
@@ -135,27 +137,27 @@ namespace GameCore.World
                 }
             }
         }
-        public void PlaceItemsByChance (GameField field, Random random,int chance, char symbol)// Place items based on a chance
+        public void PlaceItemsByChance<T>(GameField field, Random random,int chance) where T : GameObject, new() // Place items based on a chance
         {
             for (int i = 0; i < RoomCount; i++)
             {
                 for (int y = _roomY[i]; y < _roomY[i] + _roomH[i]; y++)
                 {
-                    for(int x = _roomX[i]; x < _roomX[i] + _roomW[i]; x++)
+                    for (int x = _roomX[i]; x < _roomX[i] + _roomW[i]; x++)
                     {
-                        if(field.GetCell(x, y) == GameSymbols.Floor)
+                        if (field[x, y] is Floor)
                         {
                             int roll = random.Next(1,101);
                             if(roll <= chance)
                             {
-                                field.SetCell(x, y, symbol);
+                                field[x, y] = new T();
                             }
                         }
                     }
                 }
             }
         }
-        public void PlaceFixedItems(GameField field, Random random,int amount, char symbol)// Place a fixed number of items in random locations within rooms
+        public void PlaceFixedItems<T>(GameField field, Random random,int amount) where T : GameObject, new() // Place a fixed number of items in random locations within rooms
         {
             int placed = 0;
             while (placed < amount)
@@ -164,9 +166,9 @@ namespace GameCore.World
                 int x = random.Next(_roomX[roomIndex], _roomX[roomIndex] + _roomW[roomIndex]);
                 int y = random.Next(_roomY[roomIndex], _roomY[roomIndex] + _roomH[roomIndex]);
 
-                if (field.GetCell(x, y) == GameSymbols.Floor)
+                if (field[x, y] is Floor)
                 {
-                    field.SetCell(x, y, symbol);
+                    field[x, y] = new T();
                     placed++;
                 }
             }

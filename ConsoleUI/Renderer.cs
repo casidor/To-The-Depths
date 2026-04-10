@@ -19,11 +19,11 @@ namespace ConsoleUI
                 {
                     if (x == player.X && y == player.Y)
                     {
-                        sb.Append(GameSymbols.Player);
+                        sb.Append(player.Symbol);
                     }
                     else
                     {
-                        sb.Append(field.GetCell(x, y));
+                        sb.Append(field[x, y].Symbol);
                     }
                 }
                 sb.AppendLine();
@@ -38,7 +38,7 @@ namespace ConsoleUI
             Console.SetCursorPosition(x, 0);
             Console.WriteLine("Player Stats:");
             Console.SetCursorPosition(x, 2);
-            Console.WriteLine($"{GameSymbols.Gold} Gold: {player.Gold}");
+            Console.WriteLine($"{GameSymbols.Gold} Gold: {player.GoldCollected}");
             Console.SetCursorPosition(x, 4);
             Console.WriteLine($"{GameSymbols.Key} Keys: {player.KeysCollected}/{Config.KeysAmount}");
             //Missions
@@ -109,7 +109,7 @@ namespace ConsoleUI
             string title = "YOU ESCAPED!";
             Console.SetCursorPosition(startX + (popupWidth - title.Length) / 2, startY + 2);
             Console.Write(title);
-            string goldStr = $"Gold Collected: {player.Gold}";
+            string goldStr = $"Gold Collected: {player.GoldCollected}";
             Console.SetCursorPosition(startX + (popupWidth - goldStr.Length) / 2, startY + 4);
             Console.Write(goldStr);
             string prompt = "Press any key to exit...";

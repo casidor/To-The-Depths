@@ -5,13 +5,14 @@ using System.Text;
 
 namespace GameCore.Models
 {
-    public class Player
+    public class Player 
     {
         public int X;
         public int Y;
         public int KeysCollected = 0;
-        public int Gold = 0;
+        public int GoldCollected = 0;
         public bool isExited = false;
+        public char Symbol = GameSymbols.Player;
         public Player(int x, int y)
         {
             this.X = x;
@@ -21,23 +22,23 @@ namespace GameCore.Models
         {
             int newX = X + dX;
             int newY = Y + dY;
-            char cell = field.GetCell(newX, newY);
+            var cell = field[newX, newY];
             bool canMove = false;
             switch (cell)
             {
-                case GameSymbols.Wall:
+                case Wall:
                     break;
-                case GameSymbols.Key:
+                case Key:
                     KeysCollected++;
                     canMove = true;
-                    field.SetCell(newX, newY, GameSymbols.Floor);
+                    field[newX, newY] = new Floor();
                     break;
-                case GameSymbols.Gold:
-                    Gold += Config.GoldAmount;
+                case Gold:
+                    GoldCollected += Config.GoldAmount;
                     canMove = true;
-                    field.SetCell(newX, newY, GameSymbols.Floor);
+                    field[newX, newY] = new Floor();
                     break;
-                case GameSymbols.Exit:
+                case Exit:
                     if(KeysCollected == Config.KeysAmount)
                     {
                         isExited = true;
