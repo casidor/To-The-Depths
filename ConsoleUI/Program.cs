@@ -45,7 +45,7 @@ namespace ConsoleUI
                             var (field, x, y) = levelGenerator.Generate(Config.FieldWidth, Config.FieldHeight, random);
                             Player player = new Player(x, y);
                             renderer.Render(field, player);
-                            while (!player.isExited)
+                            while (!player.IsExited)
                             {
                                 if (!input.ProcessInput(player, field))
                                 {
@@ -53,7 +53,7 @@ namespace ConsoleUI
                                     break;
                                 }
                                 renderer.Render(field, player);
-                                if (player.isExited)
+                                if (player.IsExited)
                                 {
                                     renderer.Render(field, player);
                                     renderer.RenderEscapePopup(player);
