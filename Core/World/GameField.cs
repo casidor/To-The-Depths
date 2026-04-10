@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace GameCore
+namespace GameCore.World
 {
     public class GameField
     {

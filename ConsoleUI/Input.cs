@@ -1,4 +1,6 @@
 ﻿using GameCore;
+using GameCore.Models;
+using GameCore.World;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,7 +9,7 @@ namespace ConsoleUI
 {
     internal class Input
     {
-        public bool ProcessInput(GameCore.Player player, GameCore.GameField field)
+        public bool ProcessInput(Player player, GameField field)
         {
             var key = Console.ReadKey(true).Key;
             while (Console.KeyAvailable) Console.ReadKey(true);

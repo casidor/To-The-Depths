@@ -1,4 +1,6 @@
 ﻿using GameCore;
+using GameCore.Models;
+using GameCore.World;
 
 namespace ConsoleUI
 {

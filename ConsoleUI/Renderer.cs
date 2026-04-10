@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using GameCore;
+using GameCore.Models;
+using GameCore.World;
 
 namespace ConsoleUI
 {

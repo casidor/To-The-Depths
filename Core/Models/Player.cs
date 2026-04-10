@@ -1,8 +1,9 @@
-﻿using System;
+﻿using GameCore.World;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace GameCore
+namespace GameCore.Models
 {
     public class Player
     {
