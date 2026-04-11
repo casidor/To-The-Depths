@@ -68,21 +68,21 @@ namespace ConsoleUI
             Console.Clear();
             int maxLen = 0;
             int startY = 2;
-            foreach (var line in GameSymbols.Title)
+            foreach (var line in GameTexts.Title)
             {
                 if (line.Length > maxLen) maxLen = line.Length;
             }
             int startX = (Config.ConsoleWidth - maxLen) / 2;
-            for (int i = 0; i < GameSymbols.Title.Length; i++)
+            for (int i = 0; i < GameTexts.Title.Length; i++)
             {
                 Console.SetCursorPosition(startX, startY + i);
-                Console.WriteLine(GameSymbols.Title[i]);
+                Console.WriteLine(GameTexts.Title[i]);
             }
-            for (int i = 0; i < GameSymbols.Options.Length; i++)
+            for (int i = 0; i < GameTexts.Options.Length; i++)
             {
-                string line = (i == selected ? "> " : "  ") + GameSymbols.Options[i];
+                string line = (i == selected ? "> " : "  ") + GameTexts.Options[i];
                 int x = (Config.ConsoleWidth - line.Length) / 2;
-                Console.SetCursorPosition(x, startY + GameSymbols.Title.Length + 2 + i * 2);
+                Console.SetCursorPosition(x, startY + GameTexts.Title.Length + 2 + i * 2);
                 Console.Write(line);
             }
         }

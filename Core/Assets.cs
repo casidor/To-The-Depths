@@ -16,6 +16,12 @@ namespace GameCore
         public const char Fog = '░';
         public const char Empty = ' ';
         public const char Key = '⚷';
+    }
+    public class GameColors
+    {
+    }
+    public class GameTexts
+    {
         public static readonly string[] Title =
         {
           " _____       _   _            ____             _   _         ",

@@ -39,7 +39,7 @@ namespace ConsoleUI
         public GameState ProcessMenuInput(Renderer renderer)
         {
             int selected = 0;
-            int count = GameSymbols.Options.Length;
+            int count = GameTexts.Options.Length;
             renderer.RenderMainMenu(selected);
             while (true) {
                 var key = Console.ReadKey(true).Key;
