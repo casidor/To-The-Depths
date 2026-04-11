@@ -25,6 +25,9 @@ namespace GameCore.Models
         public Enemy Enemy { get; private set; }
         public EnemyTile(Enemy enemy)
         {
+            Symbol = GameSymbols.Enemy;
+            IsPassable = true;
+            Color = GameColors.Enemy;
             Enemy = enemy;
         }
         public override void Interact(Player player, GameField field, int x, int y)

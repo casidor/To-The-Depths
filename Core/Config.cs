@@ -24,5 +24,6 @@ namespace GameCore
         public const int GoldChance = 10;
         public const int KeysAmount = 3;
         public const int ExitAmount = 1;
+        public const int EnemiesAmount = 5;
     }
 }

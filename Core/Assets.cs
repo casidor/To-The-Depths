@@ -17,6 +17,7 @@ namespace GameCore
         public const char Fog = '░';
         public const char Empty = ' ';
         public const char Key = '⚷';
+        public const char Enemy = '☻';
     }
     public class GameColors
     {
