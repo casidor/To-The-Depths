@@ -20,9 +20,9 @@ namespace GameCore.World
             PlaceRooms(field, random);
             ConnectRooms(field, random);
             AddWalls(field);
-            PlaceItemsByChance<Gold>(field, random, Config.GoldChance);
-            PlaceFixedItems<Key>(field, random, Config.KeysAmount);
-            PlaceFixedItems<Exit>(field, random, Config.ExitAmount);
+            PlaceItemsByChance(field, random, Config.GoldChance, () => new Gold());
+            PlaceFixedItems(field, random, Config.KeysAmount, () => new Key());
+            PlaceFixedItems(field, random, Config.ExitAmount, () => new Exit());
             return (field, _roomX[0] + _roomW[0] / 2, _roomY[0] + _roomH[0] / 2);
         }
         private bool RoomsOverlap(int x, int y, int w, int h)// Check if the new room overlaps with existing rooms
@@ -137,7 +137,7 @@ namespace GameCore.World
                 }
             }
         }
-        public void PlaceItemsByChance<T>(GameField field, Random random,int chance) where T : GameObject, new() // Place items based on a chance
+        public void PlaceItemsByChance(GameField field, Random random,int chance, Func<GameObject> factory) // Place items based on a chance
         {
             for (int i = 0; i < RoomCount; i++)
             {
@@ -150,14 +150,14 @@ namespace GameCore.World
                             int roll = random.Next(1,101);
                             if(roll <= chance)
                             {
-                                field[x, y] = new T();
+                                field[x, y] = factory();
                             }
                         }
                     }
                 }
             }
         }
-        public void PlaceFixedItems<T>(GameField field, Random random,int amount) where T : GameObject, new() // Place a fixed number of items in random locations within rooms
+        public void PlaceFixedItems(GameField field, Random random,int amount, Func<GameObject> factory) // Place a fixed number of items in random locations within rooms
         {
             int placed = 0;
             while (placed < amount)
@@ -168,7 +168,7 @@ namespace GameCore.World
 
                 if (field[x, y] is Floor)
                 {
-                    field[x, y] = new T();
+                    field[x, y] = factory();
                     placed++;
                 }
             }
