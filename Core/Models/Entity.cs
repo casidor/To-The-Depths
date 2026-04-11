@@ -7,9 +7,9 @@ namespace GameCore.Models
     public abstract class Entity
     {
         public string Name { get; set; }
-        public int MaxHP { get; set; } = 0;
-        public int HP { get; set; } = 0;
-        public int Attack { get; set; } = 0;
+        public int MaxHP { get; set; }
+        public int HP { get; set; } 
+        public int Attack { get; set; }
         public bool IsAlive => HP > 0;
         public void TakeDamage(int damage)
         {

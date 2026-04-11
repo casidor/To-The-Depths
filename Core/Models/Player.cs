@@ -5,7 +5,7 @@ using System.Text;
 
 namespace GameCore.Models
 {
-    public class Player
+    public class Player : Entity
     {
         public int X { get; private set; }
         public int Y { get; private set; }
@@ -18,6 +18,10 @@ namespace GameCore.Models
         {
             X = x;
             Y = y;
+            Name = "Player";
+            HP = Config.PlayerMaxHP;
+            MaxHP = Config.PlayerMaxHP;
+            Attack = Config.PlayerAttack;
         }
         public void Move(int dX, int dY, GameField field)
         {
