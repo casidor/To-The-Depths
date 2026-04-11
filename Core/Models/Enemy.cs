@@ -14,6 +14,11 @@ namespace GameCore.Models
             MaxHP = hp;
             Attack = attack;
         }
+        public static Enemy GetEnemy(Random random)
+        {
+            var data = EnemyData.Types[random.Next(EnemyData.Types.Count)];
+            return new Enemy(data.Name, data.HP, data.Attack);
+        }
     }
     public class EnemyTile : GameObject
     {
@@ -24,7 +29,7 @@ namespace GameCore.Models
         }
         public override void Interact(Player player, GameField field, int x, int y)
         {
-            
+            player.StartBattle(Enemy);
         }
     }
 }

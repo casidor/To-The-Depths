@@ -42,4 +42,12 @@ namespace GameCore
         };
         public static readonly string[] Options = { "Start Game", "Help", "Exit" };
     }
+    public static class EnemyData
+    {
+        public static readonly List<(string Name, int HP, int Attack)> Types = new()
+    {
+        ("Shadow Wolf", 50,  8),
+        ("Cave Troll",  80, 12),
+    };
+    }
 }
