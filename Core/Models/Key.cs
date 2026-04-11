@@ -11,6 +11,7 @@ namespace GameCore.Models
         {
             Symbol = GameSymbols.Key;
             IsPassable = true;
+            Color = GameColors.Key;
         }
 
         public override void Interact(Player player, GameField field, int x, int y)

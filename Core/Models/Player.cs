@@ -13,6 +13,7 @@ namespace GameCore.Models
         public int GoldCollected { get; private set; } = 0;
         public bool IsExited { get; private set; } = false;
         public char Symbol { get; private set; } = GameSymbols.Player;
+        public string Color { get; private set; } = GameColors.Player;
         public Player(int x, int y)
         {
             X = x;

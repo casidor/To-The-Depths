@@ -19,11 +19,16 @@ namespace ConsoleUI
                 {
                     if (x == player.X && y == player.Y)
                     {
+                        sb.Append(player.Color);
                         sb.Append(player.Symbol);
+                        sb.Append(GameColors.Reset);
                     }
                     else
                     {
-                        sb.Append(field[x, y].Symbol);
+                        var obj = field[x, y];
+                        sb.Append(obj.Color);
+                        sb.Append(obj.Symbol);
+                        sb.Append(GameColors.Reset);
                     }
                 }
                 sb.AppendLine();

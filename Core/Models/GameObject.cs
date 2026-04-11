@@ -9,8 +9,7 @@ namespace GameCore.Models
     {
         public char Symbol { get; protected set; }
         public bool IsPassable { get; protected set; } = false;
-        public ConsoleColor Color { get; protected set; } = ConsoleColor.White;
-        public ConsoleColor BackgroundColor { get; protected set; } = ConsoleColor.Black;
+        public string Color { get; protected set; } = GameColors.Reset;
         public abstract void Interact(Player player, GameField field, int x, int y);
     }
 }
