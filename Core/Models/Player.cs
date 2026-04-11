@@ -14,6 +14,7 @@ namespace GameCore.Models
         public bool IsExited { get; private set; } = false;
         public char Symbol { get; private set; } = GameSymbols.Player;
         public string Color { get; private set; } = GameColors.Player;
+        public Enemy? PendingEnemy { get; private set; }
         public Player(int x, int y)
         {
             X = x;
@@ -23,6 +24,10 @@ namespace GameCore.Models
             MaxHP = Config.PlayerMaxHP;
             Attack = Config.PlayerAttack;
         }
+        public void StartBattle(Enemy enemy)
+        {
+            PendingEnemy = enemy;
+        }   
         public void Move(int dX, int dY, GameField field)
         {
             int newX = X + dX;

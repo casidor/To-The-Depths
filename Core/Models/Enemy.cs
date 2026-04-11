@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameCore.World;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -12,6 +13,18 @@ namespace GameCore.Models
             HP = hp;
             MaxHP = hp;
             Attack = attack;
+        }
+    }
+    public class EnemyTile : GameObject
+    {
+        public Enemy Enemy { get; private set; }
+        public EnemyTile(Enemy enemy)
+        {
+            Enemy = enemy;
+        }
+        public override void Interact(Player player, GameField field, int x, int y)
+        {
+            
         }
     }
 }
