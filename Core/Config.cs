@@ -15,6 +15,9 @@ namespace GameCore
         //Player settings
         public const int GoldAmount = 10;
         public const int PlayerMaxHP = 100;
+        //Enemy settings
+        public const int EnemyDamage = 5;
+        public const int GoldStolen = 10;
         //Generation settings
         public const int MaxRooms = 10;
         public const int GenAttempts = 300;

@@ -9,11 +9,16 @@ namespace GameCore.Models
     {
         public int X { get; private set; }
         public int Y { get; private set; }
-        public int MaxHP { get; set; }
-        public int HP { get; set; }
+        public int MaxHP { get; private set; }
+        public int HP { get; private set; }
         public bool IsAlive => HP > 0;
         public int KeysCollected { get; private set; } = 0;
-        public int GoldCollected { get; private set; } = 0;
+        private int _gold;
+        public int GoldCollected
+        {
+            get => _gold;
+            private set => _gold = Math.Max(value, 0);
+        }
         public bool IsExited { get; private set; } = false;
         public char Symbol { get; private set; } = GameSymbols.Player;
         public string Color { get; private set; } = GameColors.Player;
@@ -51,6 +56,12 @@ namespace GameCore.Models
         public void TakeDamage(int damage)
         {
             HP = Math.Max(HP - damage, 0);
+        }
+        public bool SpendGold(int amount)
+        {
+            if (GoldCollected < amount) return false;
+            GoldCollected -= amount;
+            return true;
         }
     }
 }

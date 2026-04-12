@@ -5,9 +5,9 @@ using System.Text;
 
 namespace GameCore.Models
 {
-    public class EnemyTile : GameObject
+    public class Enemy : GameObject
     {
-        public EnemyTile()
+        public Enemy()
         {
             Symbol = GameSymbols.Enemy;
             IsPassable = true;
@@ -15,6 +15,9 @@ namespace GameCore.Models
         }
         public override void Interact(Player player, GameField field, int x, int y)
         {
+            player.TakeDamage(Config.EnemyDamage);
+            player.SpendGold(Config.GoldStolen);
+            field[x, y] = new Floor();
         }
     }
 }
