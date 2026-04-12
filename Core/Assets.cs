@@ -18,6 +18,7 @@ namespace GameCore
         public const char Empty = ' ';
         public const char Key = '⚷';
         public const char Enemy = '☻';
+        public const char Health = '♥';
     }
     public class GameColors
     {
