@@ -27,5 +27,10 @@ namespace GameCore
         public const int KeysAmount = 3;
         public const int ExitAmount = 1;
         public const int EnemiesAmount = 5;
+        public const int AltarsAmount = 3;
+        //Tiles settings
+        public const int AltarCharges = 3;
+        public const int AltarHeal = 20;
+        public const int HealCost = 20;
     }
 }

@@ -63,5 +63,11 @@ namespace GameCore.Models
             GoldCollected -= amount;
             return true;
         }
+        public bool Heal(int amount)
+        {
+            if (HP >= MaxHP) return false;
+            HP = Math.Min(HP + amount, MaxHP);
+            return true;
+        }
     }
 }

@@ -24,6 +24,7 @@ namespace GameCore.World
             PlaceFixedItems(field, random, Config.KeysAmount, () => new Key());
             PlaceFixedItems(field, random, Config.ExitAmount, () => new Exit());
             PlaceFixedItems(field, random, Config.EnemiesAmount, () => new Enemy());
+            PlaceFixedItems(field, random, Config.AltarsAmount, () => new Altar());
             return (field, _roomX[0] + _roomW[0] / 2, _roomY[0] + _roomH[0] / 2);
         }
         private bool RoomsOverlap(int x, int y, int w, int h)// Check if the new room overlaps with existing rooms
