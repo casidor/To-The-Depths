@@ -5,29 +5,25 @@ using System.Text;
 
 namespace GameCore.Models
 {
-    public class Player : Entity
+    public class Player
     {
         public int X { get; private set; }
         public int Y { get; private set; }
+        public int MaxHP { get; set; }
+        public int HP { get; set; }
+        public bool IsAlive => HP > 0;
         public int KeysCollected { get; private set; } = 0;
         public int GoldCollected { get; private set; } = 0;
         public bool IsExited { get; private set; } = false;
         public char Symbol { get; private set; } = GameSymbols.Player;
         public string Color { get; private set; } = GameColors.Player;
-        public Enemy? PendingEnemy { get; private set; }
         public Player(int x, int y)
         {
             X = x;
             Y = y;
-            Name = "Player";
             HP = Config.PlayerMaxHP;
             MaxHP = Config.PlayerMaxHP;
-            Attack = Config.PlayerAttack;
         }
-        public void StartBattle(Enemy enemy)
-        {
-            PendingEnemy = enemy;
-        }   
         public void Move(int dX, int dY, GameField field)
         {
             int newX = X + dX;
@@ -51,6 +47,10 @@ namespace GameCore.Models
         public void Exit()
         {
             IsExited = true;
+        }
+        public void TakeDamage(int damage)
+        {
+            HP = Math.Max(HP - damage, 0);
         }
     }
 }

@@ -15,7 +15,6 @@ namespace GameCore
         //Player settings
         public const int GoldAmount = 10;
         public const int PlayerMaxHP = 100;
-        public const int PlayerAttack = 20;
         //Generation settings
         public const int MaxRooms = 10;
         public const int GenAttempts = 300;
