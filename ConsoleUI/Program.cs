@@ -45,7 +45,7 @@ namespace ConsoleUI
                             var (field, x, y) = levelGenerator.Generate(Config.FieldWidth, Config.FieldHeight, random);
                             Player player = new Player(x, y);
                             renderer.Render(field, player);
-                            while (!player.IsExited)
+                            while (!player.IsExited && player.IsAlive)
                             {
                                 if (!input.ProcessInput(player, field))
                                 {
@@ -57,6 +57,13 @@ namespace ConsoleUI
                                 {
                                     renderer.Render(field, player);
                                     renderer.RenderEscapePopup(player);
+                                    Console.ReadKey(true);
+                                    state = GameState.MainMenu;
+                                }
+                                else if (!player.IsAlive)
+                                {
+                                    renderer.Render(field, player);
+                                    renderer.RenderDeathPopup(player);
                                     Console.ReadKey(true);
                                     state = GameState.MainMenu;
                                 }

@@ -93,7 +93,7 @@ namespace ConsoleUI
                 Console.Write(line);
             }
         }
-        public static void RenderPopup(params string[] lines)
+        public void RenderPopup(params string[] lines)
         {
             int maxLen = 0;
             foreach (var line in lines)
@@ -130,6 +130,14 @@ namespace ConsoleUI
         public void RenderEscapePopup(Player player)
         {
             RenderPopup(["YOU ESCAPED!",
+                "",
+                $"Gold Collected: {player.GoldCollected}",
+                "",
+                "Press any key to exit..."]);
+        }
+        public void RenderDeathPopup(Player player)
+        {
+            RenderPopup(["YOU DIED!",
                 "",
                 $"Gold Collected: {player.GoldCollected}",
                 "",
