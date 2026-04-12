@@ -91,10 +91,15 @@ namespace ConsoleUI
                 Console.Write(line);
             }
         }
-        public void RenderEscapePopup(Player player)
+        public static void RenderPopup(params string[] lines)
         {
-            int popupWidth = 40;
-            int popupHeight = 9;
+            int maxLen = 0;
+            foreach (var line in lines)
+            {
+                if (line.Length > maxLen) maxLen = line.Length;
+            }
+            int popupWidth = Math.Max(maxLen + 4, 40);
+            int popupHeight = Math.Max(lines.Length + 4, 9);
             int startX = (Config.ConsoleWidth - popupWidth) / 2;
             int startY = (Config.ConsoleHeight - popupHeight) / 2;
             for (int y = 0; y < popupHeight; y++)
@@ -111,15 +116,22 @@ namespace ConsoleUI
                     else Console.Write(" ");
                 }
             }
-            string title = "YOU ESCAPED!";
-            Console.SetCursorPosition(startX + (popupWidth - title.Length) / 2, startY + 2);
-            Console.Write(title);
-            string goldStr = $"Gold Collected: {player.GoldCollected}";
-            Console.SetCursorPosition(startX + (popupWidth - goldStr.Length) / 2, startY + 4);
-            Console.Write(goldStr);
-            string prompt = "Press any key to exit...";
-            Console.SetCursorPosition(startX + (popupWidth - prompt.Length) / 2, startY + 6);
-            Console.Write(prompt);
+            for (int i = 0; i < lines.Length; i++)
+            {
+                int textX = startX + (popupWidth - lines[i].Length) / 2;
+                int textY = startY + (popupHeight - lines.Length) / 2 + i;
+
+                Console.SetCursorPosition(textX, textY);
+                Console.Write(lines[i]);
+            }
+        }
+        public void RenderEscapePopup(Player player)
+        {
+            RenderPopup(["YOU ESCAPED!",
+                "",
+                $"Gold Collected: {player.GoldCollected}",
+                "",
+                "Press any key to exit..."]);
         }
         public void RenderHelp()
         {
