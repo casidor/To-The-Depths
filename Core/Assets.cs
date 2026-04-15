@@ -4,7 +4,6 @@ using System.Text;
 
 namespace GameCore
 {
-    //█
     public class GameSymbols
     {
         public const char Wall = '█';
@@ -19,6 +18,7 @@ namespace GameCore
         public const char Key = '⚷';
         public const char Enemy = '☻';
         public const char Health = '♥';
+        public const char Shield = '⛨';
     }
     public class GameColors
     {

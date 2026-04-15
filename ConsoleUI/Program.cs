@@ -62,6 +62,12 @@ namespace ConsoleUI
                                     state = GameState.Running;
                                 }
                             }
+                            if (interaction == InteractionResult.PlayerAttacked)
+                            {
+                                renderer.Render(field, player);
+                                renderer.RenderAttackPopup();
+                                Console.ReadKey(true);
+                            }
                             renderer.Render(field, player);
                             if (player.IsExited)
                             {

@@ -43,11 +43,11 @@ namespace ConsoleUI
             Console.SetCursorPosition(x, 0);
             Console.WriteLine("Player Stats:");
             Console.SetCursorPosition(x, 2);
-            Console.WriteLine($"{GameSymbols.Health} Health: {player.HP}/{player.MaxHP}    ");
+            Console.WriteLine($"{GameSymbols.Health} Health: {player.HP}/{player.MaxHP}     ");
             Console.SetCursorPosition(x, 4);
-            Console.WriteLine($"{GameSymbols.Gold} Gold: {player.GoldCollected}");
+            Console.WriteLine($"{GameSymbols.Gold} Gold: {player.GoldCollected}     ");
             Console.SetCursorPosition(x, 6);
-            Console.WriteLine($"{GameSymbols.Key} Keys: {player.KeysCollected}/{Config.KeysAmount}");
+            Console.WriteLine($"{GameSymbols.Key} Keys: {player.KeysCollected}/{Config.KeysAmount}     ");
             //Missions
             Console.SetCursorPosition(x, 8);
             Console.Write("=== MISSION ===");
@@ -126,6 +126,20 @@ namespace ConsoleUI
                 Console.SetCursorPosition(textX, textY);
                 Console.Write(lines[i]);
             }
+        }
+        public void RenderAttackPopup()
+        {
+            string[] lines = [
+                "--- AMBUSH! ---",
+                "",
+                "A thief jumps out of the shadows!",
+                "He strikes you and grabs your purse.",
+                "",
+                $"Health lost: {Config.EnemyDamage}",
+                $"Gold stolen: {Config.GoldStolen}",
+                "",
+                "Press any key to continue..."];
+            RenderPopup(lines);
         }
         public void RenderAltarMenu(int selected)
         {
