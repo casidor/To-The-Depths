@@ -52,7 +52,15 @@ namespace ConsoleUI
                             }
                             if (interaction == InteractionResult.Altar)
                             {
-                                state = GameState.AltarMenu;
+                                renderer.Render(field, player);
+                                if (field[player.X, player.Y] is Altar currentAltar)
+                                {
+                                    state = input.ProcessAltarInput(renderer, player, currentAltar);
+                                }
+                                else
+                                {
+                                    state = GameState.Running;
+                                }
                             }
                             renderer.Render(field, player);
                             if (player.IsExited)

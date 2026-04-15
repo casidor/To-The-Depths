@@ -3,6 +3,7 @@ using GameCore.Models;
 using GameCore.World;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Text;
 
 namespace ConsoleUI
@@ -42,7 +43,8 @@ namespace ConsoleUI
             int selected = 0;
             int count = GameTexts.Options.Length;
             renderer.RenderMainMenu(selected);
-            while (true) {
+            while (true)
+            {
                 var key = Console.ReadKey(true).Key;
                 switch (key)
                 {
@@ -59,8 +61,41 @@ namespace ConsoleUI
                     case ConsoleKey.Enter:
                         if (selected == 0) return GameState.Generating;
                         if (selected == 1) return GameState.Help;
-                        if(selected == 2) return GameState.Exit;
+                        if (selected == 2) return GameState.Exit;
                         break;
+                }
+            }
+        }
+        public GameState ProcessAltarInput(Renderer renderer, Player player, Altar altar)
+        {
+            int selected = 0;
+            int count = 2;
+            renderer.RenderAltarMenu(selected);
+            while (true)
+            {
+                renderer.RenderAltarMenu(selected);
+
+                var key = Console.ReadKey(true).Key;
+                switch (key)
+                {
+                    case ConsoleKey.W:
+                    case ConsoleKey.UpArrow:
+                        selected = (selected - 1 + count) % count;
+                        break;
+                    case ConsoleKey.S:
+                    case ConsoleKey.DownArrow:
+                        selected = (selected + 1) % count;
+                        break;
+                    case ConsoleKey.Enter:
+                        if (selected == 0)
+                        {
+                            var (success, message) = altar.TryHeal(player);
+                            renderer.RenderPopup(message);
+                            Thread.Sleep(1000);
+                        }
+                        return GameState.Running;
+                    case ConsoleKey.Escape:
+                        return GameState.Running;
                 }
             }
         }

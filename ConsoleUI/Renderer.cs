@@ -127,6 +127,18 @@ namespace ConsoleUI
                 Console.Write(lines[i]);
             }
         }
+        public void RenderAltarMenu(int selected)
+        {
+            string[] lines = [
+                "=== ANCIENT ALTAR ===",
+                "",
+                $"Heal {Config.AltarHeal} HP for {Config.HealCost} Gold?",
+                "",
+                (selected == 0 ? "> YES" : "  YES"),
+                "",
+                (selected == 1 ? "> NO" : "  NO")];
+            RenderPopup(lines);
+        }
         public void RenderEscapePopup(Player player)
         {
             RenderPopup(["YOU ESCAPED!",
