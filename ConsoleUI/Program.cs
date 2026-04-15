@@ -4,13 +4,6 @@ using GameCore.World;
 
 namespace ConsoleUI
 {
-    public enum GameState
-    {
-        MainMenu,
-        Running,
-        Help,
-        Exit
-    }
     internal class Program
     {
         static void InitConsole() 
