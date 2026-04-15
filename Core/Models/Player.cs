@@ -29,17 +29,18 @@ namespace GameCore.Models
             HP = Config.PlayerMaxHP;
             MaxHP = Config.PlayerMaxHP;
         }
-        public void Move(int dX, int dY, GameField field)
+        public InteractionResult Move(int dX, int dY, GameField field)
         {
             int newX = X + dX;
             int newY = Y + dY;
             var cell = field[newX, newY];
-            cell.Interact(this, field, newX, newY);
+            var result = cell.Interact(this, field, newX, newY);
             if (field[newX, newY].IsPassable)
             {
                 X = newX;
                 Y = newY;
             }
+            return result;
         }
         public void AddGold(int amount)
         {

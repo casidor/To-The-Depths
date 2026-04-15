@@ -9,32 +9,33 @@ namespace ConsoleUI
 {
     internal class Input
     {
-        public bool ProcessInput(Player player, GameField field)
+        public (bool, InteractionResult) ProcessInput(Player player, GameField field)
         {
             var key = Console.ReadKey(true).Key;
             while (Console.KeyAvailable) Console.ReadKey(true);
+            InteractionResult moveResult = InteractionResult.None;
             switch (key)
             {
                 case ConsoleKey.W:
                 case ConsoleKey.UpArrow:
-                    player.Move(0, -1, field);
+                    moveResult = player.Move(0, -1, field);
                     break;
                 case ConsoleKey.S:
                 case ConsoleKey.DownArrow:
-                    player.Move(0, 1, field);
+                    moveResult = player.Move(0, 1, field);
                     break;
                 case ConsoleKey.A:
                 case ConsoleKey.LeftArrow:
-                    player.Move(-1, 0, field);
+                    moveResult = player.Move(-1, 0, field);
                     break;
                 case ConsoleKey.D:
                 case ConsoleKey.RightArrow:
-                    player.Move(1, 0, field);
+                    moveResult = player.Move(1, 0, field);
                     break;
                 case ConsoleKey.Escape:
-                    return false;
+                    return (false, InteractionResult.None);
             }
-            return true;
+            return (true, moveResult);
         }
         public GameState ProcessMenuInput(Renderer renderer)
         {

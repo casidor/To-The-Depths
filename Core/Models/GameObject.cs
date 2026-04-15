@@ -10,6 +10,6 @@ namespace GameCore.Models
         public char Symbol { get; protected set; }
         public bool IsPassable { get; protected set; } = false;
         public string Color { get; protected set; } = GameColors.Reset;
-        public abstract void Interact(Player player, GameField field, int x, int y);
+        public abstract InteractionResult Interact(Player player, GameField field, int x, int y);
     }
 }

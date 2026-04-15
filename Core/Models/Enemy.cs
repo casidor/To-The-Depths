@@ -13,11 +13,12 @@ namespace GameCore.Models
             IsPassable = true;
             Color = GameColors.Enemy;
         }
-        public override void Interact(Player player, GameField field, int x, int y)
+        public override InteractionResult Interact(Player player, GameField field, int x, int y)
         {
             player.TakeDamage(Config.EnemyDamage);
             player.SpendGold(Config.GoldStolen);
             field[x, y] = new Floor();
+            return InteractionResult.PlayerAttacked;  
         }
     }
 }

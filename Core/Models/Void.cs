@@ -12,8 +12,9 @@ namespace GameCore.Models
             Symbol = GameSymbols.Empty;
             IsPassable = false;
         }
-        public override void Interact(Player player, GameField field, int x, int y)
+        public override InteractionResult Interact(Player player, GameField field, int x, int y)
         {
+            return InteractionResult.None;
         }
     }
 }

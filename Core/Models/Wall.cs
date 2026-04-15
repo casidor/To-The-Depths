@@ -14,8 +14,9 @@ namespace GameCore.Models
             Color = GameColors.Wall;
         }
 
-        public override void Interact(Player player, GameField field, int x, int y)
+        public override InteractionResult Interact(Player player, GameField field, int x, int y)
         {
+            return InteractionResult.None;
         }
     }
 }

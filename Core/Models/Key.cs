@@ -14,10 +14,11 @@ namespace GameCore.Models
             Color = GameColors.Key;
         }
 
-        public override void Interact(Player player, GameField field, int x, int y)
+        public override InteractionResult Interact(Player player, GameField field, int x, int y)
         {
                 player.AddKey();
                 field[x, y] = new Floor();
+                return InteractionResult.None;
         }
     }
 }

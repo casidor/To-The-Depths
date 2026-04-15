@@ -14,13 +14,14 @@ namespace GameCore.Models
             IsPassable = true;
             Color = GameColors.Altar;
         }
-        public override void Interact(Player player, GameField field, int x, int y)
+        public override InteractionResult Interact(Player player, GameField field, int x, int y)
         {
             if (Charges > 0 && player.SpendGold(Config.HealCost))
             {
                 player.Heal(Config.AltarHeal);
                 Charges--;
             }
+            return InteractionResult.AltarMenu;
         }
     }
 }

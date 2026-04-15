@@ -14,12 +14,13 @@ namespace GameCore.Models
             Color = GameColors.Exit;
         }
 
-        public override void Interact(Player player, GameField field, int x, int y)
+        public override InteractionResult Interact(Player player, GameField field, int x, int y)
         {
             if (player.KeysCollected == Config.KeysAmount)
             {
                 player.Exit();
             }
+            return InteractionResult.ExitReached;
         }
     }
 }

@@ -14,10 +14,11 @@ namespace GameCore.Models
             Color = GameColors.Gold;
         }
 
-        public override void Interact(Player player, GameField field, int x, int y)
+        public override InteractionResult Interact(Player player, GameField field, int x, int y)
         {
             player.AddGold(Config.GoldAmount);
             field[x, y] = new Floor();
+            return InteractionResult.None;
         }
     }
 }
