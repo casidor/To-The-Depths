@@ -13,6 +13,7 @@ namespace GameCore.Models
         public int HP { get; private set; }
         public bool IsAlive => HP > 0;
         public int KeysCollected { get; private set; } = 0;
+        public int CurrentFloor { get; private set; } = 1;
         private int _gold;
         public int GoldCollected
         {
@@ -41,6 +42,14 @@ namespace GameCore.Models
                 Y = newY;
             }
             return result;
+        }
+        public void Descend(int startX, int startY)
+        {
+            X = startX;
+            Y = startY;
+            KeysCollected = 0;
+            IsExited = false;
+            CurrentFloor++;
         }
         public void AddGold(int amount)
         {

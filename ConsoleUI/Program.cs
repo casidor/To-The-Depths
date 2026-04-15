@@ -72,9 +72,11 @@ namespace ConsoleUI
                             if (player.IsExited)
                             {
                                 renderer.Render(field, player);
-                                renderer.RenderEscapePopup(player);
+                                renderer.RenderDescentPopup(player);
                                 Console.ReadKey(true);
-                                state = GameState.MainMenu;
+                                var nextfloor = new LevelGenerator().Generate(Config.FieldWidth, Config.FieldHeight, random);
+                                field = nextfloor.field;
+                                player.Descend(nextfloor.x, nextfloor.y);
                             }
                             else if (!player.IsAlive)
                             {
