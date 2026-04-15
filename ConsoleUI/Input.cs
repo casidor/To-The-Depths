@@ -57,7 +57,7 @@ namespace ConsoleUI
                         renderer.RenderMainMenu(selected);
                         break;
                     case ConsoleKey.Enter:
-                        if (selected == 0) return GameState.Running;
+                        if (selected == 0) return GameState.Generating;
                         if (selected == 1) return GameState.Help;
                         if(selected == 2) return GameState.Exit;
                         break;

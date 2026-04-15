@@ -7,7 +7,9 @@ namespace GameCore
     public enum GameState
     {
         MainMenu,
+        Generating,
         Running,
+        AltarMenu,
         Help,
         Exit
     }
@@ -15,7 +17,7 @@ namespace GameCore
     {
         None,
         PlayerAttacked,
-        AltarMenu,
+        Altar,
         ExitReached
     }
 }

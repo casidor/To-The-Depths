@@ -21,7 +21,7 @@ namespace GameCore.Models
                 player.Heal(Config.AltarHeal);
                 Charges--;
             }
-            return InteractionResult.AltarMenu;
+            return InteractionResult.Altar;
         }
     }
 }

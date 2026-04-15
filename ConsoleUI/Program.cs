@@ -23,6 +23,8 @@ namespace ConsoleUI
             Renderer renderer = new Renderer();
             Input input = new Input();
             Console.Clear();
+            GameField? field = null;
+            Player? player = null;
             GameState state = GameState.MainMenu;
             do
             {
@@ -31,35 +33,41 @@ namespace ConsoleUI
                     case GameState.MainMenu:
                         state = input.ProcessMenuInput(renderer);
                         break;
+                    case GameState.Generating:
+                        Console.Clear();
+                        LevelGenerator levelGenerator = new LevelGenerator();
+                        var generated = levelGenerator.Generate(Config.FieldWidth, Config.FieldHeight, random);
+                        field = generated.field;
+                        player = new Player(generated.x, generated.y);
+                        state = GameState.Running;
+                        break;
                     case GameState.Running:
                         {
-                            Console.Clear();
-                            LevelGenerator levelGenerator = new LevelGenerator();
-                            var (field, x, y) = levelGenerator.Generate(Config.FieldWidth, Config.FieldHeight, random);
-                            Player player = new Player(x, y);
                             renderer.Render(field, player);
-                            while (!player.IsExited && player.IsAlive)
+                            var (isRunning, interaction) = input.ProcessInput(player, field);
+                            if (!isRunning)
                             {
-                                if (!input.ProcessInput(player, field))
-                                {
-                                    state = GameState.MainMenu;
-                                    break;
-                                }
+                                state = GameState.MainMenu;
+                                break;
+                            }
+                            if (interaction == InteractionResult.Altar)
+                            {
+                                state = GameState.AltarMenu;
+                            }
+                            renderer.Render(field, player);
+                            if (player.IsExited)
+                            {
                                 renderer.Render(field, player);
-                                if (player.IsExited)
-                                {
-                                    renderer.Render(field, player);
-                                    renderer.RenderEscapePopup(player);
-                                    Console.ReadKey(true);
-                                    state = GameState.MainMenu;
-                                }
-                                else if (!player.IsAlive)
-                                {
-                                    renderer.Render(field, player);
-                                    renderer.RenderDeathPopup(player);
-                                    Console.ReadKey(true);
-                                    state = GameState.MainMenu;
-                                }
+                                renderer.RenderEscapePopup(player);
+                                Console.ReadKey(true);
+                                state = GameState.MainMenu;
+                            }
+                            else if (!player.IsAlive)
+                            {
+                                renderer.Render(field, player);
+                                renderer.RenderDeathPopup(player);
+                                Console.ReadKey(true);
+                                state = GameState.MainMenu;
                             }
                         }
                         break;

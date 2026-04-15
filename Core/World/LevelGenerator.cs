@@ -13,7 +13,7 @@ namespace GameCore.World
         private int[] _roomW = new int[Config.MaxRooms];
         private int[] _roomH = new int[Config.MaxRooms];
         private int RoomCount = 0;
-        public (GameField, int x,int y) Generate (int w, int h, Random random)
+        public (GameField field, int x,int y) Generate (int w, int h, Random random)
         {
             GameField field = new GameField(w, h);
             FillEmptySpaces(field);
