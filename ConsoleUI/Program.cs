@@ -19,7 +19,8 @@ namespace ConsoleUI
         static void Main()
         {
             InitConsole();
-            Random random = new Random();
+            int currentSeed = new Random().Next();
+            Random random = new Random(currentSeed);
             Renderer renderer = new Renderer();
             Input input = new Input();
             Console.Clear();
@@ -33,12 +34,34 @@ namespace ConsoleUI
                     case GameState.MainMenu:
                         state = input.ProcessMenuInput(renderer);
                         break;
+                    case GameState.LoadGame:
+                        var data = SaveManager.Load();
+                        if (data != null)
+                        {
+                            Console.Clear();
+                            currentSeed = data.Seed;
+                            random = new Random(currentSeed + data.Floor);
+                            var restored = new LevelGenerator().Generate(Config.FieldWidth, Config.FieldHeight, random);
+                            field = restored.field;
+                            player = new Player(restored.x, restored.y, data.HP, data.MaxHP, data.Gold, data.Keys, data.Floor);
+                            state = GameState.Running;
+                        }
+                        else
+                        {
+                            renderer.RenderPopup("No save found or file corrupted!", "", "Press any key...");
+                            Console.ReadKey(true);
+                            state = GameState.MainMenu;
+                        }
+                        break;
                     case GameState.Generating:
                         Console.Clear();
+                        currentSeed = new Random().Next();
+                        random = new Random(currentSeed + 1);
                         LevelGenerator levelGenerator = new LevelGenerator();
                         var generated = levelGenerator.Generate(Config.FieldWidth, Config.FieldHeight, random);
                         field = generated.field;
                         player = new Player(generated.x, generated.y);
+                        SaveManager.Save(player, currentSeed);
                         state = GameState.Running;
                         break;
                     case GameState.Running:
@@ -74,9 +97,11 @@ namespace ConsoleUI
                                 renderer.Render(field, player);
                                 renderer.RenderDescentPopup(player);
                                 Console.ReadKey(true);
+                                random = new Random(currentSeed + player.CurrentFloor + 1);
                                 var nextfloor = new LevelGenerator().Generate(Config.FieldWidth, Config.FieldHeight, random);
                                 field = nextfloor.field;
                                 player.Descend(nextfloor.x, nextfloor.y);
+                                SaveManager.Save(player, currentSeed);
                             }
                             else if (!player.IsAlive)
                             {

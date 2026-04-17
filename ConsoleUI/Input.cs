@@ -60,8 +60,9 @@ namespace ConsoleUI
                         break;
                     case ConsoleKey.Enter:
                         if (selected == 0) return GameState.Generating;
-                        if (selected == 1) return GameState.Help;
-                        if (selected == 2) return GameState.Exit;
+                        if (selected == 1) return GameState.LoadGame;
+                        if (selected == 2) return GameState.Help;
+                        if (selected == 3) return GameState.Exit;
                         break;
                 }
             }
