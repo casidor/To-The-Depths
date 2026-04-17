@@ -30,6 +30,16 @@ namespace GameCore.Models
             HP = Config.PlayerMaxHP;
             MaxHP = Config.PlayerMaxHP;
         }
+        public Player(int x, int y, int hp,int maxhp, int gold, int keys, int floor)
+        {
+            X = x;
+            Y = y;
+            HP = hp;
+            MaxHP = maxhp;
+            GoldCollected = gold;
+            KeysCollected = keys;
+            CurrentFloor = floor;
+        }
         public InteractionResult Move(int dX, int dY, GameField field)
         {
             int newX = X + dX;
