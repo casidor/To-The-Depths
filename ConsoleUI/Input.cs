@@ -42,6 +42,7 @@ namespace ConsoleUI
         {
             int selected = 0;
             int count = GameTexts.Options.Length;
+            Console.Clear();
             renderer.RenderMainMenu(selected);
             while (true)
             {

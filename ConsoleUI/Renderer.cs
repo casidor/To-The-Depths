@@ -74,7 +74,6 @@ namespace ConsoleUI
         }
         public void RenderMainMenu (int selected)
         {
-            Console.Clear();
             int maxLen = 0;
             int startY = 2;
             foreach (var line in GameTexts.Title)
@@ -106,22 +105,34 @@ namespace ConsoleUI
             int popupHeight = Math.Max(lines.Length + 4, 9);
             int startX = (Config.ConsoleWidth - popupWidth) / 2;
             int startY = (Config.ConsoleHeight - popupHeight) / 2;
+            int textStartY = startY + (popupHeight - lines.Length) / 2;
             for (int y = 0; y < popupHeight; y++)
             {
                 Console.SetCursorPosition(startX, startY + y);
+                StringBuilder sb = new StringBuilder(popupWidth);
                 for (int x = 0; x < popupWidth; x++)
                 {
-                    if (y == 0 && x == 0) Console.Write("╔");
-                    else if (y == 0 && x == popupWidth - 1) Console.Write("╗");
-                    else if (y == popupHeight - 1 && x == 0) Console.Write("╚");
-                    else if (y == popupHeight - 1 && x == popupWidth - 1) Console.Write("╝");
-                    else if (y == 0 || y == popupHeight - 1) Console.Write("═");
-                    else if (x == 0 || x == popupWidth - 1) Console.Write("║");
-                    else Console.Write(" ");
+                    if (y == 0 && x == 0) sb.Append("╔");
+                    else if (y == 0 && x == popupWidth - 1) sb.Append("╗");
+                    else if (y == popupHeight - 1 && x == 0) sb.Append("╚");
+                    else if (y == popupHeight - 1 && x == popupWidth - 1) sb.Append("╝");
+                    else if (y == 0 || y == popupHeight - 1) sb.Append("═");
+                    else if (x == 0 || x == popupWidth - 1) sb.Append("║");
+                    else sb.Append(" ");
                 }
+                int currentLineIndex = startY + y - textStartY;
+                if (currentLineIndex >= 0 && currentLineIndex < lines.Length)
+                {
+                    string text = lines[currentLineIndex];
+                    int textStartX = (popupWidth - text.Length) / 2;
+                    sb.Remove(textStartX, text.Length);
+                    sb.Insert(textStartX, text);
+                }
+                Console.Write(sb.ToString());
             }
+        }
         public void RenderExitConfirm(int selected)
-            {
+        {
             string[] lines = [
                 "--- UNSAVED PROGRESS ---",
                 "",
@@ -170,9 +181,9 @@ namespace ConsoleUI
                 "",
                 $"Heal {Config.AltarHeal} HP for {Config.HealCost} Gold?",
                 "",
-                (selected == 0 ? "> YES" : "  YES"),
+                (selected == 0 ? "> YES " : "  YES"),
                 "",
-                (selected == 1 ? "> NO" : "  NO")];
+                (selected == 1 ? ">  NO" : "   NO ")];
             RenderPopup(lines);
         }
         public void RenderEscapePopup(Player player)
