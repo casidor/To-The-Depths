@@ -67,6 +67,31 @@ namespace ConsoleUI
                 }
             }
         }
+        public bool ProcessExitConfirm(Renderer renderer, GameField field, Player player)
+        {
+            int selected = 1;
+            int count = 2;
+            while (true)
+            {
+                renderer.RenderExitConfirm(selected);
+                var key = Console.ReadKey(true).Key;
+                switch (key)
+                {
+                    case ConsoleKey.W:
+                    case ConsoleKey.UpArrow:
+                        selected = (selected - 1 + count) % count;
+                        break;
+                    case ConsoleKey.S:
+                    case ConsoleKey.DownArrow:
+                        selected = (selected + 1) % count;
+                        break;
+                    case ConsoleKey.Enter:
+                        return selected == 0;
+                    case ConsoleKey.Escape:
+                        return false;
+                }
+            }
+        }
         public GameState ProcessAltarInput(Renderer renderer, Player player, Altar altar)
         {
             int selected = 0;

@@ -120,14 +120,19 @@ namespace ConsoleUI
                     else Console.Write(" ");
                 }
             }
-            for (int i = 0; i < lines.Length; i++)
+        public void RenderExitConfirm(int selected)
             {
-                int textX = startX + (popupWidth - lines[i].Length) / 2;
-                int textY = startY + (popupHeight - lines.Length) / 2 + i;
-
-                Console.SetCursorPosition(textX, textY);
-                Console.Write(lines[i]);
-            }
+            string[] lines = [
+                "--- UNSAVED PROGRESS ---",
+                "",
+                "You have unsaved progress.",
+                "Are you sure you want to exit?",
+                "Current floor progress will be lost.",
+                "",
+                (selected == 0 ? "> EXIT TO MENU" : "  EXIT TO MENU"),
+                "",
+                (selected == 1 ? "> CANCEL" : "  CANCEL")];
+            RenderPopup(lines);
         }
         public void RenderDescentPopup(Player player)
         {
@@ -138,6 +143,8 @@ namespace ConsoleUI
                 "The air grows colder, and the shadows lengthen.",
                 "",
                 $"Entering Floor {player.CurrentFloor + 1}...",
+                "",
+                "Game Autosaved.",
                 "",
                 "Press any key to descend..."];
             RenderPopup(lines);

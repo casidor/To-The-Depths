@@ -26,6 +26,7 @@ namespace ConsoleUI
             Console.Clear();
             GameField? field = null;
             Player? player = null;
+            bool hasUnsavedProgress = false;
             GameState state = GameState.MainMenu;
             do
             {
@@ -62,6 +63,7 @@ namespace ConsoleUI
                         field = generated.field;
                         player = new Player(generated.x, generated.y);
                         SaveManager.Save(player, currentSeed);
+                        hasUnsavedProgress = false;
                         state = GameState.Running;
                         break;
                     case GameState.Running:
@@ -70,9 +72,17 @@ namespace ConsoleUI
                             var (isRunning, interaction) = input.ProcessInput(player, field);
                             if (!isRunning)
                             {
+                                if (hasUnsavedProgress)
+                                {
+                                    bool confirmExit = input.ProcessExitConfirm(renderer, field, player);
+                                    if (!confirmExit)
+                                    {
+                                        continue;
+                                    }
+                                }
                                 state = GameState.MainMenu;
                                 break;
-                            }
+                            } else hasUnsavedProgress = true;
                             if (interaction == InteractionResult.Altar)
                             {
                                 renderer.Render(field, player);
@@ -102,6 +112,7 @@ namespace ConsoleUI
                                 field = nextfloor.field;
                                 player.Descend(nextfloor.x, nextfloor.y);
                                 SaveManager.Save(player, currentSeed);
+                                hasUnsavedProgress = false;
                             }
                             else if (!player.IsAlive)
                             {
