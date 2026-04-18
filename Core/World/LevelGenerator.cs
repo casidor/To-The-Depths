@@ -20,11 +20,11 @@ namespace GameCore.World
             PlaceRooms(field, random);
             ConnectRooms(field, random);
             AddWalls(field);
+            PlaceInRoomCenters(field, random, Config.AltarsAmount, () => new Altar(), excludeFirst: true);
+            PlaceInFarthestRoom(field, random, Config.ExitAmount, () => new Exit());
+            PlaceInRandomRooms(field, random, Config.KeysAmount, () => new Key(), excludeFirst: true);
+            PlaceInRandomRooms(field, random, Config.EnemiesAmount, () => new Enemy(), excludeFirst: true);
             PlaceItemsByChance(field, random, Config.GoldChance, () => new Gold());
-            PlaceFixedItems(field, random, Config.KeysAmount, () => new Key());
-            PlaceFixedItems(field, random, Config.ExitAmount, () => new Exit());
-            PlaceFixedItems(field, random, Config.EnemiesAmount, () => new Enemy());
-            PlaceFixedItems(field, random, Config.AltarsAmount, () => new Altar());
             return (field, _roomX[0] + _roomW[0] / 2, _roomY[0] + _roomH[0] / 2);
         }
         private bool RoomsOverlap(int x, int y, int w, int h)// Check if the new room overlaps with existing rooms
@@ -139,7 +139,82 @@ namespace GameCore.World
                 }
             }
         }
-        public void PlaceItemsByChance(GameField field, Random random,int chance, Func<GameObject> factory) // Place items based on a chance
+        private void PlaceInFarthestRoom(GameField field, Random random,int amount, Func<GameObject> factory) // Place an item in the farthest room from the starting room
+        {
+            int startX = _roomX[0] + _roomW[0] / 2;
+            int startY = _roomY[0] + _roomH[0] / 2;
+            double maxDistance = -1;
+            int farthestRoom = 0;
+            for (int i = 1; i < RoomCount; i++)
+            {
+                int centerX = _roomX[i] + _roomW[i] / 2;
+                int centerY = _roomY[i] + _roomH[i] / 2;
+                double dist = Math.Sqrt(Math.Pow(centerX - startX, 2) + Math.Pow(centerY - startY, 2));
+
+                if (dist > maxDistance)
+                {
+                    maxDistance = dist;
+                    farthestRoom = i;
+                }
+            }
+
+            for (int i = 0; i < amount; i++)
+            {
+                PlaceItemInRoom(field, random, farthestRoom, factory);
+            }
+        }
+        private void PlaceInRoomCenters(GameField field, Random random, int amount, Func<GameObject> factory, bool excludeFirst = false)
+        {
+            HashSet<int> usedRooms = new HashSet<int>();
+            int startRoom = excludeFirst ? 1 : 0;
+
+            for (int i = 0; i < amount && usedRooms.Count < RoomCount - startRoom; i++)
+            {
+                int roomIndex;
+                do
+                {
+                    roomIndex = random.Next(startRoom, RoomCount);
+                } while (usedRooms.Contains(roomIndex));
+
+                usedRooms.Add(roomIndex);
+                int centerX = _roomX[roomIndex] + _roomW[roomIndex] / 2;
+                int centerY = _roomY[roomIndex] + _roomH[roomIndex] / 2;
+
+                if (field[centerX, centerY] is Floor)
+                {
+                    field[centerX, centerY] = factory();
+                }
+                else
+                {
+                    PlaceItemInRoom(field, random, roomIndex, factory);
+                }
+            }
+        }
+        private void PlaceInRandomRooms(GameField field, Random random, int amount, Func<GameObject> factory, bool excludeFirst = false)
+        {
+            int startRoom = excludeFirst ? 1 : 0;
+
+            for (int i = 0; i < amount; i++)
+            {
+                int roomIndex = random.Next(startRoom, RoomCount);
+                PlaceItemInRoom(field, random, roomIndex, factory);
+            }
+        }
+        private void PlaceItemInRoom(GameField field, Random random, int roomIndex, Func<GameObject> factory)
+        {
+            for (int attempt = 0; attempt < 100; attempt++)
+            {
+                int x = random.Next(_roomX[roomIndex], _roomX[roomIndex] + _roomW[roomIndex]);
+                int y = random.Next(_roomY[roomIndex], _roomY[roomIndex] + _roomH[roomIndex]);
+
+                if (field[x, y] is Floor)
+                {
+                    field[x, y] = factory();
+                    return;
+                }
+            }
+        }
+        public void PlaceItemsByChance(GameField field, Random random, int chance, Func<GameObject> factory) // Place items based on a chance
         {
             for (int i = 0; i < RoomCount; i++)
             {
@@ -149,29 +224,13 @@ namespace GameCore.World
                     {
                         if (field[x, y] is Floor)
                         {
-                            int roll = random.Next(1,101);
-                            if(roll <= chance)
+                            int roll = random.Next(1, 101);
+                            if (roll <= chance)
                             {
                                 field[x, y] = factory();
                             }
                         }
                     }
-                }
-            }
-        }
-        public void PlaceFixedItems(GameField field, Random random,int amount, Func<GameObject> factory) // Place a fixed number of items in random locations within rooms
-        {
-            int placed = 0;
-            while (placed < amount)
-            {
-                int roomIndex = random.Next(RoomCount);
-                int x = random.Next(_roomX[roomIndex], _roomX[roomIndex] + _roomW[roomIndex]);
-                int y = random.Next(_roomY[roomIndex], _roomY[roomIndex] + _roomH[roomIndex]);
-
-                if (field[x, y] is Floor)
-                {
-                    field[x, y] = factory();
-                    placed++;
                 }
             }
         }
