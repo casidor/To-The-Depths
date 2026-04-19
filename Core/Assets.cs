@@ -31,6 +31,9 @@ namespace GameCore
         public const string Exit = "\x1b[48;2;18;18;30m\x1b[38;2;255;107;53m";        
         public const string Enemy = "\x1b[48;2;18;18;30m\x1b[38;2;226;75;74m";
         public const string Altar = "\x1b[48;2;40;35;45m\x1b[38;2;220;50;50m";
+        public const string Health = "\x1b[38;2;226;75;74m";
+        public const string GoldText = "\x1b[38;2;240;192;64m";
+        public const string KeyText = "\x1b[38;2;64;170;255m";
     }
     public class GameTexts
     {

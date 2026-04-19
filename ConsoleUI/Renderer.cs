@@ -43,33 +43,35 @@ namespace ConsoleUI
             Console.WriteLine($"=== FLOOR {player.CurrentFloor} ===");
             //Stats
             Console.SetCursorPosition(x, 2);
-            Console.WriteLine("=== Player Stats ===");
+            Console.WriteLine($"=== Player Stats ===");
             Console.SetCursorPosition(x, 4);
-            Console.WriteLine($"{GameSymbols.Health} Health: {player.HP}/{player.MaxHP}     ");
+            Console.WriteLine($"{GameColors.Health}{GameSymbols.Health} Health: {player.HP}/{player.MaxHP}{GameColors.Reset}     ");
             Console.SetCursorPosition(x, 6);
-            Console.WriteLine($"{GameSymbols.Gold} Gold: {player.GoldCollected}     ");
+            Console.WriteLine($"{GameColors.GoldText}{GameSymbols.Gold} Gold: {player.GoldCollected}{GameColors.Reset}     ");
             Console.SetCursorPosition(x, 8);
-            Console.WriteLine($"{GameSymbols.Key} Keys: {player.KeysCollected}/{Config.KeysAmount}     ");
+            Console.WriteLine($"{GameColors.KeyText}{GameSymbols.Key} Keys: {player.KeysCollected}/{Config.KeysAmount}{GameColors.Reset}     ");
             //Missions
             Console.SetCursorPosition(x, 10);
-            Console.Write("=== MISSION ===");
-            Console.SetCursorPosition(x, 11);
+            Console.WriteLine($"=== MISSION ===");
+            Console.SetCursorPosition(x, 12);
             if (player.KeysCollected < Config.KeysAmount)
             {
-                Console.Write($"Collect {Config.KeysAmount} keys!");
+                Console.WriteLine($"Collect {Config.KeysAmount} keys!");
+                Console.SetCursorPosition(x, 13);
+                Console.WriteLine($"                             ");
             }
             else
             {
                 Console.Write("Exit is OPEN!    ");
-                Console.SetCursorPosition(x, 12);
+                Console.SetCursorPosition(x, 13);
                 Console.Write("Find the exit!   ");
             }
             //Controls
-            Console.SetCursorPosition(x, 14);
-            Console.Write("=== CONTROLS ===");
-            Console.SetCursorPosition(x, 16);
-            Console.Write("W/A/S/D or Arrows - Move");
+            Console.SetCursorPosition(x, 15);
+            Console.WriteLine($"=== CONTROLS ===");
             Console.SetCursorPosition(x, 17);
+            Console.Write("W/A/S/D or Arrows - Move");
+            Console.SetCursorPosition(x, 18);
             Console.Write("ESC - Menu");
         }
         public void RenderMainMenu (int selected)
