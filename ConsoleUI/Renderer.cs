@@ -1,9 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using GameCore;
+﻿using GameCore;
 using GameCore.Models;
 using GameCore.World;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Reflection.Emit;
+using System.Runtime.InteropServices;
+using System.Text;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ConsoleUI
 {
@@ -207,32 +212,40 @@ namespace ConsoleUI
         public void RenderHelp()
         {
             Console.Clear();
-            string[] helpText = {
-                "=== HOW TO PLAY ===",
-                "",
-                $"Your goal is to collect all {Config.KeysAmount} keys to unlock the exit.",
-                $"Watch your steps and gather gold on your way!",
-                "",
-                "=== LEGEND ===",
-                $"{GameSymbols.Player} - You",
-                $"{GameSymbols.Key} - Key",
-                $"{GameSymbols.Gold} - Gold",
-                $"{GameSymbols.Exit} - Exit",
-                "",
-                "=== CONTROLS ===",
-                "W, A, S, D / Arrows - Move",
-                "ESC - Return to Menu",
-                "",
-                "Press any key to go back..."
-            };
-            int maxLen = 0;
-            foreach (var line in helpText)
-            {
-                if (line.Length > maxLen) maxLen = line.Length;
-            }
-            int startX = (Config.ConsoleWidth - maxLen) / 2;
-            int startY = (Config.ConsoleHeight - helpText.Length) / 2;
-            for (int i = 0; i < helpText.Length; i++)
+            string[] helpText = [
+            "                      === HOW TO PLAY ===                          ",
+            "",
+            $"  GOAL: Descend deeper, survive each level, and find a way out of the dungeon.",
+            "",
+            "                        === LEGEND ===                             ",
+            "",
+            $"  {GameColors.Player}{GameSymbols.Player}{GameColors.Reset} - You (Hero)          {GameColors.Enemy}{GameSymbols.Enemy}{GameColors.Reset} - Enemy (Thief)",
+            $"  {GameColors.Key}{GameSymbols.Key}{GameColors.Reset} - Key                 {GameColors.Gold}{GameSymbols.Gold}{GameColors.Reset} - Gold (+{Config.GoldAmount})",
+            $"  {GameColors.Exit}{GameSymbols.Exit}{GameColors.Reset} - Exit                {GameColors.Altar}{GameSymbols.Altar}{GameColors.Reset} - Altar (healing)",
+            $"  {GameColors.Wall}{GameSymbols.Wall}{GameColors.Reset} - Wall                {GameColors.Floor}{GameSymbols.Floor}{GameColors.Reset} - Floor",
+            "",
+            "                       === CONTROLS ===                            ",
+            "",
+            "  W/A/S/D or Arrow Keys  -  Move",
+            "  ESC                    -  Menu / Cancel",
+            "  ENTER                  -  Confirm (in menus)",
+            "",
+            "                      === GAME MECHANICS ===                        ",
+            "",
+            $"  {GameColors.Health}{GameSymbols.Health}{GameColors.Reset} Health can be restored at altars using gold.",
+            $"  {GameColors.Enemy}{GameSymbols.Enemy}{GameColors.Reset} Enemies will chase and attack you if you get too close.",
+            $"  {GameColors.Key}{GameSymbols.Key}{GameColors.Reset} Collect keys to unlock the exit and progress deeper.",
+            $"  {GameColors.Gold}{GameSymbols.Gold}{GameColors.Reset} Gold is used for healing and survival.",
+            $"  ⚑ Progress is saved when descending to the next level.",
+            "",
+            "  TIP: Descend as deep as possible. Something below might free you.",
+            "  For full game guide, see README.md in the project repository.",
+            "",
+            "                  Press any key to return to menu..."
+            ];
+            int startX = (Config.ConsoleWidth - 83) / 2;
+            int startY = Math.Max(0, (Config.ConsoleHeight - helpText.Length) / 2);
+            for (int i = 0; i < helpText.Length && (startY + i) < Config.ConsoleHeight; i++)
             {
                 Console.SetCursorPosition(startX, startY + i);
                 Console.WriteLine(helpText[i]);
