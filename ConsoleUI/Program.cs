@@ -37,23 +37,36 @@ namespace ConsoleUI
                         state = input.ProcessMenuInput(renderer);
                         break;
                     case GameState.LoadGame:
-                        var data = SaveManager.Load();
-                        if (data != null)
+                        var (data, result) = SaveManager.Load();
+                        switch (result)
                         {
-                            Console.Clear();
-                            currentSeed = data.Seed;
-                            random = new Random(currentSeed + data.Floor);
-                            var restored = new LevelGenerator().Generate(Config.FieldWidth, Config.FieldHeight, random);
-                            field = restored.field;
-                            player = new Player(restored.x, restored.y, data.HP, data.MaxHP, data.Gold, data.Keys, data.Floor);
-                            enemyAI = new EnemyAI(random);
-                            state = GameState.Running;
-                        }
-                        else
-                        {
-                            renderer.RenderPopup("No save found or file corrupted!", "", "Press any key...");
-                            Console.ReadKey(true);
-                            state = GameState.MainMenu;
+                            case SaveResult.NotFound:
+                                renderer.RenderPopup("Save file not found!", "", "Press any key...");
+                                Console.ReadKey(true);
+                                state = GameState.MainMenu;
+                                break;
+                            case SaveResult.Corrupted:
+                                renderer.RenderPopup("Save file is corrupted!", "", "Save deleted.", "Press any key...");
+                                SaveManager.DeleteSave();
+                                Console.ReadKey(true);
+                                state = GameState.MainMenu;
+                                break;
+                            case SaveResult.Unverified:
+                                renderer.RenderPopup("Data integrity check failed.", "", "Save deleted.", "Press any key...");
+                                SaveManager.DeleteSave();
+                                Console.ReadKey(true);
+                                state = GameState.MainMenu;
+                                break;
+                            case SaveResult.Success:
+                                Console.Clear();
+                                currentSeed = data.Seed;
+                                random = new Random(currentSeed + data.Floor);
+                                var restored = new LevelGenerator().Generate(Config.FieldWidth, Config.FieldHeight, random);
+                                field = restored.field;
+                                player = new Player(restored.x, restored.y, data.HP, data.MaxHP, data.Gold, data.Keys, data.Floor);
+                                enemyAI = new EnemyAI(random);
+                                state = GameState.Running;
+                                break;
                         }
                         break;
                     case GameState.Generating:

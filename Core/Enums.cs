@@ -21,4 +21,11 @@ namespace GameCore
         Altar,
         ExitReached
     }
+    public enum SaveResult
+    {
+        NotFound,
+        Corrupted,
+        Unverified,
+        Success
+    }
 }
