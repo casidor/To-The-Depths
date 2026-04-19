@@ -26,6 +26,7 @@ namespace ConsoleUI
             Console.Clear();
             GameField? field = null;
             Player? player = null;
+            EnemyAI? enemyAI = null;
             bool hasUnsavedProgress = false;
             GameState state = GameState.MainMenu;
             do
@@ -45,6 +46,7 @@ namespace ConsoleUI
                             var restored = new LevelGenerator().Generate(Config.FieldWidth, Config.FieldHeight, random);
                             field = restored.field;
                             player = new Player(restored.x, restored.y, data.HP, data.MaxHP, data.Gold, data.Keys, data.Floor);
+                            enemyAI = new EnemyAI(random);
                             state = GameState.Running;
                         }
                         else
@@ -62,6 +64,7 @@ namespace ConsoleUI
                         var generated = levelGenerator.Generate(Config.FieldWidth, Config.FieldHeight, random);
                         field = generated.field;
                         player = new Player(generated.x, generated.y);
+                        enemyAI = new EnemyAI(random);
                         SaveManager.Save(player, currentSeed);
                         hasUnsavedProgress = false;
                         state = GameState.Running;
@@ -70,6 +73,12 @@ namespace ConsoleUI
                         {
                             renderer.Render(field, player);
                             var (isRunning, interaction) = input.ProcessInput(player, field);
+                            var worldInteraction = InteractionResult.None;
+                            if (isRunning)
+                            {
+                                enemyAI.BuildDistanceMap(field, player);
+                                worldInteraction = enemyAI.UpdateEnemies(field, player);
+                            }
                             if (!isRunning)
                             {
                                 if (hasUnsavedProgress)
@@ -95,7 +104,7 @@ namespace ConsoleUI
                                     state = GameState.Running;
                                 }
                             }
-                            if (interaction == InteractionResult.PlayerAttacked)
+                            if (interaction == InteractionResult.PlayerAttacked || worldInteraction == InteractionResult.PlayerAttacked)
                             {
                                 renderer.Render(field, player);
                                 renderer.RenderAttackPopup();
@@ -111,6 +120,7 @@ namespace ConsoleUI
                                 var nextfloor = new LevelGenerator().Generate(Config.FieldWidth, Config.FieldHeight, random);
                                 field = nextfloor.field;
                                 player.Descend(nextfloor.x, nextfloor.y);
+                                enemyAI = new EnemyAI(random);
                                 SaveManager.Save(player, currentSeed);
                                 hasUnsavedProgress = false;
                             }

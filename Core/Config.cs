@@ -18,6 +18,7 @@ namespace GameCore
         //Enemy settings
         public const int EnemyDamage = 5;
         public const int GoldStolen = 10;
+        public const int AggroRange = 5;
         //Generation settings
         public const int MaxRooms = 10;
         public const int GenAttempts = 300;
