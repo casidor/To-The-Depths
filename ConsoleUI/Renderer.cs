@@ -215,7 +215,7 @@ namespace ConsoleUI
             string[] helpText = [
             "                      === HOW TO PLAY ===                          ",
             "",
-            $"  GOAL: Descend deeper, survive each level, and find a way out of the dungeon.",
+            $"  GOAL: Descend deeper, survive, collect as much gold as possible, and find a way out of the dungeon.",
             "",
             "                        === LEGEND ===                             ",
             "",

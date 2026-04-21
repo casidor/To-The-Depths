@@ -10,6 +10,7 @@ namespace GameCore
         Generating,
         Running,
         AltarMenu,
+        Win,
         LoadGame,
         Help,
         Exit

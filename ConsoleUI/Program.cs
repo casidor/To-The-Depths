@@ -126,6 +126,11 @@ namespace ConsoleUI
                             renderer.Render(field, player);
                             if (player.IsExited)
                             {
+                                if(player.CurrentFloor == Config.MaxFloor)
+                                {
+                                    state = GameState.Win;
+                                    break;
+                                }
                                 renderer.Render(field, player);
                                 renderer.RenderDescentPopup(player);
                                 Console.ReadKey(true);
@@ -145,6 +150,12 @@ namespace ConsoleUI
                                 state = GameState.MainMenu;
                             }
                         }
+                        break;
+                    case GameState.Win:
+                        Console.Clear();
+                        renderer.RenderEscapePopup(player);
+                        Console.ReadKey(true);
+                        state = GameState.MainMenu;
                         break;
                     case GameState.Help:
                         renderer.RenderHelp();
