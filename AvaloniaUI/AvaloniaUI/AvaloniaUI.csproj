@@ -20,4 +20,8 @@
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Mvvm" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\GameCore.csproj" />
+  </ItemGroup>
 </Project>

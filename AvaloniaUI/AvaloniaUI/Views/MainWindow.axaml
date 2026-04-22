@@ -7,6 +7,9 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="AvaloniaUI.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
-        Title="AvaloniaUI">
+        Title="To The Depths"
+        SizeToContent="WidthAndHeight" 
+        CanResize="False">
+
         <views:MainView />
 </Window>
