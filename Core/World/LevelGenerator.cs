@@ -31,8 +31,8 @@ namespace GameCore.World
         {
             for (int i = 0; i < RoomCount; i++)
             {
-                if (x < _roomX[i] + _roomW[i] && x + w > _roomX[i] &&
-                    y < _roomY[i] + _roomH[i] && y + h > _roomY[i])
+                if (x - 1 < _roomX[i] + _roomW[i] && x + w + 1 > _roomX[i] &&
+                    y - 1 < _roomY[i] + _roomH[i] && y + h + 1 > _roomY[i])
                 {
                     return true;
                 }

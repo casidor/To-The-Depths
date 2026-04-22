@@ -1,4 +1,9 @@
 <Solution>
+  <Project Path="AvaloniaUI/AvaloniaUI.Android/AvaloniaUI.Android.csproj" Id="ab79621c-0c83-4613-8654-3fb49ebe4d51" />
+  <Project Path="AvaloniaUI/AvaloniaUI.Browser/AvaloniaUI.Browser.csproj" Id="3084220f-88f0-449e-9923-5791cc7ff469" />
+  <Project Path="AvaloniaUI/AvaloniaUI.Desktop/AvaloniaUI.Desktop.csproj" Id="340364d4-c915-4506-a4dd-995b9d7f1d06" />
+  <Project Path="AvaloniaUI/AvaloniaUI.iOS/AvaloniaUI.iOS.csproj" Id="37a45c7f-4e87-4c80-bcea-ca4953e1a170" />
+  <Project Path="AvaloniaUI/AvaloniaUI/AvaloniaUI.csproj" Id="8207b6ae-7dda-492b-a1a8-095b7e86366b" />
   <Project Path="ConsoleUI/ConsoleUI.csproj" Id="e262bbce-7997-499d-8d51-683a2c4b4512" />
   <Project Path="Core/GameCore.csproj" />
 </Solution>
