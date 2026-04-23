@@ -10,7 +10,13 @@ namespace AvaloniaUI.ViewModels
     public partial class MainViewModel : ViewModelBase
     {
         private readonly int currentSeed;
-
+        public string HPText => $" {Player.HP}/{Player.MaxHP}";
+        public int PlayerGold => Player.GoldCollected;
+        public string KeysText => $" {Player.KeysCollected}/{Config.KeysAmount}";
+        public bool HasAllKeys => Player.KeysCollected >= Config.KeysAmount;
+        public int CurrentFloor => Player.CurrentFloor;
+        public string MissionText => Player.KeysCollected >= Config.KeysAmount
+        ? "Exit is OPEN!\nFind the exit!" : $"Collect {Config.KeysAmount} keys!";
         public GameField Field { get; private set; }
         public Player Player { get; private set; }
         public EnemyAI EnemyAI { get; private set; }
@@ -52,6 +58,13 @@ namespace AvaloniaUI.ViewModels
                 EnemyAI = new EnemyAI(random);
                 SaveManager.Save(Player, currentSeed);
             }
+            OnPropertyChanged(nameof(Field));
+            OnPropertyChanged(nameof(HPText));
+            OnPropertyChanged(nameof(PlayerGold));
+            OnPropertyChanged(nameof(KeysText));
+            OnPropertyChanged(nameof(CurrentFloor));
+            OnPropertyChanged(nameof(HasAllKeys));
+            OnPropertyChanged(nameof(MissionText));
         }
     }
 }

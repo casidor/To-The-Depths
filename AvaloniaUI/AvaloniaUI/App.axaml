@@ -9,7 +9,27 @@
         <local:ViewLocator/>
     </Application.DataTemplates>
 
+    <Application.Resources>
+    <ResourceDictionary>
+        <FontFamily x:Key="GameFont">Cascadia Code, Consolas, Courier New, monospace</FontFamily>
+        <SolidColorBrush x:Key="BrushText" Color="#C0C0C0"/>
+        <SolidColorBrush x:Key="BrushAccent" Color="#F0C040"/>
+        <SolidColorBrush x:Key="BrushHP" Color="#E24B4A"/>
+        <SolidColorBrush x:Key="BrushGold" Color="#F0C040"/>
+        <SolidColorBrush x:Key="BrushKey" Color="#40AAFF"/>
+        <SolidColorBrush x:Key="BrushBackground" Color="#12121E"/>
+    </ResourceDictionary>
+</Application.Resources>
+
     <Application.Styles>
-        <FluentTheme />
-    </Application.Styles>
+    <FluentTheme />
+    <Style Selector="TextBlock">
+        <Setter Property="FontFamily" Value="{DynamicResource GameFont}"/>
+        <Setter Property="Foreground" Value="{DynamicResource BrushText}"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+    <Style Selector="Window, UserControl">
+        <Setter Property="Background" Value="{DynamicResource BrushBackground}"/>
+    </Style>
+</Application.Styles>
 </Application>

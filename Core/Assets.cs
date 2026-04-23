@@ -47,5 +47,6 @@ namespace GameCore
           "                                         |_|                  "
         };
         public static readonly string[] Options = { "Start Game", "Load Save", "Help", "Exit" };
+        public static readonly string Controls = "===Controls===\nW/A/S/D or Arrows - Move\nEsc to open menu";
     }
 }

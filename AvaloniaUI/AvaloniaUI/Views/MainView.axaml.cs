@@ -33,6 +33,7 @@ namespace AvaloniaUI.Views
                     case Key.A: case Key.Left: vm.MovePlayer(-1, 0); break;
                     case Key.D: case Key.Right: vm.MovePlayer(1, 0); break;
                 }
+                MapRenderer.SetGameState(vm.Field, vm.Player);
                 MapRenderer.InvalidateVisual();
             }
         }
