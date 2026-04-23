@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using GameCore;
 using GameCore.Models;
 using GameCore.World;
@@ -20,6 +21,32 @@ namespace AvaloniaUI.ViewModels
         public GameField Field { get; private set; }
         public Player Player { get; private set; }
         public EnemyAI EnemyAI { get; private set; }
+        public event Action? ReturnToMenuRequested;
+        [ObservableProperty]
+        private bool _isExitPopupOpen;
+        private bool _hasUnsavedProgress = false;
+        [ObservableProperty]
+        public string _exitWarningText = "";
+        [RelayCommand]
+        private void RequestExit()
+        {
+            ExitWarningText = _hasUnsavedProgress
+                ? "Unsaved progress on this floor will be lost!\nExit anyway?"
+                : "Do you want to return to the Main Menu?";
+            IsExitPopupOpen = true;
+        }
+
+        [RelayCommand]
+        private void CancelExit()
+        {
+            IsExitPopupOpen = false;
+        }
+
+        [RelayCommand]
+        private void ConfirmExit()
+        {
+            ReturnToMenuRequested?.Invoke();
+        }
 
         public MainViewModel()
         {
@@ -31,12 +58,15 @@ namespace AvaloniaUI.ViewModels
             Player = new Player(generated.x, generated.y);
             EnemyAI = new EnemyAI(random);
             SaveManager.Save(Player, currentSeed);
+
         }
         public void MovePlayer(int dx, int dy)
         {
             // TODO: If player is dead, trigger Game Over screen/popup here instead of just returning.
+            if (IsExitPopupOpen) return;
             if (!Player.IsAlive) return;
             var interaction = Player.Move(dx, dy, Field);
+            _hasUnsavedProgress = true;
             EnemyAI.BuildDistanceMap(Field, Player);
             var worldInteraction = EnemyAI.UpdateEnemies(Field, Player);
             if (interaction == InteractionResult.Altar)
@@ -57,6 +87,7 @@ namespace AvaloniaUI.ViewModels
                 Player.Descend(nextfloor.x, nextfloor.y);
                 EnemyAI = new EnemyAI(random);
                 SaveManager.Save(Player, currentSeed);
+                _hasUnsavedProgress = false;
             }
             OnPropertyChanged(nameof(Field));
             OnPropertyChanged(nameof(HPText));

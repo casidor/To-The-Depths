@@ -8,7 +8,6 @@ namespace AvaloniaUI.ViewModels
     public partial class MenuViewModel : ViewModelBase
     {
         public event Action? StartGameRequested;
-
         [RelayCommand]
         private void StartGame()
         {

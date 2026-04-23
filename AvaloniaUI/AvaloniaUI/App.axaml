@@ -31,5 +31,25 @@
     <Style Selector="Window, UserControl">
         <Setter Property="Background" Value="{DynamicResource BrushBackground}"/>
     </Style>
+        <Style Selector="ContentControl.GamePopup">
+        <Setter Property="ZIndex" Value="100"/>
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Background="#A0000000">
+                    <Border Background="#222" 
+                            BorderBrush="{DynamicResource BrushAccent}" 
+                            BorderThickness="2" 
+                            CornerRadius="8" 
+                            Padding="30"
+                            HorizontalAlignment="Center" 
+                            VerticalAlignment="Center">
+                        
+                        <ContentPresenter Content="{TemplateBinding Content}" />
+                        
+                    </Border>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
 </Application.Styles>
 </Application>

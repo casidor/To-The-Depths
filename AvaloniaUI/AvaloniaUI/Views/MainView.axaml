@@ -33,6 +33,27 @@
         <TextBlock Text="{Binding MissionText}"/>
         <TextBlock Text="{x:Static local:GameTexts.Controls}" Margin="0,10,0,0"/>
     </StackPanel>
+    <ContentControl Classes="GamePopup" IsVisible="{Binding IsExitPopupOpen}">
+    
+    <StackPanel Spacing="20">
+        <TextBlock Text="{Binding ExitWarningText}" 
+                   FontSize="20" FontWeight="Bold" 
+                   HorizontalAlignment="Center" TextAlignment="Center" Foreground="White"/>
+        
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="20">
+                <Button Content="YES" 
+                        Command="{Binding ConfirmExitCommand}"
+                        Background="#3D3D5C" Foreground="White" Width="100" HorizontalContentAlignment="Center"/>
+                <Button Content="NO" 
+                        Command="{Binding CancelExitCommand}"
+                        Background="#3D3D5C" Foreground="White" Width="100" HorizontalContentAlignment="Center"/>
+            </StackPanel>
+    </StackPanel>
+
+</ContentControl>
+
 </Grid>  
+
+
 
 </UserControl>

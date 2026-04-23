@@ -11,16 +11,21 @@ namespace AvaloniaUI.ViewModels
         private ViewModelBase _currentPage;
         public MainWindowViewModel()
         {
-            var menu = new MenuViewModel();
-            menu.StartGameRequested += () =>
-            {
-                CurrentPage = new MainViewModel();
-            };
-            _currentPage = menu;
+            ShowMenu();
         }
-        public void StartGame()
+
+        private void ShowMenu()
         {
-            CurrentPage = new MainViewModel();
+            var menu = new MenuViewModel();
+            menu.StartGameRequested += StartGame;
+            CurrentPage = menu;
+        }
+
+        private void StartGame()
+        {
+            var game = new MainViewModel();
+            game.ReturnToMenuRequested += ShowMenu;
+            CurrentPage = game;
         }
     }
 }

@@ -26,6 +26,18 @@ namespace AvaloniaUI.Views
         {
             if (DataContext is MainViewModel vm)
             {
+                if (e.Key == Key.Escape)
+                {
+                    if (vm.IsExitPopupOpen)
+                    {
+                        vm.IsExitPopupOpen = false;
+                    }
+                    else
+                    {
+                        vm.RequestExitCommand.Execute(null);
+                    }
+                    return;
+                }
                 switch (e.Key)
                 {
                     case Key.W: case Key.Up: vm.MovePlayer(0, -1); break;
