@@ -6,37 +6,6 @@
 			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			 x:Class="AvaloniaUI.Views.MenuView"
 			 x:DataType="vm:MenuViewModel">
-	<UserControl.Styles>
-		<Style Selector="Button.MenuButton">
-			<Setter Property="Background" Value="#2A2A40"/>
-			<Setter Property="Foreground" Value="White"/>
-			<Setter Property="BorderBrush" Value="{DynamicResource BrushAccent}"/>
-			<Setter Property="BorderThickness" Value="1"/>
-			<Setter Property="Width" Value="200"/>
-			<Setter Property="Height" Value="40"/>
-			<Setter Property="HorizontalAlignment" Value="Center"/>
-			<Setter Property="HorizontalContentAlignment" Value="Center"/>
-			<Setter Property="VerticalContentAlignment" Value="Center"/>
-			<Setter Property="Transitions">
-				<Transitions>
-					<BrushTransition Property="Background" Duration="0:0:0.2"/>
-					<BrushTransition Property="BorderBrush" Duration="0:0:0.2"/>
-				</Transitions>
-			</Setter>
-		</Style>
-
-		<Style Selector="Button.MenuButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-			<Setter Property="Background" Value="#3D3D5C"/> 
-			<Setter Property="BorderBrush" Value="White"/> 
-			<Setter Property="TextBlock.Foreground" Value="White"/>
-		</Style>
-
-		<Style Selector="Button.MenuButton:pressed /template/ ContentPresenter#PART_ContentPresenter">
-			<Setter Property="Background" Value="#1A1A2A"/> 
-			<Setter Property="BorderBrush" Value="{DynamicResource BrushAccent}"/>
-			<Setter Property="TextBlock.Foreground" Value="Gray"/>
-		</Style>
-	</UserControl.Styles>
 
 	<Grid Background="{DynamicResource BrushBackground}">
 		<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="20">

@@ -22,8 +22,11 @@ namespace AvaloniaUI.ViewModels
         public Player Player { get; private set; }
         public EnemyAI EnemyAI { get; private set; }
         public event Action? ReturnToMenuRequested;
+        //Popups
         [ObservableProperty]
         private bool _isExitPopupOpen;
+        [ObservableProperty]
+        private bool _isGameOverPopupOpen;
         private bool _hasUnsavedProgress = false;
         [ObservableProperty]
         public string _exitWarningText = "";
@@ -62,13 +65,17 @@ namespace AvaloniaUI.ViewModels
         }
         public void MovePlayer(int dx, int dy)
         {
-            // TODO: If player is dead, trigger Game Over screen/popup here instead of just returning.
-            if (IsExitPopupOpen) return;
-            if (!Player.IsAlive) return;
+            if (IsExitPopupOpen || IsGameOverPopupOpen || !Player.IsAlive) return;
             var interaction = Player.Move(dx, dy, Field);
             _hasUnsavedProgress = true;
             EnemyAI.BuildDistanceMap(Field, Player);
             var worldInteraction = EnemyAI.UpdateEnemies(Field, Player);
+            if (!Player.IsAlive)
+            {
+                IsGameOverPopupOpen = true;
+                UpdateUI();
+                return;
+            }
             if (interaction == InteractionResult.Altar)
             {
                 // TODO: Trigger Altar UI Popup (ask player if they want to spend gold to heal).
@@ -89,6 +96,10 @@ namespace AvaloniaUI.ViewModels
                 SaveManager.Save(Player, currentSeed);
                 _hasUnsavedProgress = false;
             }
+            UpdateUI();
+        }
+        private void UpdateUI()
+        {
             OnPropertyChanged(nameof(Field));
             OnPropertyChanged(nameof(HPText));
             OnPropertyChanged(nameof(PlayerGold));

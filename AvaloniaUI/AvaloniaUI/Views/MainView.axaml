@@ -33,8 +33,8 @@
         <TextBlock Text="{Binding MissionText}"/>
         <TextBlock Text="{x:Static local:GameTexts.Controls}" Margin="0,10,0,0"/>
     </StackPanel>
-    <ContentControl Classes="GamePopup" IsVisible="{Binding IsExitPopupOpen}">
-    
+
+    <ContentControl Classes="GamePopup" IsVisible="{Binding IsExitPopupOpen}">    
     <StackPanel Spacing="20">
         <TextBlock Text="{Binding ExitWarningText}" 
                    FontSize="20" FontWeight="Bold" 
@@ -49,8 +49,22 @@
                         Background="#3D3D5C" Foreground="White" Width="100" HorizontalContentAlignment="Center"/>
             </StackPanel>
     </StackPanel>
-
 </ContentControl>
+    <ContentControl Classes="GamePopup" IsVisible="{Binding IsGameOverPopupOpen}">
+    <StackPanel Spacing="20">
+        <TextBlock Text="YOU DIED" 
+                   FontSize="40" FontWeight="Bold" 
+                   Foreground="Red" HorizontalAlignment="Center"/>
+        
+        <TextBlock Text="The depths have claimed another soul..." 
+                   Foreground="Gray" HorizontalAlignment="Center"/>
+        
+        <Button Classes="MenuButton" Width="200" 
+                Content="BACK TO MENU" 
+                Command="{Binding ConfirmExitCommand}"/>
+    </StackPanel>
+</ContentControl>
+
 
 </Grid>  
 
