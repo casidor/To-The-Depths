@@ -6,10 +6,10 @@
         xmlns:views="using:AvaloniaUI.Views"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="AvaloniaUI.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="To The Depths"
-        SizeToContent="WidthAndHeight" 
-        CanResize="False">
+        Width="1000" Height="700">
 
-        <views:MainView />
+        <ContentControl Content="{Binding CurrentPage}" />
 </Window>
