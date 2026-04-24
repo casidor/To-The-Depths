@@ -42,9 +42,11 @@
         
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="20">
                 <Button Content="YES" 
+                        Focusable="False"
                         Command="{Binding ConfirmExitCommand}"
                         Background="#3D3D5C" Foreground="White" Width="100" HorizontalContentAlignment="Center"/>
                 <Button Content="NO" 
+                        Focusable="False"
                         Command="{Binding CancelExitCommand}"
                         Background="#3D3D5C" Foreground="White" Width="100" HorizontalContentAlignment="Center"/>
             </StackPanel>
@@ -60,10 +62,61 @@
                    Foreground="Gray" HorizontalAlignment="Center"/>
         
         <Button Classes="MenuButton" Width="200" 
+                Focusable="False"
                 Content="BACK TO MENU" 
                 Command="{Binding ConfirmExitCommand}"/>
     </StackPanel>
 </ContentControl>
+    <ContentControl Classes="GamePopup" IsVisible="{Binding IsDescendingPopupOpen}">
+    <StackPanel Spacing="20">
+        <TextBlock Text="DEEPER INTO THE DARK" 
+                   FontSize="40" FontWeight="Bold" 
+                   Foreground="Crimson" HorizontalAlignment="Center"/>
+        
+        <TextBlock Text="{Binding CurrentFloor, StringFormat='Entering Floor {0}...'}" 
+                   Foreground="Gray" HorizontalAlignment="Center"/>
+        
+        <Button Classes="MenuButton" Width="200" 
+                Focusable="False"
+                Content="Continue" 
+                Command="{Binding ContinueCommand}"/>
+    </StackPanel>   
+</ContentControl>
+    <ContentControl Classes="GamePopup" IsVisible="{Binding IsAltarPopupOpen}">    
+    <StackPanel Spacing="20">
+        <TextBlock Text="Ancient Altar" 
+                   FontSize="25" FontWeight="Bold" 
+                   HorizontalAlignment="Center" TextAlignment="Center" Foreground="White"/>
+        <TextBlock Text="{Binding AltarOfferText}"
+                   Foreground="WhiteSmoke" HorizontalAlignment="Center"/> 
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="20">
+                <Button Content="YES" 
+                        Focusable="False"
+                        Command="{Binding AltarConfirmCommand}"
+                        Background="#3D3D5C" Foreground="White" Width="100" HorizontalContentAlignment="Center"/>
+                <Button Content="NO" 
+                        Focusable="False"
+                        Command="{Binding AltarCancelCommand}"
+                        Background="#3D3D5C" Foreground="White" Width="100" HorizontalContentAlignment="Center"/>
+            </StackPanel>
+    </StackPanel>
+</ContentControl>
+    <ContentControl Classes="GamePopup" IsVisible="{Binding IsAltarResultOpen}">    
+    <StackPanel Spacing="20">
+        <TextBlock Text="Ancient Altar" 
+                   FontSize="25" FontWeight="Bold" 
+                   HorizontalAlignment="Center" TextAlignment="Center" Foreground="White"/>
+        <TextBlock Text="{Binding AltarResultText}"
+                   Foreground="WhiteSmoke" HorizontalAlignment="Center"/> 
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="20">
+                <Button Content="OK" 
+                        Focusable="False"
+                        Command="{Binding ContinueCommand}"
+                        Background="#3D3D5C" Foreground="White" Width="100" HorizontalContentAlignment="Center"/>
+            </StackPanel>
+    </StackPanel>
+</ContentControl>
+
 
 
 </Grid>  

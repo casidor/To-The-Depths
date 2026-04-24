@@ -24,12 +24,24 @@ namespace AvaloniaUI.ViewModels
         public event Action? ReturnToMenuRequested;
         //Popups
         [ObservableProperty]
-        private bool _isExitPopupOpen;
-        [ObservableProperty]
         private bool _isGameOverPopupOpen;
+        [ObservableProperty]
+        private bool _isDescendingPopupOpen;
+        //Exit popup
+        [ObservableProperty]
+        private bool _isExitPopupOpen;
         private bool _hasUnsavedProgress = false;
         [ObservableProperty]
         public string _exitWarningText = "";
+        //Altar popup and result popup
+        [ObservableProperty]
+        private bool _isAltarPopupOpen;
+        [ObservableProperty]
+        private bool _isAltarResultOpen;
+        [ObservableProperty]
+        private string _altarResultText = "";
+        private Altar? _currentAltar;
+        public string AltarOfferText => $"Heal {Config.AltarHeal} HP for {Config.HealCost} Gold?";
         [RelayCommand]
         private void RequestExit()
         {
@@ -38,17 +50,37 @@ namespace AvaloniaUI.ViewModels
                 : "Do you want to return to the Main Menu?";
             IsExitPopupOpen = true;
         }
-
         [RelayCommand]
-        private void CancelExit()
+        private void CancelExit() => IsExitPopupOpen = false;
+        [RelayCommand]
+        private void Continue()
         {
-            IsExitPopupOpen = false;
+            IsDescendingPopupOpen = false;
+            IsAltarResultOpen = false;
+            UpdateUI();
         }
-
         [RelayCommand]
-        private void ConfirmExit()
+        private void ConfirmExit() => ReturnToMenuRequested?.Invoke();
+        [RelayCommand]
+        private void AltarConfirm()
         {
-            ReturnToMenuRequested?.Invoke();
+            var (success, message) = _currentAltar!.TryHeal(Player);
+            AltarResultText = message;
+            IsAltarPopupOpen = false;
+            IsAltarResultOpen = true;
+            UpdateUI();
+        }
+        [RelayCommand]
+        private void AltarCancel()
+        {
+            IsAltarPopupOpen = false;
+            UpdateUI();
+        }
+        [RelayCommand]
+        private void AltarResultClose()
+        {
+            IsAltarResultOpen = false;
+            UpdateUI();
         }
 
         public MainViewModel()
@@ -65,7 +97,7 @@ namespace AvaloniaUI.ViewModels
         }
         public void MovePlayer(int dx, int dy)
         {
-            if (IsExitPopupOpen || IsGameOverPopupOpen || !Player.IsAlive) return;
+            if (IsExitPopupOpen || IsGameOverPopupOpen || IsDescendingPopupOpen || IsAltarPopupOpen || IsAltarResultOpen || !Player.IsAlive) return;
             var interaction = Player.Move(dx, dy, Field);
             _hasUnsavedProgress = true;
             EnemyAI.BuildDistanceMap(Field, Player);
@@ -78,7 +110,11 @@ namespace AvaloniaUI.ViewModels
             }
             if (interaction == InteractionResult.Altar)
             {
-                // TODO: Trigger Altar UI Popup (ask player if they want to spend gold to heal).
+                if (Field[Player.X, Player.Y] is Altar altar)
+    {
+        _currentAltar = altar;
+        IsAltarPopupOpen = true;
+    }
             }
             if (Player.IsExited)
             {
@@ -87,7 +123,6 @@ namespace AvaloniaUI.ViewModels
                     // TODO: Trigger Victory screen / Win Game popup.
                     return;
                 }
-                // TODO: Trigger "Descending..." popup or transition animation here.
                 var random = new Random(currentSeed + Player.CurrentFloor + 1);
                 var nextfloor = new LevelGenerator().Generate(Config.FieldWidth, Config.FieldHeight, random);
                 Field = nextfloor.field;
@@ -95,6 +130,8 @@ namespace AvaloniaUI.ViewModels
                 EnemyAI = new EnemyAI(random);
                 SaveManager.Save(Player, currentSeed);
                 _hasUnsavedProgress = false;
+                IsDescendingPopupOpen = true;
+                UpdateUI();
             }
             UpdateUI();
         }

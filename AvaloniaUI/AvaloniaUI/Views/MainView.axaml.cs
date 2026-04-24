@@ -19,7 +19,19 @@ namespace AvaloniaUI.Views
                 MapRenderer.Width = vm.Field.Width * UIConfig.TileSize;
                 MapRenderer.Height = vm.Field.Height * UIConfig.TileSize;
                 MapRenderer.SetGameState(vm.Field, vm.Player);
+                vm.PropertyChanged += (s, e) =>
+                {
+                    if (e.PropertyName is
+                        nameof(vm.IsAltarPopupOpen) or
+                        nameof(vm.IsAltarResultOpen) or
+                        nameof(vm.IsDescendingPopupOpen) or
+                        nameof(vm.IsGameOverPopupOpen))
+                    {
+                        this.Focus();
+                    }
+                };
             }
+            this.Focus();
         }
 
         private void InputElement_OnKeyDown(object? sender, Avalonia.Input.KeyEventArgs e)
