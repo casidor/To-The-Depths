@@ -11,5 +11,20 @@
         Title="To The Depths"
         Width="1000" Height="700">
 
+    <Grid>
         <ContentControl Content="{Binding CurrentPage}" />
+        <ContentControl Classes="GamePopup" IsVisible="{Binding IsLoadErrorVisible}">
+    <StackPanel Spacing="20">
+        <TextBlock Text="{Binding LoadErrorMessage}" 
+                   FontSize="20" FontWeight="Bold" 
+                   Foreground="White" 
+                   VerticalAlignment="Center" 
+                   HorizontalAlignment="Center"/>
+        <Button Classes="MenuButton" Width="200" 
+                Focusable="False"
+                Content="BACK TO MENU" 
+                Command="{Binding CloseLoadErrorCommand}"/>
+    </StackPanel>
+</ContentControl>
+    </Grid>
 </Window>

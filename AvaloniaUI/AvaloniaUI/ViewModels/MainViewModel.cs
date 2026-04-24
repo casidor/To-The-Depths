@@ -5,12 +5,13 @@ using GameCore.Models;
 using GameCore.World;
 using System;
 using System.Numerics;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AvaloniaUI.ViewModels
 {
     public partial class MainViewModel : ViewModelBase
     {
-        private readonly int currentSeed;
+        private int currentSeed;
         public string HPText => $" {Player.HP}/{Player.MaxHP}";
         public int PlayerGold => Player.GoldCollected;
         public string KeysText => $" {Player.KeysCollected}/{Config.KeysAmount}";
@@ -85,15 +86,37 @@ namespace AvaloniaUI.ViewModels
 
         public MainViewModel()
         {
+        }
+        public void StartNewGame()
+        {
             currentSeed = new Random().Next();
-            var random = new Random(currentSeed);
+            var random = new Random(currentSeed + 1);
             var generator = new LevelGenerator();
             var generated = generator.Generate(Config.FieldWidth, Config.FieldHeight, random);
             Field = generated.field;
             Player = new Player(generated.x, generated.y);
             EnemyAI = new EnemyAI(random);
             SaveManager.Save(Player, currentSeed);
-
+            _hasUnsavedProgress = false;
+            UpdateUI();
+        }
+        public SaveResult TryLoadGame()
+        {
+            var (data, saveResult) = SaveManager.Load();
+            if(saveResult == SaveResult.Success)
+            {
+                currentSeed = data.Seed;
+                var random = new Random(currentSeed + data.Floor);
+                var restored = new LevelGenerator().Generate(Config.FieldWidth, Config.FieldHeight, random);
+                Field = restored.field;
+                Player = new Player(restored.x, restored.y, data.HP, data.MaxHP, data.Gold, data.Keys, data.Floor);
+                EnemyAI = new EnemyAI(random);
+                _hasUnsavedProgress = false;
+                UpdateUI();
+                return SaveResult.Success;
+            }
+            SaveManager.DeleteSave();
+            return saveResult;
         }
         public void MovePlayer(int dx, int dy)
         {
