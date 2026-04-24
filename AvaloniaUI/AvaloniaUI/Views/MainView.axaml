@@ -116,7 +116,21 @@
             </StackPanel>
     </StackPanel>
 </ContentControl>
-
+     <ContentControl Classes="GamePopup" IsVisible="{Binding IsWinPopupOpen}">
+    <StackPanel Spacing="20">
+        <TextBlock Text="YOU ESCAPED" 
+                   FontSize="40" FontWeight="Bold" 
+                   Foreground="White" HorizontalAlignment="Center"/>
+        
+        <TextBlock Text="{Binding PlayerGold, StringFormat='Gold collected: {0}'}" 
+                   Foreground="Gold" HorizontalAlignment="Center"/>
+        
+        <Button Classes="MenuButton" Width="200" 
+                Focusable="False"
+                Content="BACK TO MENU" 
+                Command="{Binding ConfirmExitCommand}"/>
+    </StackPanel>
+</ContentControl>
 
 
 </Grid>  

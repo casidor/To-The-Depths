@@ -83,7 +83,9 @@ namespace AvaloniaUI.ViewModels
             IsAltarResultOpen = false;
             UpdateUI();
         }
-
+        //Win popup
+        [ObservableProperty]
+        private bool _isWinPopupOpen;
         public MainViewModel()
         {
         }
@@ -134,16 +136,17 @@ namespace AvaloniaUI.ViewModels
             if (interaction == InteractionResult.Altar)
             {
                 if (Field[Player.X, Player.Y] is Altar altar)
-    {
-        _currentAltar = altar;
-        IsAltarPopupOpen = true;
-    }
+                {
+                    _currentAltar = altar;
+                    IsAltarPopupOpen = true;
+                }
             }
             if (Player.IsExited)
             {
                 if (Player.CurrentFloor == Config.MaxFloor)
                 {
-                    // TODO: Trigger Victory screen / Win Game popup.
+                    IsWinPopupOpen = true;
+                    UpdateUI();
                     return;
                 }
                 var random = new Random(currentSeed + Player.CurrentFloor + 1);
