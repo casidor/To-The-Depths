@@ -131,7 +131,16 @@
                 Command="{Binding ConfirmExitCommand}"/>
     </StackPanel>
 </ContentControl>
-
+    <ContentControl Classes="GamePopup" IsVisible="{Binding IsAttackPopupOpen}">
+    <StackPanel Spacing="10">
+        <TextBlock Text="AMBUSH!" FontSize="30" 
+                   Foreground="Red" HorizontalAlignment="Center"/>
+        <TextBlock Text="A thief strikes from the shadows!"
+                   Foreground="Gray" HorizontalAlignment="Center"/>
+        <TextBlock Text="{Binding AttackInfoText}"
+                   Foreground="White" HorizontalAlignment="Center"/>
+    </StackPanel>
+</ContentControl>
 
 </Grid>  
 

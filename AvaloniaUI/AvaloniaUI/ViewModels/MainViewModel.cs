@@ -5,6 +5,7 @@ using GameCore.Models;
 using GameCore.World;
 using System;
 using System.Numerics;
+using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AvaloniaUI.ViewModels
@@ -86,6 +87,18 @@ namespace AvaloniaUI.ViewModels
         //Win popup
         [ObservableProperty]
         private bool _isWinPopupOpen;
+        //Attack popup
+        [ObservableProperty]
+        private bool _isAttackPopupOpen;
+        public string AttackInfoText =>
+            $"HP lost: {Config.EnemyDamage}\nGold stolen: {Config.GoldStolen}";
+
+        private async void ShowAttackPopup()
+        {
+            IsAttackPopupOpen = true;
+            await Task.Delay(1500);
+            IsAttackPopupOpen = false;
+        }
         public MainViewModel()
         {
         }
@@ -122,7 +135,8 @@ namespace AvaloniaUI.ViewModels
         }
         public void MovePlayer(int dx, int dy)
         {
-            if (IsExitPopupOpen || IsGameOverPopupOpen || IsDescendingPopupOpen || IsAltarPopupOpen || IsAltarResultOpen || !Player.IsAlive) return;
+            if (IsExitPopupOpen || IsGameOverPopupOpen || IsDescendingPopupOpen ||
+                IsAltarPopupOpen || IsAltarResultOpen || IsAttackPopupOpen || !Player.IsAlive) return;
             var interaction = Player.Move(dx, dy, Field);
             _hasUnsavedProgress = true;
             EnemyAI.BuildDistanceMap(Field, Player);
@@ -140,6 +154,10 @@ namespace AvaloniaUI.ViewModels
                     _currentAltar = altar;
                     IsAltarPopupOpen = true;
                 }
+            }
+            if (worldInteraction == InteractionResult.PlayerAttacked || interaction == InteractionResult.PlayerAttacked)
+            {
+                ShowAttackPopup();
             }
             if (Player.IsExited)
             {
