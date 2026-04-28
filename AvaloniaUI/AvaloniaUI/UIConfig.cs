@@ -8,8 +8,27 @@ namespace AvaloniaUI
     public class UIConfig
     {
         public const int TileSize = 16;
-        public static readonly Typeface GameFont = new Typeface( 
+        public const int SpriteSize = 16;
+        public const int SpriteSpacing = 1;
+        public const int SpriteStep = SpriteSize + SpriteSpacing; // 17
+
+        public static readonly Typeface GameFont = new Typeface(
             new FontFamily("Cascadia Code, Consolas, Courier New, monospace"));
+    }
+
+    public static class SpriteCoords
+    {
+        public static readonly (int col, int row) Floor = (0, 0);
+        public static readonly (int col, int row) Wall = (10, 17);
+        public static readonly (int col, int row) Gold = (41, 4);
+        public static readonly (int col, int row) Key = (33, 11);
+        public static readonly (int col, int row) Exit = (3, 6);
+        public static readonly (int col, int row) Enemy = (29, 6);
+        public static readonly (int col, int row) Player = (25, 0);
+        public static readonly (int col, int row) Altar = (2, 14);
+        public static readonly (int col, int row) FullHP = (42, 10);
+        public static readonly (int col, int row) HalfHP = (41, 10);
+        public static readonly (int col, int row) ZeroHP = (40, 10);
     }
     public static class TileColors
     {

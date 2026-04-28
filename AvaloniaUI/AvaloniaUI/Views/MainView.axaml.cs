@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using AvaloniaUI.ViewModels;
+using System.IO;
 
 namespace AvaloniaUI.Views
 {
@@ -14,11 +15,18 @@ namespace AvaloniaUI.Views
         protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
         {
             base.OnAttachedToVisualTree(e);
+
+            // Шукаємо тайлсет поруч з exe або в Assets
+            var tilesetPath = FindTileset();
+            if (tilesetPath != null)
+                MapRenderer.LoadTileset(tilesetPath);
+
             if (DataContext is MainViewModel vm)
             {
                 MapRenderer.Width = vm.Field.Width * UIConfig.TileSize;
                 MapRenderer.Height = vm.Field.Height * UIConfig.TileSize;
                 MapRenderer.SetGameState(vm.Field, vm.Player);
+
                 vm.PropertyChanged += (s, e) =>
                 {
                     if (e.PropertyName is
@@ -31,7 +39,24 @@ namespace AvaloniaUI.Views
                     }
                 };
             }
+
             this.Focus();
+        }
+
+        private static string? FindTileset()
+        {
+            var candidates = new[]
+            {
+                "Assets/colored.png",
+                "colored.png",
+                Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "Assets", "colored.png"),
+                Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "colored.png"),
+            };
+
+            foreach (var path in candidates)
+                if (File.Exists(path)) return path;
+
+            return null;
         }
 
         private void InputElement_OnKeyDown(object? sender, Avalonia.Input.KeyEventArgs e)
