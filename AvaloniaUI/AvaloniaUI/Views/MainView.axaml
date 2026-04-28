@@ -16,7 +16,7 @@
 
 <Grid>
      <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="Auto"/>  <!-- GameCanvas -->
+        <ColumnDefinition Width="*"/>  <!-- GameCanvas -->
         <ColumnDefinition Width="250"/>   <!-- Sidebar -->
     </Grid.ColumnDefinitions>
       <views:GameCanvas x:Name="MapRenderer" Grid.Column="0"/>

@@ -15,16 +15,12 @@ namespace AvaloniaUI.Views
         protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
         {
             base.OnAttachedToVisualTree(e);
-
-            // Шукаємо тайлсет поруч з exe або в Assets
             var tilesetPath = FindTileset();
             if (tilesetPath != null)
                 MapRenderer.LoadTileset(tilesetPath);
 
             if (DataContext is MainViewModel vm)
             {
-                MapRenderer.Width = vm.Field.Width * UIConfig.TileSize;
-                MapRenderer.Height = vm.Field.Height * UIConfig.TileSize;
                 MapRenderer.SetGameState(vm.Field, vm.Player);
 
                 vm.PropertyChanged += (s, e) =>
@@ -39,7 +35,6 @@ namespace AvaloniaUI.Views
                     }
                 };
             }
-
             this.Focus();
         }
 
@@ -81,6 +76,7 @@ namespace AvaloniaUI.Views
                     case Key.S: case Key.Down: vm.MovePlayer(0, 1); break;
                     case Key.A: case Key.Left: vm.MovePlayer(-1, 0); break;
                     case Key.D: case Key.Right: vm.MovePlayer(1, 0); break;
+                    case Key.Space: MapRenderer.CenterOnPlayer(); break;
                 }
                 MapRenderer.SetGameState(vm.Field, vm.Player);
                 MapRenderer.InvalidateVisual();
