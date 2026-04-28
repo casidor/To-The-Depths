@@ -111,6 +111,7 @@ namespace AvaloniaUI.ViewModels
             Field = generated.field;
             Player = new Player(generated.x, generated.y);
             EnemyAI = new EnemyAI(random);
+            Field.Fov.Update(Player.X, Player.Y, Field);
             SaveManager.Save(Player, currentSeed);
             _hasUnsavedProgress = false;
             UpdateUI();
@@ -126,6 +127,7 @@ namespace AvaloniaUI.ViewModels
                 Field = restored.field;
                 Player = new Player(restored.x, restored.y, data.HP, data.MaxHP, data.Gold, data.Keys, data.Floor);
                 EnemyAI = new EnemyAI(random);
+                Field.Fov.Update(Player.X, Player.Y, Field);
                 _hasUnsavedProgress = false;
                 UpdateUI();
                 return SaveResult.Success;
@@ -141,6 +143,7 @@ namespace AvaloniaUI.ViewModels
             _hasUnsavedProgress = true;
             EnemyAI.BuildDistanceMap(Field, Player);
             var worldInteraction = EnemyAI.UpdateEnemies(Field, Player);
+            Field.Fov.Update(Player.X, Player.Y, Field);
             if (!Player.IsAlive)
             {
                 IsGameOverPopupOpen = true;
@@ -172,6 +175,7 @@ namespace AvaloniaUI.ViewModels
                 Field = nextfloor.field;
                 Player.Descend(nextfloor.x, nextfloor.y);
                 EnemyAI = new EnemyAI(random);
+                Field.Fov.Update(Player.X, Player.Y, Field);
                 SaveManager.Save(Player, currentSeed);
                 _hasUnsavedProgress = false;
                 IsDescendingPopupOpen = true;

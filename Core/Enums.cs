@@ -29,4 +29,10 @@ namespace GameCore
         Unverified,
         Success
     }
+    public enum ExplorationState : byte
+    {
+        Unknown = 0,
+        Explored = 1,
+        Visible = 2
+    }
 }

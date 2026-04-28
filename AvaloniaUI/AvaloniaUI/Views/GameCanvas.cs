@@ -208,15 +208,32 @@ namespace AvaloniaUI.Views
                         continue;
                     }
 
+                    var fov = _field.Fov[x, y];
+
+                    if (fov == ExplorationState.Unknown)
+                    {
+                        context.DrawRectangle(Brushes.Black, null, destRect);
+                        continue;
+                    }
+
                     if (_tileset != null)
                     {
                         (int col, int row) coords;
-                        if (isPlayer)
+
+                        bool isStatic = tile is Wall or Floor;
+                        if (fov == ExplorationState.Explored && !isStatic)
+                            coords = SpriteCoords.Floor;
+                        else if (isPlayer && fov == ExplorationState.Visible)
                             coords = SpriteCoords.Player;
                         else if (!_spriteMap.TryGetValue(tile.GetType(), out coords))
                             coords = SpriteCoords.Floor;
 
                         context.DrawImage(_tileset, GetSourceRect(coords.col, coords.row), destRect);
+
+                        if (fov == ExplorationState.Explored)
+                            context.DrawRectangle(
+                                new SolidColorBrush(Color.FromArgb(120, 0, 0, 0)),
+                                null, destRect);
                     }
                     else
                     {
@@ -246,7 +263,7 @@ namespace AvaloniaUI.Views
             { typeof(Wall),                 TileColors.Wall       },
             { typeof(Floor),                TileColors.Floor      },
             { typeof(Gold),                 TileColors.Gold       },
-            { typeof(GameCore.Models.Key),                  TileColors.Key        },
+            { typeof(GameCore.Models.Key),  TileColors.Key        },
             { typeof(Exit),                 TileColors.Exit       },
             { typeof(Enemy),                TileColors.Enemy      },
             { typeof(Altar),                TileColors.Altar      },
