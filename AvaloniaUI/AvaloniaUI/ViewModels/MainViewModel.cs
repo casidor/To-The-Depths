@@ -138,55 +138,64 @@ namespace AvaloniaUI.ViewModels
         }
         public void MovePlayer(int dx, int dy)
         {
-            if (IsExitPopupOpen || IsGameOverPopupOpen || IsDescendingPopupOpen ||
-                IsAltarPopupOpen || IsAltarResultOpen || IsAttackPopupOpen || !Player.IsAlive) return;
-            var interaction = Player.Move(dx, dy, Field);
-            _hasUnsavedProgress = true;
-            EnemyAI.BuildDistanceMap(Field, Player);
-            var worldInteraction = EnemyAI.UpdateEnemies(Field, Player);
-            Field.Fov.Update(Player.X, Player.Y, Field);
-            if (!Player.IsAlive)
-            {
-                IsGameOverPopupOpen = true;
-                UpdateUI();
-                return;
-            }
-            if (interaction == InteractionResult.Altar)
-            {
-                if (Field[Player.X, Player.Y] is Altar altar)
-                {
-                    _currentAltar = altar;
-                    IsAltarPopupOpen = true;
-                }
-            }
-            if (interaction == InteractionResult.EnemyAttacked || interaction == InteractionResult.EnemyKilled)
-            {
-                FloatingTextRequested?.Invoke(Player.X + dx, Player.Y + dy, $"-{Player.Damage}", '⚔');
-            }
-            if (worldInteraction == InteractionResult.PlayerAttacked)
-            {
-                FloatingTextRequested?.Invoke(Player.X, Player.Y, $"-{Config.EnemyDamage}", '♥');
-            }
-            if (Player.IsExited)
-            {
-                if (Player.CurrentFloor == Config.MaxFloor)
-                {
-                    IsWinPopupOpen = true;
-                    UpdateUI();
-                    return;
-                }
-                var random = new Random(currentSeed + Player.CurrentFloor + 1);
-                var nextfloor = new LevelGenerator().Generate(Config.FieldWidth, Config.FieldHeight, random);
-                Field = nextfloor.field;
-                Player.Descend(nextfloor.x, nextfloor.y);
-                EnemyAI = new EnemyAI(random);
-                Field.Fov.Update(Player.X, Player.Y, Field);
-                SaveManager.Save(Player, currentSeed);
-                _hasUnsavedProgress = false;
-                IsDescendingPopupOpen = true;
-                UpdateUI();
-            }
+            if (IsInputBlocked()) return;
+
+            var interaction = HandlePlayerTurn(dx, dy);
+            var worldInteraction = HandleEnemyTurn();
+
+            if (!Player.IsAlive) { IsGameOverPopupOpen = true; UpdateUI(); return; }
+
+            HandleInteractionResult(interaction, worldInteraction, dx, dy);
+            HandleWorldState();
             UpdateUI();
+        }
+        private bool IsInputBlocked() =>
+    IsExitPopupOpen || IsGameOverPopupOpen || IsDescendingPopupOpen ||
+    IsAltarPopupOpen || IsAltarResultOpen || IsAttackPopupOpen || !Player.IsAlive;
+
+        private InteractionResult HandlePlayerTurn(int dx, int dy)
+        {
+            _hasUnsavedProgress = true;
+            return Player.Move(dx, dy, Field);
+        }
+
+        private InteractionResult HandleEnemyTurn()
+        {
+            EnemyAI.BuildDistanceMap(Field, Player);
+            var result = EnemyAI.UpdateEnemies(Field, Player);
+            Field.Fov.Update(Player.X, Player.Y, Field);
+            return result;
+        }
+
+        private void HandleInteractionResult(InteractionResult interaction, InteractionResult world, int dx, int dy)
+        {
+            if (interaction == InteractionResult.Altar)
+                if (Field[Player.X, Player.Y] is Altar altar)
+                { _currentAltar = altar; IsAltarPopupOpen = true; }
+
+            if (interaction is InteractionResult.EnemyAttacked or InteractionResult.EnemyKilled)
+                FloatingTextRequested?.Invoke(Player.X + dx, Player.Y + dy, $"-{Player.Damage}", '⚔');
+
+            if (world == InteractionResult.PlayerAttacked)
+                FloatingTextRequested?.Invoke(Player.X, Player.Y, $"-{Config.EnemyDamage}", '♥');
+        }
+
+        private void HandleWorldState()
+        {
+            if (!Player.IsExited) return;
+
+            if (Player.CurrentFloor == Config.MaxFloor)
+            { IsWinPopupOpen = true; UpdateUI(); return; }
+
+            var random = new Random(currentSeed + Player.CurrentFloor + 1);
+            var next = new LevelGenerator().Generate(Config.FieldWidth, Config.FieldHeight, random);
+            Field = next.field;
+            Player.Descend(next.x, next.y);
+            EnemyAI = new EnemyAI(random);
+            Field.Fov.Update(Player.X, Player.Y, Field);
+            SaveManager.Save(Player, currentSeed);
+            _hasUnsavedProgress = false;
+            IsDescendingPopupOpen = true;
         }
         private void UpdateUI()
         {
