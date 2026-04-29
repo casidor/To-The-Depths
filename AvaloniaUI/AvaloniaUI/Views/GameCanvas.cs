@@ -92,7 +92,7 @@ namespace AvaloniaUI.Views
         }
         private readonly List<FloatingText> _floatingTexts = new();
 
-        public void AddFloatingText(int gridX, int gridY, string text, char? icon = null)
+        public void AddFloatingText(double gridX, double gridY, string text, char? icon = null)
         {
             _floatingTexts.Add(new FloatingText { WorldX = gridX, WorldY = gridY, Text = text, Icon = icon });
         }

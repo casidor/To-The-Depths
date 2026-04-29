@@ -99,7 +99,7 @@ namespace AvaloniaUI.ViewModels
             await Task.Delay(1500);
             IsAttackPopupOpen = false;
         }
-        public event Action<int, int, string, char?>? FloatingTextRequested;
+        public event Action<double, double, string, char?>? FloatingTextRequested;
         public MainViewModel()
         {
         }
@@ -177,7 +177,11 @@ namespace AvaloniaUI.ViewModels
                 FloatingTextRequested?.Invoke(Player.X + dx, Player.Y + dy, $"-{Player.Damage}", '⚔');
 
             if (world == InteractionResult.PlayerAttacked)
-                FloatingTextRequested?.Invoke(Player.X, Player.Y, $"-{Config.EnemyDamage}", '♥');
+            {
+                float offsetX = dx != 0 ? dx : -0.3f;
+
+                FloatingTextRequested?.Invoke(Player.X - offsetX, Player.Y, $"-{Config.EnemyDamage}", '♥');
+            }
         }
 
         private void HandleWorldState()
