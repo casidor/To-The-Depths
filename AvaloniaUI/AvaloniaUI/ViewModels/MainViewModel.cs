@@ -99,6 +99,7 @@ namespace AvaloniaUI.ViewModels
             await Task.Delay(1500);
             IsAttackPopupOpen = false;
         }
+        public event Action<int, int, string, char?>? FloatingTextRequested;
         public MainViewModel()
         {
         }
@@ -158,9 +159,13 @@ namespace AvaloniaUI.ViewModels
                     IsAltarPopupOpen = true;
                 }
             }
-            if (worldInteraction == InteractionResult.PlayerAttacked || interaction == InteractionResult.PlayerAttacked)
+            if (interaction == InteractionResult.EnemyAttacked || interaction == InteractionResult.EnemyKilled)
             {
-                ShowAttackPopup();
+                FloatingTextRequested?.Invoke(Player.X + dx, Player.Y + dy, $"-{Player.Damage}", '⚔');
+            }
+            if (worldInteraction == InteractionResult.PlayerAttacked)
+            {
+                FloatingTextRequested?.Invoke(Player.X, Player.Y, $"-{Config.EnemyDamage}", '♥');
             }
             if (Player.IsExited)
             {

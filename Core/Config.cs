@@ -14,8 +14,10 @@ namespace GameCore
         public const int FieldHeight = 50;
         //Player settings
         public const int PlayerMaxHP = 100;
+        public const int PlayerDamage = 10;
         //Enemy settings
-        public const int EnemyDamage = 15;
+        public const int EnemyMaxHP = 30;
+        public const int EnemyDamage = 5;
         public const int GoldStolen = 10;
         public const int AggroRange = 7;
         //Generation settings

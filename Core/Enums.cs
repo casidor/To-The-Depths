@@ -19,6 +19,8 @@ namespace GameCore
     {
         None,
         PlayerAttacked,
+        EnemyAttacked,
+        EnemyKilled,
         Altar,
         ExitReached
     }

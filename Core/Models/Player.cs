@@ -11,6 +11,7 @@ namespace GameCore.Models
         public int Y { get; private set; }
         public int MaxHP { get; private set; }
         public int HP { get; private set; }
+        public int Damage { get; private set; } = Config.PlayerDamage;
         public bool IsAlive => HP > 0;
         public int KeysCollected { get; private set; } = 0;
         public int CurrentFloor { get; private set; } = 1;

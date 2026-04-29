@@ -54,18 +54,48 @@ namespace AvaloniaUI.Views
             _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(16) };
             _timer.Tick += (_, _) =>
             {
+                bool needsRedraw = false;
                 double dx = _targetCamX - _camX;
                 double dy = _targetCamY - _camY;
                 if (Math.Abs(dx) > 0.5 || Math.Abs(dy) > 0.5)
                 {
                     _camX += dx * 0.12;
                     _camY += dy * 0.12;
-                    InvalidateVisual();
+                    needsRedraw = true;
                 }
+
+                for (int i = _floatingTexts.Count - 1; i >= 0; i--)
+                {
+                    var ft = _floatingTexts[i];
+                    ft.Life -= 0.016;
+                    ft.WorldY -= 0.03;
+
+                    if (ft.Life <= 0)
+                    {
+                        _floatingTexts.RemoveAt(i);
+                    }
+                    needsRedraw = true;
+                }
+
+                if (needsRedraw) InvalidateVisual();
             };
             _timer.Start();
         }
 
+        private class FloatingText
+        {
+            public double WorldX { get; set; }
+            public double WorldY { get; set; }
+            public string Text { get; set; } = "";
+            public double Life { get; set; } = 1.0;
+            public char? Icon { get; set; }
+        }
+        private readonly List<FloatingText> _floatingTexts = new();
+
+        public void AddFloatingText(int gridX, int gridY, string text, char? icon = null)
+        {
+            _floatingTexts.Add(new FloatingText { WorldX = gridX, WorldY = gridY, Text = text, Icon = icon });
+        }
         private static Avalonia.Rect GetSourceRect(int col, int row) =>
             new(col * UIConfig.SpriteStep, row * UIConfig.SpriteStep,
                 UIConfig.SpriteSize, UIConfig.SpriteSize);
@@ -239,7 +269,45 @@ namespace AvaloniaUI.Views
                     {
                         DrawFallbackTile(context, tile, isPlayer, destRect, x, y);
                     }
+                    if (fov == ExplorationState.Visible && tile is Enemy enemy && enemy.HP < enemy.MaxHP && enemy.HP > 0)
+                    {
+                        double hpPercentage = Math.Max(0, (double)enemy.HP / enemy.MaxHP);
+                        double barHeight = 4 * _zoom;
+                        double yOffset = -(barHeight + 2);
+
+                        var bgRect = new Avalonia.Rect(destRect.X, destRect.Y + yOffset, destRect.Width, barHeight);
+                        context.DrawRectangle(Brushes.Black, null, bgRect);
+
+                        var fgRect = new Avalonia.Rect(destRect.X, destRect.Y + yOffset, destRect.Width * hpPercentage, barHeight);
+                        context.DrawRectangle(Brushes.Red, null, fgRect);
+                    }
                 }
+            }
+            foreach (var ft in _floatingTexts)
+            {
+                byte alpha = (byte)(Math.Clamp(ft.Life, 0.0, 1.0) * 255);
+
+                var textBrush = new SolidColorBrush(Color.FromArgb(alpha, 255, 50, 50));
+                var outlinePen = new Pen(new SolidColorBrush(Color.FromArgb(alpha, 0, 0, 0)), 2 * _zoom);
+
+                string displayString = (ft.Icon.HasValue ? $"{ft.Icon} " : "") + ft.Text;
+
+                var textFormat = new FormattedText(
+                displayString,
+                System.Globalization.CultureInfo.CurrentCulture,
+                FlowDirection.LeftToRight,
+                UIConfig.GameFont,
+                UIConfig.TileSize * _zoom * 0.6,
+                textBrush);
+
+                double screenX = ft.WorldX * tileSize + (tileSize * 0.2);
+                double screenY = ft.WorldY * tileSize;
+
+                var textGeometry = textFormat.BuildGeometry(new Avalonia.Point(screenX, screenY));
+
+                context.DrawGeometry(null, outlinePen, textGeometry);
+
+                context.DrawGeometry(textBrush, null, textGeometry);
             }
         }
 

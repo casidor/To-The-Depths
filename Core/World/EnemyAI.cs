@@ -79,7 +79,10 @@ namespace GameCore.World
                 int ty = y + bestMove.dy;
                 if (tx == player.X && ty == player.Y)
                 {
-                    field[x, y].Interact(player, field, x, y);
+                    if (field[x, y] is Enemy enemy)
+                    {
+                        enemy.Attack(player);
+                    }
                     return true;
                 }
                 else

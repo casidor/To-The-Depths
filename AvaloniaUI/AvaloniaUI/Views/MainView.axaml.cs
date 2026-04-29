@@ -22,7 +22,7 @@ namespace AvaloniaUI.Views
             if (DataContext is MainViewModel vm)
             {
                 MapRenderer.SetGameState(vm.Field, vm.Player);
-
+                vm.FloatingTextRequested += (x, y, text, icon) => MapRenderer.AddFloatingText(x, y, text, icon);
                 vm.PropertyChanged += (s, e) =>
                 {
                     if (e.PropertyName is
