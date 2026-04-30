@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using GameCore;
 using GameCore.Models;
 using GameCore.World;
+using GameCore.World.Generator;
 using System;
 using System.Numerics;
 using System.Threading.Tasks;
@@ -107,8 +108,8 @@ namespace AvaloniaUI.ViewModels
         {
             currentSeed = new Random().Next();
             var random = new Random(currentSeed + 1);
-            var generator = new LevelGenerator();
-            var generated = generator.Generate(Config.FieldWidth, Config.FieldHeight, random);
+            var generator = new RoomCorridorGenerator();
+            var generated = generator.Generate(Config.FieldWidth, Config.FieldHeight, random, 1);
             Field = generated.field;
             Player = new Player(generated.x, generated.y);
             EnemyAI = new EnemyAI(random);
@@ -124,7 +125,7 @@ namespace AvaloniaUI.ViewModels
             {
                 currentSeed = data.Seed;
                 var random = new Random(currentSeed + data.Floor);
-                var restored = new LevelGenerator().Generate(Config.FieldWidth, Config.FieldHeight, random);
+                var restored = new RoomCorridorGenerator().Generate(Config.FieldWidth, Config.FieldHeight, random, data.Floor);
                 Field = restored.field;
                 Player = new Player(restored.x, restored.y, data.HP, data.MaxHP, data.Gold, data.Keys, data.Floor);
                 EnemyAI = new EnemyAI(random);
@@ -192,7 +193,7 @@ namespace AvaloniaUI.ViewModels
             { IsWinPopupOpen = true; UpdateUI(); return; }
 
             var random = new Random(currentSeed + Player.CurrentFloor + 1);
-            var next = new LevelGenerator().Generate(Config.FieldWidth, Config.FieldHeight, random);
+            var next = new RoomCorridorGenerator().Generate(Config.FieldWidth, Config.FieldHeight, random, Player.CurrentFloor + 1);
             Field = next.field;
             Player.Descend(next.x, next.y);
             EnemyAI = new EnemyAI(random);

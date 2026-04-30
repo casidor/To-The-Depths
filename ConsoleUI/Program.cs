@@ -1,6 +1,7 @@
 ﻿using GameCore;
 using GameCore.Models;
 using GameCore.World;
+using GameCore.World.Generator;
 
 namespace ConsoleUI
 {
@@ -61,7 +62,7 @@ namespace ConsoleUI
                                 Console.Clear();
                                 currentSeed = data.Seed;
                                 random = new Random(currentSeed + data.Floor);
-                                var restored = new LevelGenerator().Generate(Config.FieldWidth, Config.FieldHeight, random);
+                                var restored = new BasicGenerator().Generate(Config.FieldWidth, Config.FieldHeight, random);
                                 field = restored.field;
                                 player = new Player(restored.x, restored.y, data.HP, data.MaxHP, data.Gold, data.Keys, data.Floor);
                                 enemyAI = new EnemyAI(random);
@@ -73,7 +74,7 @@ namespace ConsoleUI
                         Console.Clear();
                         currentSeed = new Random().Next();
                         random = new Random(currentSeed + 1);
-                        LevelGenerator levelGenerator = new LevelGenerator();
+                        BasicGenerator levelGenerator = new BasicGenerator();
                         var generated = levelGenerator.Generate(Config.FieldWidth, Config.FieldHeight, random);
                         field = generated.field;
                         player = new Player(generated.x, generated.y);
@@ -135,7 +136,7 @@ namespace ConsoleUI
                                 renderer.RenderDescentPopup(player);
                                 Console.ReadKey(true);
                                 random = new Random(currentSeed + player.CurrentFloor + 1);
-                                var nextfloor = new LevelGenerator().Generate(Config.FieldWidth, Config.FieldHeight, random);
+                                var nextfloor = new BasicGenerator().Generate(Config.FieldWidth, Config.FieldHeight, random);
                                 field = nextfloor.field;
                                 player.Descend(nextfloor.x, nextfloor.y);
                                 enemyAI = new EnemyAI(random);
