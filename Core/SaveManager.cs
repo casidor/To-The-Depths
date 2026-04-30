@@ -1,4 +1,4 @@
-﻿using GameCore.Models;
+﻿using GameCore.Models.Entities;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

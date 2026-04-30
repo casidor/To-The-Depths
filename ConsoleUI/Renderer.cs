@@ -1,5 +1,5 @@
 ﻿using GameCore;
-using GameCore.Models;
+using GameCore.Models.Entities;
 using GameCore.World;
 using System;
 using System.Collections;

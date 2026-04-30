@@ -1,9 +1,10 @@
-﻿using GameCore.World;
+﻿using GameCore.Models.Entities;
+using GameCore.World;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace GameCore.Models
+namespace GameCore.Models.Objects
 {
     public class Door : GameObject
     {

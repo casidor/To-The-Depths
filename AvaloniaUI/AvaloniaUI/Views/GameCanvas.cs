@@ -5,7 +5,8 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using GameCore;
-using GameCore.Models;
+using GameCore.Models.Entities;
+using GameCore.Models.Objects;
 using GameCore.World;
 using System;
 using System.Collections.Generic;
@@ -41,7 +42,7 @@ namespace AvaloniaUI.Views
             { typeof(Floor),                SpriteCoords.Floor },
             { typeof(Wall),                 SpriteCoords.Wall  },
             { typeof(Gold),                 SpriteCoords.Gold  },
-            { typeof(GameCore.Models.Key),  SpriteCoords.Key   },
+            { typeof(GameCore.Models.Objects.Key),  SpriteCoords.Key   },
             { typeof(Exit),                 SpriteCoords.Exit  },
             { typeof(Enemy),                SpriteCoords.Enemy },
             { typeof(Altar),                SpriteCoords.Altar },
@@ -223,24 +224,21 @@ namespace AvaloniaUI.Views
 
             using var _ = context.PushTransform(Matrix.CreateTranslation(-_camX, -_camY));
 
+            //Tilese layer
             for (int y = startY; y < endY; y++)
             {
                 for (int x = startX; x < endX; x++)
                 {
                     var tile = _field[x, y];
-                    bool isPlayer = x == _player.X && y == _player.Y;
+                    var destRect = new Avalonia.Rect(x * tileSize, y * tileSize, tileSize, tileSize);
 
-                    var destRect = new Avalonia.Rect(
-                        x * tileSize, y * tileSize, tileSize, tileSize);
-
-                    if (tile is GameCore.Models.Void)
+                    if (tile is GameCore.Models.Objects.Void)
                     {
                         context.DrawRectangle(Brushes.Black, null, destRect);
                         continue;
                     }
 
                     var fov = _field.Fov[x, y];
-
                     if (fov == ExplorationState.Unknown)
                     {
                         context.DrawRectangle(Brushes.Black, null, destRect);
@@ -248,52 +246,87 @@ namespace AvaloniaUI.Views
                     }
 
                     if (_tileset != null)
-                    {
-                        (int col, int row) coords;
-
-                        bool isStatic = tile is Wall or Floor;
-                        if (fov == ExplorationState.Explored && !isStatic)
-                            coords = SpriteCoords.Floor;
-                        else if (isPlayer && fov == ExplorationState.Visible)
-                            coords = SpriteCoords.Player;
-                        else if (!_spriteMap.TryGetValue(tile.GetType(), out coords))
-                            coords = SpriteCoords.Floor;
-
-                        context.DrawImage(_tileset, GetSourceRect(coords.col, coords.row), destRect);
-
-                        if (fov == ExplorationState.Explored)
-                            context.DrawRectangle(
-                                new SolidColorBrush(Color.FromArgb(120, 0, 0, 0)),
-                                null, destRect);
-                    }
+                        DrawTileSprite(context, tile, fov, destRect);
                     else
-                    {
-                        DrawFallbackTile(context, tile, isPlayer, destRect, x, y);
-                    }
-                    if (fov == ExplorationState.Visible && tile is Enemy enemy && enemy.HP < enemy.MaxHP && enemy.HP > 0)
-                    {
-                        double hpPercentage = Math.Max(0, (double)enemy.HP / enemy.MaxHP);
-                        double barHeight = 4 * _zoom;
-                        double yOffset = -(barHeight + 2);
+                        DrawFallbackTile(context, tile, false, destRect, x, y);
 
-                        var bgRect = new Avalonia.Rect(destRect.X, destRect.Y + yOffset, destRect.Width, barHeight);
-                        context.DrawRectangle(Brushes.Black, null, bgRect);
-
-                        var fgRect = new Avalonia.Rect(destRect.X, destRect.Y + yOffset, destRect.Width * hpPercentage, barHeight);
-                        context.DrawRectangle(Brushes.Red, null, fgRect);
-                    }
+                    if (fov == ExplorationState.Explored)
+                        context.DrawRectangle(new SolidColorBrush(Color.FromArgb(120, 0, 0, 0)), null, destRect);
                 }
             }
-            foreach (var ft in _floatingTexts)
+
+            //Enemy layer
+            for (int y = startY; y < endY; y++)
             {
-                byte alpha = (byte)(Math.Clamp(ft.Life, 0.0, 1.0) * 255);
+                for (int x = startX; x < endX; x++)
+                {
+                    if (_field.Fov[x, y] != ExplorationState.Visible) continue;
+                    var entity = _field.GetEntity(x, y);
+                    if (entity == null) continue;
 
-                var textBrush = new SolidColorBrush(Color.FromArgb(alpha, 255, 50, 50));
-                var outlinePen = new Pen(new SolidColorBrush(Color.FromArgb(alpha, 0, 0, 0)), 2 * _zoom);
+                    var destRect = new Avalonia.Rect(x * tileSize, y * tileSize, tileSize, tileSize);
 
-                string displayString = (ft.Icon.HasValue ? $"{ft.Icon} " : "") + ft.Text;
+                    if (_tileset != null)
+                        context.DrawImage(_tileset, GetSourceRect(SpriteCoords.Enemy.col, SpriteCoords.Enemy.row), destRect);
+                    else
+                        DrawFallbackTile(context, null, false, destRect, x, y);
+                }
+            }
 
-                var textFormat = new FormattedText(
+            //Player layer
+            {
+                var destRect = new Avalonia.Rect(_player.X * tileSize, _player.Y * tileSize, tileSize, tileSize);
+                if (_tileset != null)
+                    context.DrawImage(_tileset, GetSourceRect(SpriteCoords.Player.col, SpriteCoords.Player.row), destRect);
+                else
+                    DrawFallbackTile(context, null, true, destRect, _player.X, _player.Y);
+            }
+            //HP bar layer
+            for (int y = startY; y < endY; y++)
+                for (int x = startX; x < endX; x++)
+                {
+                    if (_field.Fov[x, y] != ExplorationState.Visible) continue;
+                    if (_field.GetEntity(x, y) is Enemy enemy && enemy.HP < enemy.MaxHP)
+                    {
+                        var destRect = new Avalonia.Rect(x * tileSize, y * tileSize, tileSize, tileSize);
+                        DrawHPBar(context, destRect, enemy);
+                    }
+                }
+            //Floating texts
+            foreach (var ft in _floatingTexts)
+                DrawFloatingText(context, ft, tileSize);
+        }
+
+        private void DrawTileSprite(DrawingContext context, GameObject tile, ExplorationState fov, Avalonia.Rect destRect)
+        {
+            (int col, int row) coords;
+            bool isStatic = tile is Wall or Floor;
+
+            if (fov == ExplorationState.Explored && !isStatic)
+                coords = SpriteCoords.Floor;
+            else if (!_spriteMap.TryGetValue(tile.GetType(), out coords))
+                coords = SpriteCoords.Floor;
+
+            context.DrawImage(_tileset!, GetSourceRect(coords.col, coords.row), destRect);
+        }
+
+        private void DrawHPBar(DrawingContext context, Avalonia.Rect destRect, Enemy enemy)
+        {
+            double hp = Math.Max(0, (double)enemy.HP / enemy.MaxHP);
+            double barH = 4 * _zoom;
+            double yOff = -(barH + 2);
+            context.DrawRectangle(Brushes.Black, null, new Avalonia.Rect(destRect.X, destRect.Y + yOff, destRect.Width, barH));
+            context.DrawRectangle(Brushes.Red, null, new Avalonia.Rect(destRect.X, destRect.Y + yOff, destRect.Width * hp, barH));
+        }
+
+        private void DrawFloatingText(DrawingContext context, FloatingText ft, float tileSize)
+        {
+            byte alpha = (byte)(Math.Clamp(ft.Life, 0.0, 1.0) * 255);
+            var textBrush = new SolidColorBrush(Color.FromArgb(alpha, 255, 50, 50));
+            var outlinePen = new Pen(new SolidColorBrush(Color.FromArgb(alpha, 0, 0, 0)), 2 * _zoom);
+            string displayString = (ft.Icon.HasValue ? $"{ft.Icon} " : "") + ft.Text;
+
+            var textFormat = new FormattedText(
                 displayString,
                 System.Globalization.CultureInfo.CurrentCulture,
                 FlowDirection.LeftToRight,
@@ -301,15 +334,12 @@ namespace AvaloniaUI.Views
                 UIConfig.TileSize * _zoom * 0.6,
                 textBrush);
 
-                double screenX = ft.WorldX * tileSize + (tileSize * 0.2);
-                double screenY = ft.WorldY * tileSize;
+            double screenX = ft.WorldX * tileSize + (tileSize * 0.2);
+            double screenY = ft.WorldY * tileSize;
+            var textGeometry = textFormat.BuildGeometry(new Avalonia.Point(screenX, screenY));
 
-                var textGeometry = textFormat.BuildGeometry(new Avalonia.Point(screenX, screenY));
-
-                context.DrawGeometry(null, outlinePen, textGeometry);
-
-                context.DrawGeometry(textBrush, null, textGeometry);
-            }
+            context.DrawGeometry(null, outlinePen, textGeometry);
+            context.DrawGeometry(textBrush, null, textGeometry);
         }
 
         private void DrawFallbackTile(DrawingContext context, GameObject tile, bool isPlayer, Avalonia.Rect destRect, int x, int y)
@@ -332,11 +362,11 @@ namespace AvaloniaUI.Views
             { typeof(Wall),                 TileColors.Wall       },
             { typeof(Floor),                TileColors.Floor      },
             { typeof(Gold),                 TileColors.Gold       },
-            { typeof(GameCore.Models.Key),  TileColors.Key        },
+            { typeof(GameCore.Models.Objects.Key),  TileColors.Key        },
             { typeof(Exit),                 TileColors.Exit       },
             { typeof(Enemy),                TileColors.Enemy      },
             { typeof(Altar),                TileColors.Altar      },
-            { typeof(GameCore.Models.Void), TileColors.Background },
+            { typeof(GameCore.Models.Objects.Void), TileColors.Background },
             { typeof(Door),                 TileColors.Door      },
         };
 

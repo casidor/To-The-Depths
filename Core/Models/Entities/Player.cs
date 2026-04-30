@@ -3,12 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace GameCore.Models
+namespace GameCore.Models.Entities
 {
-    public class Player
+    public class Player : Entity
     {
-        public int X { get; private set; }
-        public int Y { get; private set; }
         public int MaxHP { get; private set; }
         public int HP { get; private set; }
         public int Damage { get; private set; } = Config.PlayerDamage;
@@ -22,8 +20,6 @@ namespace GameCore.Models
             private set => _gold = Math.Max(value, 0);
         }
         public bool IsExited { get; private set; } = false;
-        public char Symbol { get; private set; } = GameSymbols.Player;
-        public string Color { get; private set; } = GameColors.Player;
         public Player(int x, int y)
         {
             X = x;
@@ -45,6 +41,8 @@ namespace GameCore.Models
         {
             int newX = X + dX;
             int newY = Y + dY;
+            if (field.GetEntity(newX, newY) is Enemy enemy)
+                return enemy.Interact(this, field, newX, newY);
             var cell = field[newX, newY];
             var result = cell.Interact(this, field, newX, newY);
             if (field[newX, newY].IsPassable)

@@ -1,8 +1,8 @@
-﻿using GameCore.Models;
+﻿using GameCore.Models.Objects;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Void = GameCore.Models.Void;
+using Void = GameCore.Models.Objects.Void;
 
 namespace GameCore.World.Generator
 {
@@ -21,7 +21,7 @@ namespace GameCore.World.Generator
             PlaceInRoomCenters(field, random, _rooms, Config.AltarsAmount, () => new Altar(), excludeFirst: true);
             PlaceInFarthestRoom(field, random, _rooms, Config.ExitAmount, () => new Exit());
             PlaceInRandomRooms(field, random, _rooms, Config.KeysAmount, () => new Key(), excludeFirst: true);
-            PlaceInRandomRooms(field, random, _rooms, Config.EnemiesAmount, () => new Enemy(), excludeFirst: true);
+            PlaceEnemies(field, random, _rooms, Config.EnemiesAmount, excludeFirst: true);
             PlaceItemsByChance(field, random, Config.GoldChance, () => new Gold(), _rooms);
             PlaceDoors(field, _rooms);
             return (field, _rooms[0].CenterX, _rooms[0].CenterY);

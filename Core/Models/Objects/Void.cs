@@ -1,19 +1,18 @@
-﻿using GameCore.World;
+﻿using GameCore.Models.Entities;
+using GameCore.World;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace GameCore.Models
+namespace GameCore.Models.Objects
 {
-    public class Wall : GameObject
+    public class Void : GameObject
     {
-        public Wall()
+        public Void()
         {
-            Symbol = GameSymbols.Wall;
+            Symbol = GameSymbols.Empty;
             IsPassable = false;
-            Color = GameColors.Wall;
         }
-
         public override InteractionResult Interact(Player player, GameField field, int x, int y)
         {
             return InteractionResult.None;

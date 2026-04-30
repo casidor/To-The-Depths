@@ -1,7 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GameCore;
-using GameCore.Models;
+using GameCore.Models.Entities;
+using GameCore.Models.Objects;
 using GameCore.World;
 using GameCore.World.Generator;
 using System;

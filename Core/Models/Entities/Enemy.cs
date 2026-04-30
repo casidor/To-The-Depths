@@ -3,30 +3,30 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace GameCore.Models
+namespace GameCore.Models.Entities
 {
-    public class Enemy : GameObject
+    public class Enemy : Entity
     {
         public int HP { get; private set; }
         public int MaxHP { get; private set; }
         public int Damage { get; private set; } = Config.EnemyDamage;
-        public Enemy()
+        public Enemy(int x, int y)
         {
+            X = x; Y = y;
             Symbol = GameSymbols.Enemy;
-            IsPassable = false;
             Color = GameColors.Enemy;
             MaxHP = Config.EnemyMaxHP;
             HP = MaxHP;
         }
-        public override InteractionResult Interact(Player player, GameField field, int x, int y)
+        public InteractionResult Interact(Player player, GameField field, int x, int y)
         {
             HP -= player.Damage;
             if (HP <= 0)
             {
-                field[x, y] = new Floor();
+                field.SetEntity(x, y, null);
                 return InteractionResult.EnemyKilled;
             }
-            return InteractionResult.EnemyAttacked;  
+            return InteractionResult.EnemyAttacked;
         }
         public InteractionResult Attack (Player player)
         {

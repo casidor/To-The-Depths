@@ -1,8 +1,9 @@
-﻿using GameCore.Models;
+﻿using GameCore.Models.Entities;
+using GameCore.Models.Objects;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Void = GameCore.Models.Void;
+using Void = GameCore.Models.Objects.Void;
 
 namespace GameCore.World.Generator
 {
@@ -109,6 +110,25 @@ namespace GameCore.World.Generator
                 {
                     if (field[room.X - 1, y] is Floor) field[room.X - 1, y] = new Door();
                     if (field[room.X + room.W, y] is Floor) field[room.X + room.W, y] = new Door();
+                }
+            }
+        }
+        protected void PlaceEnemies(GameField field, Random random, List<Room> rooms, int amount, bool excludeFirst = false)
+        {
+            int startRoom = excludeFirst ? 1 : 0;
+            for (int i = 0; i < amount; i++)
+            {
+                var room = rooms[random.Next(startRoom, rooms.Count)];
+                for (int attempt = 0; attempt < 100; attempt++)
+                {
+                    int x = random.Next(room.X, room.X + room.W);
+                    int y = random.Next(room.Y, room.Y + room.H);
+                    if (field[x, y] is Floor && !field.HasEntity(x, y))
+                    {
+                        var enemy = new Enemy(x, y);
+                        field.SetEntity(x, y, enemy);
+                        break;
+                    }
                 }
             }
         }
