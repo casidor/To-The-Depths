@@ -45,6 +45,7 @@ namespace AvaloniaUI.Views
             { typeof(Exit),                 SpriteCoords.Exit  },
             { typeof(Enemy),                SpriteCoords.Enemy },
             { typeof(Altar),                SpriteCoords.Altar },
+            { typeof(Door),                 SpriteCoords.Door  },
         };
 
         public GameCanvas()
@@ -336,6 +337,7 @@ namespace AvaloniaUI.Views
             { typeof(Enemy),                TileColors.Enemy      },
             { typeof(Altar),                TileColors.Altar      },
             { typeof(GameCore.Models.Void), TileColors.Background },
+            { typeof(Door),                 TileColors.Door      },
         };
 
         private static IBrush GetFallbackBrush(GameObject obj)

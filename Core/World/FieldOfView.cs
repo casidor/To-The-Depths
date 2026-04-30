@@ -71,11 +71,11 @@ namespace GameCore.World
                     if (dx * dx + dy * dy <= Radius * Radius)
                         _state[wx, wy] = ExplorationState.Visible;
 
-                    bool isWall = field[wx, wy] is Wall;
+                    bool isBlocked = field[wx, wy] is Wall || field[wx, wy] is Door { IsOpen: false };
 
                     if (blocked)
                     {
-                        if (isWall)
+                        if (isBlocked)
                         {
                             newStart = rightSlope;
                         }
@@ -86,7 +86,7 @@ namespace GameCore.World
                             hitFloorAfterWall = true;
                         }
                     }
-                    else if (isWall && dist < Radius)
+                    else if (isBlocked && dist < Radius)
                     {
                         blocked = true;
                         ScanOctant(px, py, field, octant, dist + 1, start, leftSlope);

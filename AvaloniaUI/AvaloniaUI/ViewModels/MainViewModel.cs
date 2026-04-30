@@ -156,8 +156,17 @@ namespace AvaloniaUI.ViewModels
 
         private InteractionResult HandlePlayerTurn(int dx, int dy)
         {
+            CloseAllDoors();
             _hasUnsavedProgress = true;
             return Player.Move(dx, dy, Field);
+        }
+
+        private void CloseAllDoors()
+        {
+            for (int y = 0; y < Field.Height; y++)
+                for (int x = 0; x < Field.Width; x++)
+                    if (Field[x, y] is Door door)
+                        door.Close();
         }
 
         private InteractionResult HandleEnemyTurn()

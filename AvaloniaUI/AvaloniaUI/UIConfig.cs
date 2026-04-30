@@ -29,6 +29,7 @@ namespace AvaloniaUI
         public static readonly (int col, int row) FullHP = (42, 10);
         public static readonly (int col, int row) HalfHP = (41, 10);
         public static readonly (int col, int row) ZeroHP = (40, 10);
+        public static readonly (int col, int row) Door = (11, 11);
     }
     public static class TileColors
     {
@@ -42,5 +43,6 @@ namespace AvaloniaUI
         public static readonly IBrush Altar = new SolidColorBrush(Color.FromRgb(220, 50, 50));
         public static readonly IBrush Fog = new SolidColorBrush(Color.FromRgb(15, 15, 25));
         public static readonly IBrush Background = Brushes.Black;
+        public static readonly IBrush Door = new SolidColorBrush(Color.FromRgb(139, 90, 43));
     }
 }

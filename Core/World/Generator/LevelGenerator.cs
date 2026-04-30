@@ -96,6 +96,21 @@ namespace GameCore.World.Generator
             }
         }
 
-        protected void PlaceDoors(GameField field, List<Room> rooms) { }
+        protected void PlaceDoors(GameField field, List<Room> rooms)
+        {
+            foreach (var room in rooms)
+            {
+                for (int x = room.X; x < room.X + room.W; x++)
+                {
+                    if (field[x, room.Y - 1] is Floor) field[x, room.Y - 1] = new Door();
+                    if (field[x, room.Y + room.H] is Floor) field[x, room.Y + room.H] = new Door();
+                }
+                for (int y = room.Y; y < room.Y + room.H; y++)
+                {
+                    if (field[room.X - 1, y] is Floor) field[room.X - 1, y] = new Door();
+                    if (field[room.X + room.W, y] is Floor) field[room.X + room.W, y] = new Door();
+                }
+            }
+        }
     }
 }
