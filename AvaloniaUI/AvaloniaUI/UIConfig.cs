@@ -9,9 +9,10 @@ namespace AvaloniaUI
     {
         public const int TileSize = 16;
         public const int SpriteSize = 16;
-
         public static readonly Typeface GameFont = new Typeface(
-            new FontFamily("Cascadia Code, Consolas, Courier New, monospace"));
+    new FontFamily("avares://AvaloniaUI/Assets/PixelOperator8.ttf#Pixel Operator 8"));
+        //public static readonly Typeface GameFont = new Typeface(
+        //    new FontFamily("Cascadia Code, Consolas, Courier New, monospace"));
     }
     public static class TileColors
     {

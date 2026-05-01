@@ -51,6 +51,13 @@ namespace AvaloniaUI.Views
                     }
                     return;
                 }
+                if (e.Key >= Key.D1 && e.Key <= Key.D4)
+                {
+                    vm.Player.Inventory.SwitchSlot((int)e.Key - (int)Key.D1);
+                    MapRenderer.SetGameState(vm.Field, vm.Player);
+                    vm.UpdateUIPublic();
+                    return;
+                }
                 switch (e.Key)
                 {
                     case Key.W: case Key.Up: vm.MovePlayer(0, -1); break;

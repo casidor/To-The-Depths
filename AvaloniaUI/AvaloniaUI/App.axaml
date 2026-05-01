@@ -11,13 +11,13 @@
 
     <Application.Resources>
     <ResourceDictionary>
-        <FontFamily x:Key="GameFont">Cascadia Code, Consolas, Courier New, monospace</FontFamily>
+        <FontFamily x:Key="GameFont">avares://AvaloniaUI/Assets/PixelOperator8.ttf#Pixel Operator 8</FontFamily>
         <SolidColorBrush x:Key="BrushText" Color="#C0C0C0"/>
         <SolidColorBrush x:Key="BrushAccent" Color="#F0C040"/>
         <SolidColorBrush x:Key="BrushHP" Color="#E24B4A"/>
         <SolidColorBrush x:Key="BrushGold" Color="#F0C040"/>
         <SolidColorBrush x:Key="BrushKey" Color="#40AAFF"/>
-        <SolidColorBrush x:Key="BrushBackground" Color="#12121E"/>
+       <SolidColorBrush x:Key="BrushBackground" Color="#2a1a2e"/>
     </ResourceDictionary>
 </Application.Resources>
 

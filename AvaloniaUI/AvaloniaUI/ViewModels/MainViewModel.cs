@@ -2,10 +2,12 @@
 using CommunityToolkit.Mvvm.Input;
 using GameCore;
 using GameCore.Models.Entities;
+using GameCore.Models.Items;
 using GameCore.Models.Objects;
 using GameCore.World;
 using GameCore.World.Generator;
 using System;
+using System.Collections.Generic;
 using System.Numerics;
 using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -102,6 +104,78 @@ namespace AvaloniaUI.ViewModels
             IsAttackPopupOpen = false;
         }
         public event Action<double, double, string, char?>? FloatingTextRequested;
+        // Sidebar - Hearts
+        private string GetHeartState(int index)
+        {
+            int full = Player.HP / 20;
+            int half = (Player.HP % 20) >= 10 ? 1 : 0;
+            if (index < full) return "fullheart";
+            if (index == full && half == 1) return "halfheart";
+            return "emptyheart";
+        }
+        public string Heart1 => GetHeartState(0);
+        public string Heart2 => GetHeartState(1);
+        public string Heart3 => GetHeartState(2);
+        public string Heart4 => GetHeartState(3);
+        public string Heart5 => GetHeartState(4);
+
+        // Sidebar - Melee
+        public string EquippedMeleeText => Player.Inventory.MeleeStatLine;
+
+        // Sidebar - Hotbar
+        public Item?[] HotbarSlots => Player.Inventory.Hotbar;
+        public int ActiveSlot => Player.Inventory.ActiveSlot;
+        public string ActiveItemStatsText => Player.Inventory.ActiveItemStatLine;
+        // Hotbar
+        private string GetSlotText(int i)
+        {
+            var item = Player.Inventory.Hotbar[i];
+            if (item == null) return "Empty";
+            if (item is RangedWeapon rw) return $"{item.Name} {rw.Ammo}/{rw.MaxAmmo}";
+            return item.Name;
+        }
+        public Item? Slot1Item => Player.Inventory.Hotbar[0];
+        public Item? Slot2Item => Player.Inventory.Hotbar[1];
+        public Item? Slot3Item => Player.Inventory.Hotbar[2];
+        public Item? Slot4Item => Player.Inventory.Hotbar[3];
+        public bool Slot1Active => Player.Inventory.ActiveSlot == 0;
+        public bool Slot2Active => Player.Inventory.ActiveSlot == 1;
+        public bool Slot3Active => Player.Inventory.ActiveSlot == 2;
+        public bool Slot4Active => Player.Inventory.ActiveSlot == 3;
+        private Item?[] _lastHotbar = new Item?[4];
+
+        private void UpdateHotbarIfChanged()
+        {
+            var hotbar = Player.Inventory.Hotbar;
+            for (int i = 0; i < 4; i++)
+            {
+                if (_lastHotbar[i] != hotbar[i])
+                {
+                    _lastHotbar[i] = hotbar[i];
+                    OnPropertyChanged(i switch
+                    {
+                        0 => nameof(Slot1Item),
+                        1 => nameof(Slot2Item),
+                        2 => nameof(Slot3Item),
+                        _ => nameof(Slot4Item)
+                    });
+                }
+            }
+        }
+        private int _lastActiveSlot = -1;
+
+        private void UpdateActiveSlotIfChanged()
+        {
+            int current = Player.Inventory.ActiveSlot;
+            if (_lastActiveSlot == current) return;
+            _lastActiveSlot = current;
+            OnPropertyChanged(nameof(Slot1Active));
+            OnPropertyChanged(nameof(Slot2Active));
+            OnPropertyChanged(nameof(Slot3Active));
+            OnPropertyChanged(nameof(Slot4Active));
+        }
+        public void UpdateUIPublic() => UpdateUI();
+
         public MainViewModel()
         {
         }
@@ -221,6 +295,17 @@ namespace AvaloniaUI.ViewModels
             OnPropertyChanged(nameof(CurrentFloor));
             OnPropertyChanged(nameof(HasAllKeys));
             OnPropertyChanged(nameof(MissionText));
+            OnPropertyChanged(nameof(Heart1));
+            OnPropertyChanged(nameof(Heart2));
+            OnPropertyChanged(nameof(Heart3));
+            OnPropertyChanged(nameof(Heart4));
+            OnPropertyChanged(nameof(Heart5));
+            OnPropertyChanged(nameof(EquippedMeleeText));
+            OnPropertyChanged(nameof(HotbarSlots));
+            OnPropertyChanged(nameof(ActiveSlot));
+            OnPropertyChanged(nameof(ActiveItemStatsText));
+            UpdateHotbarIfChanged();
+            UpdateActiveSlotIfChanged();
         }
     }
 }
