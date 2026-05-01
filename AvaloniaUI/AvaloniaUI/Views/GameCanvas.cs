@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 using Avalonia.Threading;
 using GameCore;
 using GameCore.Models.Entities;
@@ -18,7 +19,7 @@ namespace AvaloniaUI.Views
     internal class GameCanvas : Control
     {
         #region Constants
-        private const float ZoomMin = 0.5f;
+        private const float ZoomMin = 1f;
         private const float ZoomMax = 6f;
         private const float ZoomStep = 0.15f;
         private const double TimerInterval = 16;
@@ -29,21 +30,36 @@ namespace AvaloniaUI.Views
         private const double ExploredTileDarkness = 120;
         #endregion
 
-        #region Static Maps
-        private static readonly Dictionary<Type, (int col, int row)> _spriteMap = new()
-        {
-            { typeof(Floor),                SpriteCoords.Floor },
-            { typeof(Wall),                 SpriteCoords.Wall  },
-            { typeof(Gold),                 SpriteCoords.Gold  },
-            { typeof(GameCore.Models.Objects.Key),  SpriteCoords.Key   },
-            { typeof(Exit),                 SpriteCoords.Exit  },
-            { typeof(Enemy),                SpriteCoords.Enemy },
-            { typeof(Altar),                SpriteCoords.Altar },
-            { typeof(Door),                 SpriteCoords.Door  },
-            { typeof(Dagger),               SpriteCoords.Dagger },
-            { typeof(Bow),                  SpriteCoords.Bow }
-        };
+        #region Texture Cache
+        private static readonly Dictionary<string, Bitmap> _textures = new();
 
+        private Bitmap? GetTexture(string spriteName)
+        {
+            string fileName = $"{spriteName}.png";
+            if (!_textures.TryGetValue(fileName, out var bitmap))
+            {
+                try
+                {
+                    bitmap = new Bitmap(AssetLoader.Open(new Uri($"avares://AvaloniaUI/Assets/{fileName}")));
+                    _textures[fileName] = bitmap;
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+            return bitmap;
+        }
+        #endregion
+
+        #region Game State Fields
+        private GameField? _field;
+        private Player? _player;
+        #endregion
+
+        #region Rendering Fields
+        private float _zoom = 2f;
+        private double ScaledTileSize => UIConfig.TileSize * _zoom;
         private static readonly Dictionary<Type, IBrush> _brushes = new()
         {
             { typeof(Wall),                 TileColors.Wall       },
@@ -56,16 +72,6 @@ namespace AvaloniaUI.Views
             { typeof(GameCore.Models.Objects.Void), TileColors.Background },
             { typeof(Door),                 TileColors.Door      },
         };
-        #endregion
-
-        #region Game State Fields
-        private GameField? _field;
-        private Player? _player;
-        #endregion
-
-        #region Rendering Fields
-        private Bitmap? _tileset;
-        private float _zoom = 2f;
         #endregion
 
         #region Camera Fields
@@ -91,6 +97,7 @@ namespace AvaloniaUI.Views
         public GameCanvas()
         {
             ClipToBounds = true;
+            RenderOptions.SetBitmapInterpolationMode(this, BitmapInterpolationMode.None);
             InitializeTimer();
         }
 
@@ -106,7 +113,6 @@ namespace AvaloniaUI.Views
         {
             bool needsRedraw = UpdateCamera();
             needsRedraw |= UpdateFloatingTexts();
-
             if (needsRedraw)
                 InvalidateVisual();
         }
@@ -122,6 +128,12 @@ namespace AvaloniaUI.Views
                 _camY += dy * CameraEasing;
                 return true;
             }
+            else if (_camX != _targetCamX || _camY != _targetCamY)
+            {
+                _camX = _targetCamX;
+                _camY = _targetCamY;
+                return true;
+            }
             return false;
         }
 
@@ -133,7 +145,6 @@ namespace AvaloniaUI.Views
                 var ft = _floatingTexts[i];
                 ft.Life -= FloatingTextDecayRate;
                 ft.WorldY -= FloatingTextSpeedY;
-
                 if (ft.Life <= 0)
                     _floatingTexts.RemoveAt(i);
                 else
@@ -144,12 +155,6 @@ namespace AvaloniaUI.Views
         #endregion
 
         #region Public Methods
-        public void LoadTileset(string path)
-        {
-            if (File.Exists(path))
-                _tileset = new Bitmap(path);
-        }
-
         public void SetGameState(GameField field, Player player)
         {
             _field = field;
@@ -161,7 +166,7 @@ namespace AvaloniaUI.Views
         public void CenterOnPlayer()
         {
             if (_player == null) return;
-            float tileSize = UIConfig.TileSize * _zoom;
+            double tileSize = ScaledTileSize;
             _targetCamX = _camX = _player.X * tileSize + tileSize / 2.0 - Bounds.Width / 2.0;
             _targetCamY = _camY = _player.Y * tileSize + tileSize / 2.0 - Bounds.Height / 2.0;
             InvalidateVisual();
@@ -177,11 +182,9 @@ namespace AvaloniaUI.Views
         private void UpdateTarget()
         {
             if (_player == null || Bounds.Width == 0) return;
-
-            float tileSize = UIConfig.TileSize * _zoom;
+            double tileSize = ScaledTileSize;
             double playerScreenX = _player.X * tileSize - _camX;
             double playerScreenY = _player.Y * tileSize - _camY;
-
             double marginX = Bounds.Width * CameraMarginRatio;
             double marginY = Bounds.Height * CameraMarginRatio;
 
@@ -242,7 +245,6 @@ namespace AvaloniaUI.Views
         protected override void OnPointerWheelChanged(PointerWheelEventArgs e)
         {
             base.OnPointerWheelChanged(e);
-
             var mouse = e.GetPosition(this);
             double worldX = (_camX + mouse.X) / _zoom;
             double worldY = (_camY + mouse.Y) / _zoom;
@@ -252,7 +254,6 @@ namespace AvaloniaUI.Views
 
             _camX = _targetCamX = worldX * _zoom - mouse.X;
             _camY = _targetCamY = worldY * _zoom - mouse.Y;
-
             InvalidateVisual();
             e.Handled = true;
         }
@@ -262,8 +263,7 @@ namespace AvaloniaUI.Views
         public override void Render(DrawingContext context)
         {
             if (_field == null || _player == null) return;
-
-            float tileSize = UIConfig.TileSize * _zoom;
+            double tileSize = Math.Round(UIConfig.TileSize * _zoom);
             double viewW = Bounds.Width;
             double viewH = Bounds.Height;
 
@@ -274,7 +274,7 @@ namespace AvaloniaUI.Views
             int endX = Math.Min(_field.Width, (int)((_camX + viewW) / tileSize) + 2);
             int endY = Math.Min(_field.Height, (int)((_camY + viewH) / tileSize) + 2);
 
-            using var _ = context.PushTransform(Matrix.CreateTranslation(-_camX, -_camY));
+            using var _ = context.PushTransform(Matrix.CreateTranslation(-Math.Round(_camX), -Math.Round(_camY)));
 
             RenderTilesLayer(context, tileSize, startX, startY, endX, endY);
             RenderEnemiesLayer(context, tileSize, startX, startY, endX, endY);
@@ -283,14 +283,16 @@ namespace AvaloniaUI.Views
             RenderFloatingTextsLayer(context, tileSize);
         }
 
-        private void RenderTilesLayer(DrawingContext context, float tileSize, int startX, int startY, int endX, int endY)
+        private void RenderTilesLayer(DrawingContext context, double tileSize, int startX, int startY, int endX, int endY)
         {
             for (int y = startY; y < endY; y++)
             {
                 for (int x = startX; x < endX; x++)
                 {
                     var tile = _field![x, y];
-                    var destRect = new Avalonia.Rect(x * tileSize, y * tileSize, tileSize, tileSize);
+                    var destRect = (tile is Wall)
+                        ? GetSeamlessRect(x, y, tileSize)
+                        : GetTileRectWithGap(x, y, tileSize);
 
                     if (tile is GameCore.Models.Objects.Void)
                     {
@@ -304,11 +306,17 @@ namespace AvaloniaUI.Views
                         context.DrawRectangle(Brushes.Black, null, destRect);
                         continue;
                     }
+                    if (tile is not GameCore.Models.Objects.Void && fov != ExplorationState.Unknown)
+                    {
+                        context.DrawRectangle(TileColors.Gap, null,
+                            new Rect(
+                                Math.Round(x * tileSize),
+                                Math.Round(y * tileSize),
+                                tileSize,
+                                tileSize));
+                    }
 
-                    if (_tileset != null)
-                        DrawTileSprite(context, tile, fov, destRect);
-                    else
-                        DrawFallbackTile(context, tile, false, destRect, x, y);
+                    DrawTileSprite(context, tile, fov, destRect);
 
                     if (fov == ExplorationState.Explored)
                         context.DrawRectangle(
@@ -318,7 +326,7 @@ namespace AvaloniaUI.Views
             }
         }
 
-        private void RenderEnemiesLayer(DrawingContext context, float tileSize, int startX, int startY, int endX, int endY)
+        private void RenderEnemiesLayer(DrawingContext context, double tileSize, int startX, int startY, int endX, int endY)
         {
             for (int y = startY; y < endY; y++)
             {
@@ -331,28 +339,29 @@ namespace AvaloniaUI.Views
                     if (entity == null)
                         continue;
 
-                    var destRect = new Avalonia.Rect(x * tileSize, y * tileSize, tileSize, tileSize);
+                    var destRect = GetTileRectWithGap(x, y, tileSize);
+                    var bitmap = GetTexture(entity.SpriteName);
 
-                    if (_tileset != null)
-                        context.DrawImage(_tileset, 
-                            GetSourceRect(SpriteCoords.Enemy.col, SpriteCoords.Enemy.row), destRect);
+                    if (bitmap != null)
+                        context.DrawImage(bitmap, destRect);
                     else
                         DrawFallbackTile(context, null, false, destRect, x, y);
                 }
             }
         }
 
-        private void RenderPlayerLayer(DrawingContext context, float tileSize)
+        private void RenderPlayerLayer(DrawingContext context, double tileSize)
         {
-            var destRect = new Avalonia.Rect(_player!.X * tileSize, _player.Y * tileSize, tileSize, tileSize);
-            if (_tileset != null)
-                context.DrawImage(_tileset,
-                    GetSourceRect(SpriteCoords.Player.col, SpriteCoords.Player.row), destRect);
+            var destRect = GetTileRectWithGap(_player!.X, _player.Y, tileSize);
+            var bitmap = GetTexture(_player.SpriteName);
+
+            if (bitmap != null)
+                context.DrawImage(bitmap, destRect);
             else
                 DrawFallbackTile(context, null, true, destRect, _player.X, _player.Y);
         }
 
-        private void RenderHPBarsLayer(DrawingContext context, float tileSize, int startX, int startY, int endX, int endY)
+        private void RenderHPBarsLayer(DrawingContext context, double tileSize, int startX, int startY, int endX, int endY)
         {
             for (int y = startY; y < endY; y++)
             {
@@ -363,14 +372,14 @@ namespace AvaloniaUI.Views
 
                     if (_field.GetEntity(x, y) is Enemy enemy && enemy.HP < enemy.MaxHP)
                     {
-                        var destRect = new Avalonia.Rect(x * tileSize, y * tileSize, tileSize, tileSize);
+                        var destRect = GetTileRectWithGap(x, y, tileSize);
                         DrawHPBar(context, destRect, enemy);
                     }
                 }
             }
         }
 
-        private void RenderFloatingTextsLayer(DrawingContext context, float tileSize)
+        private void RenderFloatingTextsLayer(DrawingContext context, double tileSize)
         {
             foreach (var ft in _floatingTexts)
                 DrawFloatingText(context, ft, tileSize);
@@ -379,12 +388,19 @@ namespace AvaloniaUI.Views
         private void DrawTileSprite(DrawingContext context, GameObject tile, ExplorationState fov, Avalonia.Rect destRect)
         {
             bool isStatic = tile is Wall or Floor;
+            string spriteName = fov == ExplorationState.Explored && !isStatic
+                ? "floor"
+                : tile.SpriteName;
 
-            var coords = fov == ExplorationState.Explored && !isStatic
-                ? SpriteCoords.Floor
-                : (_spriteMap.TryGetValue(tile.GetType(), out var c) ? c : SpriteCoords.Floor);
-
-            context.DrawImage(_tileset!, GetSourceRect(coords.col, coords.row), destRect);
+            var bitmap = GetTexture(spriteName);
+            if (bitmap != null)
+            {
+                context.DrawImage(bitmap, destRect);
+            }
+            else
+            {
+                DrawFallbackTile(context, tile, false, destRect, (int)(destRect.X / UIConfig.TileSize), (int)(destRect.Y / UIConfig.TileSize));
+            }
         }
 
         private void DrawHPBar(DrawingContext context, Avalonia.Rect destRect, Enemy enemy)
@@ -392,14 +408,14 @@ namespace AvaloniaUI.Views
             double hp = Math.Max(0, (double)enemy.HP / enemy.MaxHP);
             double barH = 4 * _zoom;
             double yOff = -(barH + 2);
-            
+
             context.DrawRectangle(Brushes.Black, null,
                 new Avalonia.Rect(destRect.X, destRect.Y + yOff, destRect.Width, barH));
             context.DrawRectangle(Brushes.Red, null,
                 new Avalonia.Rect(destRect.X, destRect.Y + yOff, destRect.Width * hp, barH));
         }
 
-        private void DrawFloatingText(DrawingContext context, FloatingText ft, float tileSize)
+        private void DrawFloatingText(DrawingContext context, FloatingText ft, double tileSize)
         {
             byte alpha = (byte)(Math.Clamp(ft.Life, 0.0, 1.0) * 255);
             var textBrush = new SolidColorBrush(Color.FromArgb(alpha, 255, 50, 50));
@@ -426,7 +442,7 @@ namespace AvaloniaUI.Views
         {
             IBrush brush = isPlayer ? TileColors.Player : GetFallbackBrush(tile);
             char symbol = isPlayer ? GameSymbols.Player : tile!.Symbol;
-            
+
             context.DrawRectangle(brush, null, destRect);
             var text = new FormattedText(
                 symbol.ToString(),
@@ -444,10 +460,23 @@ namespace AvaloniaUI.Views
             => obj != null && _brushes.TryGetValue(obj.GetType(), out var brush)
                 ? brush
                 : TileColors.Floor;
+        private Avalonia.Rect GetTileRectWithGap(double gridX, double gridY, double tileSize)
+        {
+            double px = Math.Round(gridX * tileSize);
+            double py = Math.Round(gridY * tileSize);
+            double nextPx = Math.Round((gridX + 1) * tileSize);
+            double nextPy = Math.Round((gridY + 1) * tileSize);
+            return new Avalonia.Rect(px, py, nextPx - px - 1, nextPy - py - 1);
+        }
 
-        private static Avalonia.Rect GetSourceRect(int col, int row) =>
-            new(col * UIConfig.SpriteStep, row * UIConfig.SpriteStep,
-                UIConfig.SpriteSize, UIConfig.SpriteSize);
+        private Avalonia.Rect GetSeamlessRect(double gridX, double gridY, double tileSize)
+        {
+            double px = Math.Round(gridX * tileSize);
+            double py = Math.Round(gridY * tileSize);
+            double nextPx = Math.Round((gridX + 1) * tileSize);
+            double nextPy = Math.Round((gridY + 1) * tileSize);
+            return new Avalonia.Rect(px, py, nextPx - px + 1, nextPy - py + 1);
+        }
         #endregion
 
         #region Floating Text

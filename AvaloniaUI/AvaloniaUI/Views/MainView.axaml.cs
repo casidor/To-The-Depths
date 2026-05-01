@@ -15,9 +15,6 @@ namespace AvaloniaUI.Views
         protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
         {
             base.OnAttachedToVisualTree(e);
-            var tilesetPath = FindTileset();
-            if (tilesetPath != null)
-                MapRenderer.LoadTileset(tilesetPath);
 
             if (DataContext is MainViewModel vm)
             {
@@ -36,22 +33,6 @@ namespace AvaloniaUI.Views
                 };
             }
             this.Focus();
-        }
-
-        private static string? FindTileset()
-        {
-            var candidates = new[]
-            {
-                "Assets/colored.png",
-                "colored.png",
-                Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "Assets", "colored.png"),
-                Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "colored.png"),
-            };
-
-            foreach (var path in candidates)
-                if (File.Exists(path)) return path;
-
-            return null;
         }
 
         private void InputElement_OnKeyDown(object? sender, Avalonia.Input.KeyEventArgs e)

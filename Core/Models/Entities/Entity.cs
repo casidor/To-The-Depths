@@ -10,5 +10,6 @@ namespace GameCore.Models.Entities
         public int Y { get; set; }
         public char Symbol { get; protected set; }
         public string Color { get; protected set; } = GameColors.Reset;
+        public virtual string SpriteName => GetType().Name.ToLower();
     }
 }

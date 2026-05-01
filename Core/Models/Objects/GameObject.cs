@@ -11,6 +11,7 @@ namespace GameCore.Models.Objects
         public char Symbol { get; protected set; }
         public bool IsPassable { get; protected set; } = false;
         public string Color { get; protected set; } = GameColors.Reset;
+        public virtual string SpriteName => GetType().Name.ToLower();
         public abstract InteractionResult Interact(Player player, GameField field, int x, int y);
     }
 }
