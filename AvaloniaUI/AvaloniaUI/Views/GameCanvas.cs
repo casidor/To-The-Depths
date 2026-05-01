@@ -32,7 +32,10 @@ namespace AvaloniaUI.Views
 
         #region Texture Cache
         private static readonly Dictionary<string, Bitmap> _textures = new();
-
+        private readonly SolidColorBrush _fogBrush = new(Color.FromArgb(120, 0, 0, 0));
+        private readonly SolidColorBrush _floatingTextBrush = new(Color.FromArgb(255, 255, 50, 50));
+        private readonly SolidColorBrush _floatingOutlineBrush = new(Color.FromArgb(255, 0, 0, 0));
+        private Pen _floatingOutlinePen = null!;
         private Bitmap? GetTexture(string spriteName)
         {
             string fileName = $"{spriteName}.png";
@@ -99,6 +102,7 @@ namespace AvaloniaUI.Views
             ClipToBounds = true;
             RenderOptions.SetBitmapInterpolationMode(this, BitmapInterpolationMode.None);
             InitializeTimer();
+            _floatingOutlinePen = new Pen(_floatingOutlineBrush, 2);
         }
 
         #region Initialization
@@ -308,12 +312,7 @@ namespace AvaloniaUI.Views
                     }
                     if (tile is not GameCore.Models.Objects.Void && fov != ExplorationState.Unknown)
                     {
-                        context.DrawRectangle(TileColors.Gap, null,
-                            new Rect(
-                                Math.Round(x * tileSize),
-                                Math.Round(y * tileSize),
-                                tileSize,
-                                tileSize));
+                        context.DrawRectangle(_fogBrush, null, destRect);
                     }
 
                     DrawTileSprite(context, tile, fov, destRect);
@@ -418,8 +417,10 @@ namespace AvaloniaUI.Views
         private void DrawFloatingText(DrawingContext context, FloatingText ft, double tileSize)
         {
             byte alpha = (byte)(Math.Clamp(ft.Life, 0.0, 1.0) * 255);
-            var textBrush = new SolidColorBrush(Color.FromArgb(alpha, 255, 50, 50));
-            var outlinePen = new Pen(new SolidColorBrush(Color.FromArgb(alpha, 0, 0, 0)), 2 * _zoom);
+            _floatingTextBrush.Color = Color.FromArgb(alpha, 255, 50, 50);
+            _floatingOutlineBrush.Color = Color.FromArgb(alpha, 0, 0, 0);
+            _floatingOutlinePen = new Pen(_floatingOutlineBrush, 2 * _zoom);
+
             string displayString = (ft.Icon.HasValue ? $"{ft.Icon} " : "") + ft.Text;
 
             var textFormat = new FormattedText(
@@ -428,14 +429,14 @@ namespace AvaloniaUI.Views
                 FlowDirection.LeftToRight,
                 UIConfig.GameFont,
                 UIConfig.TileSize * _zoom * 0.6,
-                textBrush);
+                _floatingTextBrush);
 
             double screenX = ft.WorldX * tileSize + (tileSize * 0.2);
             double screenY = ft.WorldY * tileSize;
             var textGeometry = textFormat.BuildGeometry(new Avalonia.Point(screenX, screenY));
 
-            context.DrawGeometry(null, outlinePen, textGeometry);
-            context.DrawGeometry(textBrush, null, textGeometry);
+            context.DrawGeometry(null, _floatingOutlinePen, textGeometry);
+            context.DrawGeometry(_floatingTextBrush, null, textGeometry);
         }
 
         private void DrawFallbackTile(DrawingContext context, GameObject? tile, bool isPlayer, Avalonia.Rect destRect, int x, int y)

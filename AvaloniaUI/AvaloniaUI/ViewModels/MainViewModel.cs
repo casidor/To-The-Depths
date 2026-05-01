@@ -118,6 +118,18 @@ namespace AvaloniaUI.ViewModels
         public string Heart3 => GetHeartState(2);
         public string Heart4 => GetHeartState(3);
         public string Heart5 => GetHeartState(4);
+        private int _lastHP = -1;
+
+        private void UpdateHeartsIfChanged()
+        {
+            if (_lastHP == Player.HP) return;
+            _lastHP = Player.HP;
+            OnPropertyChanged(nameof(Heart1));
+            OnPropertyChanged(nameof(Heart2));
+            OnPropertyChanged(nameof(Heart3));
+            OnPropertyChanged(nameof(Heart4));
+            OnPropertyChanged(nameof(Heart5));
+        }
 
         // Sidebar - Melee
         public string EquippedMeleeText => Player.Inventory.MeleeStatLine;
@@ -295,11 +307,7 @@ namespace AvaloniaUI.ViewModels
             OnPropertyChanged(nameof(CurrentFloor));
             OnPropertyChanged(nameof(HasAllKeys));
             OnPropertyChanged(nameof(MissionText));
-            OnPropertyChanged(nameof(Heart1));
-            OnPropertyChanged(nameof(Heart2));
-            OnPropertyChanged(nameof(Heart3));
-            OnPropertyChanged(nameof(Heart4));
-            OnPropertyChanged(nameof(Heart5));
+            UpdateHeartsIfChanged();
             OnPropertyChanged(nameof(EquippedMeleeText));
             OnPropertyChanged(nameof(HotbarSlots));
             OnPropertyChanged(nameof(ActiveSlot));
