@@ -22,7 +22,8 @@ namespace GameCore
         EnemyAttacked,
         EnemyKilled,
         Altar,
-        ExitReached
+        ExitReached,
+        ItemPickedUp
     }
     public enum SaveResult
     {
