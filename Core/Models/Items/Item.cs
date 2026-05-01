@@ -23,13 +23,9 @@ namespace GameCore.Models.Items
                 bool equipped = eq.Equip(player, field, x, y);
                 return equipped ? InteractionResult.ItemPickedUp : InteractionResult.None;
             }
-            if (this is IUsable us)
-            {
-                us.Use(player);
-                field[x, y] = new Floor();
-                return InteractionResult.ItemPickedUp;
-            }
-            return InteractionResult.None;
+            bool added = player.Inventory.TryAddToHotbar(this);
+            if (added) field[x, y] = new Floor();
+            return added ? InteractionResult.ItemPickedUp : InteractionResult.None;
         }
     }
 }

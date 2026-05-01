@@ -6,6 +6,7 @@ using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using GameCore;
 using GameCore.Models.Entities;
+using GameCore.Models.Items.Weapons;
 using GameCore.Models.Objects;
 using GameCore.World;
 using System;
@@ -39,6 +40,8 @@ namespace AvaloniaUI.Views
             { typeof(Enemy),                SpriteCoords.Enemy },
             { typeof(Altar),                SpriteCoords.Altar },
             { typeof(Door),                 SpriteCoords.Door  },
+            { typeof(Dagger),               SpriteCoords.Dagger },
+            { typeof(Bow),                  SpriteCoords.Bow }
         };
 
         private static readonly Dictionary<Type, IBrush> _brushes = new()

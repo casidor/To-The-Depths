@@ -1,4 +1,5 @@
-﻿using GameCore.Models.Objects;
+﻿using GameCore.Models.Items.Weapons;
+using GameCore.Models.Objects;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -24,6 +25,8 @@ namespace GameCore.World.Generator
             PlaceEnemies(field, random, _rooms, Config.EnemiesAmount, excludeFirst: true);
             PlaceItemsByChance(field, random, Config.GoldChance, () => new Gold(), _rooms);
             PlaceDoors(field, _rooms);
+            PlaceInRandomRooms(field, random, _rooms, 1, () => new Dagger(), excludeFirst: true);
+            PlaceInRandomRooms(field, random, _rooms, 1, () => new Bow(), excludeFirst: true);
             return (field, _rooms[0].CenterX, _rooms[0].CenterY);
         }
 

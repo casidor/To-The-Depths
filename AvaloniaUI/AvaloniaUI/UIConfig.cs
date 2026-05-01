@@ -30,6 +30,8 @@ namespace AvaloniaUI
         public static readonly (int col, int row) HalfHP = (41, 10);
         public static readonly (int col, int row) ZeroHP = (40, 10);
         public static readonly (int col, int row) Door = (11, 11);
+        public static readonly (int col, int row) Dagger = (36, 6);
+        public static readonly (int col, int row) Bow = (38, 6);
     }
     public static class TileColors
     {

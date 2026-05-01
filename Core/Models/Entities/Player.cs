@@ -1,4 +1,5 @@
-﻿using GameCore.World;
+﻿using GameCore.Models.Items;
+using GameCore.World;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,7 +10,7 @@ namespace GameCore.Models.Entities
     {
         public int MaxHP { get; private set; }
         public int HP { get; private set; }
-        public int Damage { get; private set; } = Config.PlayerDamage;
+        public int Damage => Inventory.EquippedMelee?.Damage ?? Config.PlayerDamage;
         public bool IsAlive => HP > 0;
         public int KeysCollected { get; private set; } = 0;
         public int CurrentFloor { get; private set; } = 1;
@@ -20,6 +21,7 @@ namespace GameCore.Models.Entities
             private set => _gold = Math.Max(value, 0);
         }
         public bool IsExited { get; private set; } = false;
+        public Inventory Inventory { get; } = new();
         public Player(int x, int y)
         {
             X = x;
@@ -60,22 +62,10 @@ namespace GameCore.Models.Entities
             IsExited = false;
             CurrentFloor++;
         }
-        public void AddGold(int amount)
-        {
-            GoldCollected += amount;
-        }
-        public void AddKey()
-        {
-            KeysCollected++;
-        }
-        public void Exit()
-        {
-            IsExited = true;
-        }
-        public void TakeDamage(int damage)
-        {
-            HP = Math.Max(HP - damage, 0);
-        }
+        public void AddGold(int amount) => GoldCollected += amount;
+        public void AddKey() => KeysCollected++;
+        public void Exit() => IsExited = true;
+        public void TakeDamage(int damage) => HP = Math.Max(HP - damage, 0);
         public bool SpendGold(int amount)
         {
             if (GoldCollected < amount) return false;

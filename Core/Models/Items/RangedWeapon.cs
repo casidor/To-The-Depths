@@ -1,4 +1,5 @@
-﻿using GameCore.Interfaces.GameCore.Interfaces;
+﻿using GameCore.Interfaces;
+using GameCore.Interfaces.GameCore.Interfaces;
 using GameCore.Models.Entities;
 using GameCore.Models.Objects;
 using GameCore.World;
@@ -8,41 +9,49 @@ using System.Text;
 
 namespace GameCore.Models.Items
 {
-    public abstract class RangedWeapon : Weapon, IEquippable
+    public abstract class RangedWeapon : Weapon, IUsable
     {
         public int Range { get; protected set; }
         public int MaxAmmo { get; protected set; }
         public int Ammo { get; private set; }
         public bool HasAmmo => Ammo > 0;
+        public bool IsEmpty => Ammo == 0;
 
         public override string StatLine =>
             $"{Name} [{Damage} dmg | {Range} range | {Ammo}/{MaxAmmo}]";
 
-        public bool Equip(Player player, GameField field, int x, int y)
-        {
-            var hotbar = player.Inventory.Hotbar;
-            for (int i = 0; i < hotbar.Length; i++)
-            {
-                if (hotbar[i] == null)
-                {
-                    Ammo = MaxAmmo;
-                    hotbar[i] = this;
-                    field[x, y] = new Floor();
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public bool TrySpendAmmo(Inventory inventory)
+        public bool TrySpendAmmo()
         {
             if (!HasAmmo) return false;
             Ammo--;
-            if (Ammo == 0)
-                for (int i = 0; i < inventory.Hotbar.Length; i++)
-                    if (inventory.Hotbar[i] == this)
-                        inventory.Hotbar[i] = null;
             return true;
+        }
+
+        public UseResult Use(Player player, GameField field)
+        {
+            if (!TrySpendAmmo()) return UseResult.Failed;
+            if (IsEmpty) player.Inventory.RemoveFromHotbar(this);
+
+            Enemy? closest = null;
+            int minDist = int.MaxValue;
+
+            for (int dy = -Range; dy <= Range; dy++)
+                for (int dx = -Range; dx <= Range; dx++)
+                {
+                    int cx = player.X + dx;
+                    int cy = player.Y + dy;
+                    if (cx < 0 || cx >= field.Width || cy < 0 || cy >= field.Height) continue;
+                    if (field.Fov[cx, cy] != ExplorationState.Visible) continue;
+                    if (field.GetEntity(cx, cy) is Enemy enemy)
+                    {
+                        int dist = Math.Abs(dx) + Math.Abs(dy);
+                        if (dist < minDist) { minDist = dist; closest = enemy; }
+                    }
+                }
+
+            if (closest == null) return UseResult.Missed;
+            closest.Interact(player, field, closest.X, closest.Y);
+            return UseResult.Hit;
         }
     }
 }

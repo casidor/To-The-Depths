@@ -38,4 +38,10 @@ namespace GameCore
         Explored = 1,
         Visible = 2
     }
+    public enum UseResult
+    {
+        Failed,
+        Missed,
+        Hit
+    }
 }
