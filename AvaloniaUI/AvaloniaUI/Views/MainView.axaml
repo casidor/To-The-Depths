@@ -18,23 +18,23 @@
 	<UserControl.Resources>
 		<conv:StringToAssetConverter x:Key="StringToAsset"/>
 		<conv:ItemToSpriteConverter x:Key="ItemToSprite"/>
-        <conv:ItemToAmmoConverter x:Key="ItemToAmmo"/>
+		<conv:ItemToAmmoConverter x:Key="ItemToAmmo"/>
 	</UserControl.Resources>
 
 	<UserControl.Styles>
 		<Style Selector="Border.hotbarSlot">
-    <Setter Property="BorderBrush" Value="#5a3060"/>
-    <Setter Property="BorderThickness" Value="1"/>
-    <Setter Property="CornerRadius" Value="2"/>
-    <Setter Property="Background" Value="Transparent"/>
-    <Setter Property="Width" Value="54"/>
-<Setter Property="Height" Value="54"/>
-    <Setter Property="Padding" Value="4"/>
-</Style>
-<Style Selector="Border.hotbarSlot.active">
-    <Setter Property="BorderBrush" Value="#c060e0"/>
-    <Setter Property="Background" Value="Transparent"/>
-</Style>
+			<Setter Property="BorderBrush" Value="#5a3060"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="CornerRadius" Value="2"/>
+			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="Width" Value="54"/>
+			<Setter Property="Height" Value="54"/>
+			<Setter Property="Padding" Value="4"/>
+		</Style>
+		<Style Selector="Border.hotbarSlot.active">
+			<Setter Property="BorderBrush" Value="#c060e0"/>
+			<Setter Property="Background" Value="Transparent"/>
+		</Style>
 	</UserControl.Styles>
 
 	<Grid>
@@ -43,170 +43,170 @@
 			<ColumnDefinition Width="280"/>   <!-- Sidebar -->
 		</Grid.ColumnDefinitions>
 		<views:GameCanvas x:Name="MapRenderer" Grid.Column="0"/>
-		<Border Grid.Column="1" 
-        BorderBrush="#8B6914" 
-        BorderThickness="2,0,0,0">
-    <Border.Background>
-        <ImageBrush Source="avares://AvaloniaUI/Assets/floor.png"
-                    Stretch="Fill"/>
-    </Border.Background>
-    <StackPanel Margin="10" Spacing="8">
-		<StackPanel Grid.Column="1" Margin="10" Spacing="8">
+		<Border Grid.Column="1"
+				BorderBrush="#8B6914"
+				BorderThickness="2,0,0,0">
+			<Border.Background>
+				<ImageBrush Source="avares://AvaloniaUI/Assets/floor.png"
+							Stretch="Fill"/>
+			</Border.Background>
+			<StackPanel Margin="10" Spacing="8">
+				<StackPanel Grid.Column="1" Margin="10" Spacing="8">
 
-			<!-- Floor -->
-			<TextBlock Text="{Binding CurrentFloor, StringFormat='— FLOOR {0} —'}"
-					   FontWeight="Bold" HorizontalAlignment="Center"
-					   Foreground="#9060a0"/>
+					<!-- Floor -->
+					<TextBlock Text="{Binding CurrentFloor, StringFormat='— FLOOR {0} —'}"
+							   FontWeight="Bold" HorizontalAlignment="Center"
+							   Foreground="#9060a0"/>
 
-			<Separator Background="#3d2045" Height="1"/>
+					<Separator Background="#3d2045" Height="1"/>
 
-			<!-- HP -->
-			<StackPanel Spacing="4">
-				<TextBlock Text="HEALTH" FontSize="10" Foreground="#9060a0"/>
-				<StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
-					<StackPanel Orientation="Horizontal" Spacing="2">
-						<Image Width="32" Height="32" Source="{Binding Heart1, Converter={StaticResource StringToAsset}}" RenderOptions.BitmapInterpolationMode="None"/>
-						<Image Width="32" Height="32" Source="{Binding Heart2, Converter={StaticResource StringToAsset}}" RenderOptions.BitmapInterpolationMode="None"/>
-						<Image Width="32" Height="32" Source="{Binding Heart3, Converter={StaticResource StringToAsset}}" RenderOptions.BitmapInterpolationMode="None"/>
-						<Image Width="32" Height="32" Source="{Binding Heart4, Converter={StaticResource StringToAsset}}" RenderOptions.BitmapInterpolationMode="None"/>
-						<Image Width="32" Height="32" Source="{Binding Heart5, Converter={StaticResource StringToAsset}}" RenderOptions.BitmapInterpolationMode="None"/>
+					<!-- HP -->
+					<StackPanel Spacing="4">
+						<TextBlock Text="HEALTH" FontSize="10" Foreground="#9060a0"/>
+						<StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+							<StackPanel Orientation="Horizontal" Spacing="2">
+								<Image Width="32" Height="32" Source="{Binding Heart1, Converter={StaticResource StringToAsset}}" RenderOptions.BitmapInterpolationMode="None"/>
+								<Image Width="32" Height="32" Source="{Binding Heart2, Converter={StaticResource StringToAsset}}" RenderOptions.BitmapInterpolationMode="None"/>
+								<Image Width="32" Height="32" Source="{Binding Heart3, Converter={StaticResource StringToAsset}}" RenderOptions.BitmapInterpolationMode="None"/>
+								<Image Width="32" Height="32" Source="{Binding Heart4, Converter={StaticResource StringToAsset}}" RenderOptions.BitmapInterpolationMode="None"/>
+								<Image Width="32" Height="32" Source="{Binding Heart5, Converter={StaticResource StringToAsset}}" RenderOptions.BitmapInterpolationMode="None"/>
+							</StackPanel>
+							<TextBlock Text="{Binding HPText}"
+									   Foreground="{DynamicResource BrushHP}"
+									   VerticalAlignment="Center" FontSize="11"/>
+						</StackPanel>
 					</StackPanel>
-					<TextBlock Text="{Binding HPText}"
-							   Foreground="{DynamicResource BrushHP}"
-							   VerticalAlignment="Center" FontSize="11"/>
+
+					<Separator Background="#3d2045" Height="1"/>
+
+					<!-- Stats -->
+					<StackPanel Spacing="2">
+						<TextBlock Text="STATS" FontSize="10" Foreground="#9060a0"/>
+						<TextBlock Text="{Binding PlayerGold, StringFormat='♦ Gold: {0}'}"
+								   Foreground="{DynamicResource BrushGold}"/>
+						<TextBlock Text="{Binding KeysText, StringFormat='⚷ Keys: {0}'}"
+								   Foreground="{DynamicResource BrushKey}"/>
+					</StackPanel>
+
+					<Separator Background="#3d2045" Height="1"/>
+
+					<!-- Melee -->
+					<StackPanel Spacing="2">
+						<TextBlock Text="MELEE" FontSize="10" Foreground="#9060a0"/>
+						<TextBlock Text="{Binding EquippedMeleeText}"
+								   Foreground="White" FontSize="11" TextWrapping="Wrap"/>
+					</StackPanel>
+
+					<Separator Background="#3d2045" Height="1"/>
+
+					<!-- Hotbar -->
+					<StackPanel Spacing="4">
+						<TextBlock Text="HOTBAR" FontSize="10" Foreground="#9060a0"/>
+						<StackPanel Orientation="Horizontal" Spacing="4">
+
+							<StackPanel Orientation="Horizontal" Spacing="4">
+								<Border Classes="hotbarSlot" Classes.active="{Binding Slot1Active}">
+									<Grid>
+										<TextBlock Text="1" FontSize="8"
+												   HorizontalAlignment="Left" VerticalAlignment="Top"
+												   Foreground="#9060a0"/>
+										<Image Width="32" Height="32"
+											   Source="{Binding Slot1Item, Converter={StaticResource ItemToSprite}}"
+											   RenderOptions.BitmapInterpolationMode="None"
+											   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+										<TextBlock Text="{Binding Slot1Item, Converter={StaticResource ItemToAmmo}}"
+												   FontSize="8" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+												   Foreground="#e0c0f0"/>
+									</Grid>
+								</Border>
+
+								<Border Classes="hotbarSlot" Classes.active="{Binding Slot2Active}">
+									<Grid>
+										<TextBlock Text="2" FontSize="8"
+												   HorizontalAlignment="Left" VerticalAlignment="Top"
+												   Foreground="#9060a0"/>
+										<Image Width="32" Height="32"
+											   Source="{Binding Slot2Item, Converter={StaticResource ItemToSprite}}"
+											   RenderOptions.BitmapInterpolationMode="None"
+											   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+										<TextBlock Text="{Binding Slot2Item, Converter={StaticResource ItemToAmmo}}"
+												   FontSize="8" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+												   Foreground="#e0c0f0"/>
+									</Grid>
+								</Border>
+
+								<Border Classes="hotbarSlot" Classes.active="{Binding Slot3Active}">
+									<Grid>
+										<TextBlock Text="3" FontSize="8"
+												   HorizontalAlignment="Left" VerticalAlignment="Top"
+												   Foreground="#9060a0"/>
+										<Image Width="32" Height="32"
+											   Source="{Binding Slot3Item, Converter={StaticResource ItemToSprite}}"
+											   RenderOptions.BitmapInterpolationMode="None"
+											   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+										<TextBlock Text="{Binding Slot3Item, Converter={StaticResource ItemToAmmo}}"
+												   FontSize="8" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+												   Foreground="#e0c0f0"/>
+									</Grid>
+								</Border>
+
+								<Border Classes="hotbarSlot" Classes.active="{Binding Slot4Active}">
+									<Grid>
+										<TextBlock Text="4" FontSize="8"
+												   HorizontalAlignment="Left" VerticalAlignment="Top"
+												   Foreground="#9060a0"/>
+										<Image Width="32" Height="32"
+											   Source="{Binding Slot4Item, Converter={StaticResource ItemToSprite}}"
+											   RenderOptions.BitmapInterpolationMode="None"
+											   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+										<TextBlock Text="{Binding Slot4Item, Converter={StaticResource ItemToAmmo}}"
+												   FontSize="8" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+												   Foreground="#e0c0f0"/>
+									</Grid>
+								</Border>
+							</StackPanel>
+
+						</StackPanel>
+						<TextBlock Text="{Binding ActiveItemStatsText}"
+								   Foreground="#aaaacc" FontSize="10" TextWrapping="Wrap"/>
+					</StackPanel>
+
+					<Separator Background="#3d2045" Height="1"/>
+
+					<!-- Mission -->
+					<StackPanel Spacing="2">
+						<TextBlock Text="MISSION" FontSize="10" Foreground="#9060a0"/>
+						<TextBlock Text="{Binding MissionText}" Foreground="White"
+								   TextWrapping="Wrap"/>
+					</StackPanel>
+
+					<Separator Background="#3d2045" Height="1"/>
+
+					<!-- Controls -->
+					<TextBlock Text="{x:Static local:GameTexts.Controls}"
+							   FontSize="10" Foreground="#7a5a8a" TextWrapping="Wrap"/>
+
 				</StackPanel>
 			</StackPanel>
-
-			<Separator Background="#3d2045" Height="1"/>
-
-			<!-- Stats -->
-			<StackPanel Spacing="2">
-				<TextBlock Text="STATS" FontSize="10" Foreground="#9060a0"/>
-				<TextBlock Text="{Binding PlayerGold, StringFormat='♦ Gold: {0}'}"
-						   Foreground="{DynamicResource BrushGold}"/>
-				<TextBlock Text="{Binding KeysText, StringFormat='⚷ Keys: {0}'}"
-						   Foreground="{DynamicResource BrushKey}"/>
-			</StackPanel>
-
-			<Separator Background="#3d2045" Height="1"/>
-
-			<!-- Melee -->
-			<StackPanel Spacing="2">
-				<TextBlock Text="MELEE" FontSize="10" Foreground="#9060a0"/>
-				<TextBlock Text="{Binding EquippedMeleeText}"
-						   Foreground="White" FontSize="11" TextWrapping="Wrap"/>
-			</StackPanel>
-
-			<Separator Background="#3d2045" Height="1"/>
-
-			<!-- Hotbar -->
-			<StackPanel Spacing="4">
-				<TextBlock Text="HOTBAR" FontSize="10" Foreground="#9060a0"/>
-				<StackPanel Orientation="Horizontal" Spacing="4">
-
-					<StackPanel Orientation="Horizontal" Spacing="4">
-    <Border Classes="hotbarSlot" Classes.active="{Binding Slot1Active}">
-        <Grid>
-            <TextBlock Text="1" FontSize="8"
-                       HorizontalAlignment="Left" VerticalAlignment="Top"
-                       Foreground="#9060a0"/>
-            <Image Width="32" Height="32"
-                   Source="{Binding Slot1Item, Converter={StaticResource ItemToSprite}}"
-                   RenderOptions.BitmapInterpolationMode="None"
-                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Text="{Binding Slot1Item, Converter={StaticResource ItemToAmmo}}"
-                       FontSize="8" HorizontalAlignment="Right" VerticalAlignment="Bottom"
-                       Foreground="#e0c0f0"/>
-        </Grid>
-    </Border>
-
-    <Border Classes="hotbarSlot" Classes.active="{Binding Slot2Active}">
-        <Grid>
-            <TextBlock Text="2" FontSize="8"
-                       HorizontalAlignment="Left" VerticalAlignment="Top"
-                       Foreground="#9060a0"/>
-            <Image Width="32" Height="32"
-                   Source="{Binding Slot2Item, Converter={StaticResource ItemToSprite}}"
-                   RenderOptions.BitmapInterpolationMode="None"
-                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Text="{Binding Slot2Item, Converter={StaticResource ItemToAmmo}}"
-                       FontSize="8" HorizontalAlignment="Right" VerticalAlignment="Bottom"
-                       Foreground="#e0c0f0"/>
-        </Grid>
-    </Border>
-
-    <Border Classes="hotbarSlot" Classes.active="{Binding Slot3Active}">
-        <Grid>
-            <TextBlock Text="3" FontSize="8"
-                       HorizontalAlignment="Left" VerticalAlignment="Top"
-                       Foreground="#9060a0"/>
-            <Image Width="32" Height="32"
-                   Source="{Binding Slot3Item, Converter={StaticResource ItemToSprite}}"
-                   RenderOptions.BitmapInterpolationMode="None"
-                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Text="{Binding Slot3Item, Converter={StaticResource ItemToAmmo}}"
-                       FontSize="8" HorizontalAlignment="Right" VerticalAlignment="Bottom"
-                       Foreground="#e0c0f0"/>
-        </Grid>
-    </Border>
-
-    <Border Classes="hotbarSlot" Classes.active="{Binding Slot4Active}">
-        <Grid>
-            <TextBlock Text="4" FontSize="8"
-                       HorizontalAlignment="Left" VerticalAlignment="Top"
-                       Foreground="#9060a0"/>
-            <Image Width="32" Height="32"
-                   Source="{Binding Slot4Item, Converter={StaticResource ItemToSprite}}"
-                   RenderOptions.BitmapInterpolationMode="None"
-                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Text="{Binding Slot4Item, Converter={StaticResource ItemToAmmo}}"
-                       FontSize="8" HorizontalAlignment="Right" VerticalAlignment="Bottom"
-                       Foreground="#e0c0f0"/>
-        </Grid>
-    </Border>
-</StackPanel>
-
-				</StackPanel>
-				<TextBlock Text="{Binding ActiveItemStatsText}"
-						   Foreground="#aaaacc" FontSize="10" TextWrapping="Wrap"/>
-			</StackPanel>
-
-			<Separator Background="#3d2045" Height="1"/>
-
-			<!-- Mission -->
-			<StackPanel Spacing="2">
-				<TextBlock Text="MISSION" FontSize="10" Foreground="#9060a0"/>
-				<TextBlock Text="{Binding MissionText}" Foreground="White"
-						   TextWrapping="Wrap"/>
-			</StackPanel>
-
-			<Separator Background="#3d2045" Height="1"/>
-
-			<!-- Controls -->
-			<TextBlock Text="{x:Static local:GameTexts.Controls}"
-					   FontSize="10" Foreground="#7a5a8a" TextWrapping="Wrap"/>
-
-		</StackPanel>
-		    </StackPanel>
-</Border>
+		</Border>
 
 		<ContentControl Classes="GamePopup" IsVisible="{Binding IsExitPopupOpen}">
-		<StackPanel Spacing="20">
-			<TextBlock Text="{Binding ExitWarningText}"
-					   FontSize="20" FontWeight="Bold"
-					   HorizontalAlignment="Center" TextAlignment="Center" Foreground="White"/>
+			<StackPanel Spacing="20">
+				<TextBlock Text="{Binding ExitWarningText}"
+						   FontSize="20" FontWeight="Bold"
+						   HorizontalAlignment="Center" TextAlignment="Center" Foreground="White"/>
 
-			<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="20">
-				<Button Content="YES"
-						Focusable="False"
-						Command="{Binding ConfirmExitCommand}"
-						Background="#3D3D5C" Foreground="White" Width="100" HorizontalContentAlignment="Center"/>
-				<Button Content="NO"
-						Focusable="False"
-						Command="{Binding CancelExitCommand}"
-						Background="#3D3D5C" Foreground="White" Width="100" HorizontalContentAlignment="Center"/>
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="20">
+					<Button Content="YES"
+							Focusable="False"
+							Command="{Binding ConfirmExitCommand}"
+							Background="#3D3D5C" Foreground="White" Width="100" HorizontalContentAlignment="Center"/>
+					<Button Content="NO"
+							Focusable="False"
+							Command="{Binding CancelExitCommand}"
+							Background="#3D3D5C" Foreground="White" Width="100" HorizontalContentAlignment="Center"/>
+				</StackPanel>
 			</StackPanel>
-		</StackPanel>
 		</ContentControl>
 		<ContentControl Classes="GamePopup" IsVisible="{Binding IsGameOverPopupOpen}">
 			<StackPanel Spacing="20">
@@ -237,40 +237,40 @@
 						Content="Continue"
 						Command="{Binding ContinueCommand}"/>
 			</StackPanel>
-	</ContentControl>
+		</ContentControl>
 		<ContentControl Classes="GamePopup" IsVisible="{Binding IsAltarPopupOpen}">
-		<StackPanel Spacing="20">
-			<TextBlock Text="Ancient Altar"
-					   FontSize="25" FontWeight="Bold"
-					   HorizontalAlignment="Center" TextAlignment="Center" Foreground="White"/>
-			<TextBlock Text="{Binding AltarOfferText}"
-					   Foreground="WhiteSmoke" HorizontalAlignment="Center"/>
-					   <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="20">
-						   <Button Content="YES"
-								   Focusable="False"
-								   Command="{Binding AltarConfirmCommand}"
-								   Background="#3D3D5C" Foreground="White" Width="100" HorizontalContentAlignment="Center"/>
-						   <Button Content="NO"
-								   Focusable="False"
-								   Command="{Binding AltarCancelCommand}"
-								   Background="#3D3D5C" Foreground="White" Width="100" HorizontalContentAlignment="Center"/>
-					   </StackPanel>
-		</StackPanel>
+			<StackPanel Spacing="20">
+				<TextBlock Text="Ancient Altar"
+						   FontSize="25" FontWeight="Bold"
+						   HorizontalAlignment="Center" TextAlignment="Center" Foreground="White"/>
+				<TextBlock Text="{Binding AltarOfferText}"
+						   Foreground="WhiteSmoke" HorizontalAlignment="Center"/>
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="20">
+					<Button Content="YES"
+							Focusable="False"
+							Command="{Binding AltarConfirmCommand}"
+							Background="#3D3D5C" Foreground="White" Width="100" HorizontalContentAlignment="Center"/>
+					<Button Content="NO"
+							Focusable="False"
+							Command="{Binding AltarCancelCommand}"
+							Background="#3D3D5C" Foreground="White" Width="100" HorizontalContentAlignment="Center"/>
+				</StackPanel>
+			</StackPanel>
 		</ContentControl>
 		<ContentControl Classes="GamePopup" IsVisible="{Binding IsAltarResultOpen}">
-		<StackPanel Spacing="20">
-			<TextBlock Text="Ancient Altar"
-					   FontSize="25" FontWeight="Bold"
-					   HorizontalAlignment="Center" TextAlignment="Center" Foreground="White"/>
-			<TextBlock Text="{Binding AltarResultText}"
-					   Foreground="WhiteSmoke" HorizontalAlignment="Center"/>
-					   <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="20">
-						   <Button Content="OK"
-								   Focusable="False"
-								   Command="{Binding ContinueCommand}"
-								   Background="#3D3D5C" Foreground="White" Width="100" HorizontalContentAlignment="Center"/>
-					   </StackPanel>
-		</StackPanel>
+			<StackPanel Spacing="20">
+				<TextBlock Text="Ancient Altar"
+						   FontSize="25" FontWeight="Bold"
+						   HorizontalAlignment="Center" TextAlignment="Center" Foreground="White"/>
+				<TextBlock Text="{Binding AltarResultText}"
+						   Foreground="WhiteSmoke" HorizontalAlignment="Center"/>
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="20">
+					<Button Content="OK"
+							Focusable="False"
+							Command="{Binding ContinueCommand}"
+							Background="#3D3D5C" Foreground="White" Width="100" HorizontalContentAlignment="Center"/>
+				</StackPanel>
+			</StackPanel>
 		</ContentControl>
 		<ContentControl Classes="GamePopup" IsVisible="{Binding IsWinPopupOpen}">
 			<StackPanel Spacing="20">

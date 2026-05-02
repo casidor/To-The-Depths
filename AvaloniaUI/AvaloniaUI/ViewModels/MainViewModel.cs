@@ -163,7 +163,7 @@ namespace AvaloniaUI.ViewModels
             var hotbar = Player.Inventory.Hotbar;
             for (int i = 0; i < 4; i++)
             {
-                if (_lastHotbar[i] != hotbar[i])
+                if (_lastHotbar[i] != hotbar[i] || hotbar[i] is RangedWeapon)
                 {
                     _lastHotbar[i] = hotbar[i];
                     OnPropertyChanged(i switch

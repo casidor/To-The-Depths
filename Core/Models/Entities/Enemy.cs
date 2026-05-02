@@ -19,17 +19,21 @@ namespace GameCore.Models.Entities
             HP = MaxHP;
         }
         public InteractionResult Interact(Player player, GameField field, int x, int y)
+            => TakeDamage(player.Damage, player, field, x, y);
+
+        public InteractionResult TakeDamage(int damage, Player player, GameField field, int x, int y)
         {
-            HP -= player.Damage;
+            HP -= damage;
             if (HP <= 0)
             {
                 field.SetEntity(x, y, null);
-                field.Log.Add(GameEventType.EnemyKilled, "Enemy slain!", '☠', x, y, amount: player.Damage);
+                field.Log.Add(GameEventType.EnemyKilled, "Enemy slain!", '☠', x, y, amount: damage);
                 return InteractionResult.EnemyKilled;
             }
-            field.Log.Add(GameEventType.DamageDealt, $"-{player.Damage}", '⚔', x, y, amount: player.Damage);
+            field.Log.Add(GameEventType.DamageDealt, $"-{damage}", '⚔', x, y, amount: damage);
             return InteractionResult.EnemyAttacked;
         }
+
         public InteractionResult Attack(Player player, GameField field)
         {
             player.TakeDamage(Damage);

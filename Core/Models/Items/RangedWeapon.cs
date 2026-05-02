@@ -59,7 +59,7 @@ namespace GameCore.Models.Items
             }
             if (IsEmpty) player.Inventory.RemoveFromHotbar(this);
 
-            closest.Interact(player, field, closest.X, closest.Y);
+            closest.TakeDamage(Damage, player, field, closest.X, closest.Y);
             return UseResult.Hit;
         }
 
@@ -79,7 +79,7 @@ namespace GameCore.Models.Items
 
             if (field.GetEntity(x, y) is Enemy enemy)
             {
-                enemy.Interact(player, field, x, y);
+                enemy.TakeDamage(Damage, player, field, x, y);
                 return UseResult.Hit;
             }
             field.Log.Add(GameEventType.Missed, "Missed!", ' ', x, y, color: LogColor.Bad);
