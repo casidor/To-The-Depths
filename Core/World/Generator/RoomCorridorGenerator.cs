@@ -26,7 +26,7 @@ namespace GameCore.World.Generator
             PlaceItemsByChance(field, random, Config.GoldChance, () => new Gold(), _rooms);
             PlaceDoors(field, _rooms);
             PlaceInRandomRooms(field, random, _rooms, 1, () => new Dagger(), excludeFirst: true);
-            PlaceInRandomRooms(field, random, _rooms, 1, () => new Bow(), excludeFirst: true);
+            PlaceInRandomRooms(field, random, _rooms, 1, () => new Bow(10), excludeFirst: true);
             return (field, _rooms[0].CenterX, _rooms[0].CenterY);
         }
 

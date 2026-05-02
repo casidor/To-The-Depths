@@ -13,7 +13,7 @@ namespace GameCore.Models.Items
     {
         public int Range { get; protected set; }
         public int MaxAmmo { get; protected set; }
-        public int Ammo { get; private set; }
+        public int Ammo { get; protected set; }
         public bool HasAmmo => Ammo > 0;
         public bool IsEmpty => Ammo == 0;
 
@@ -29,9 +29,6 @@ namespace GameCore.Models.Items
 
         public UseResult Use(Player player, GameField field)
         {
-            if (!TrySpendAmmo()) return UseResult.Failed;
-            if (IsEmpty) player.Inventory.RemoveFromHotbar(this);
-
             Enemy? closest = null;
             int minDist = int.MaxValue;
 
@@ -50,8 +47,29 @@ namespace GameCore.Models.Items
                 }
 
             if (closest == null) return UseResult.Missed;
+
+            if (!TrySpendAmmo()) return UseResult.Failed;
+            if (IsEmpty) player.Inventory.RemoveFromHotbar(this);
+
             closest.Interact(player, field, closest.X, closest.Y);
             return UseResult.Hit;
+        }
+        public UseResult UseAt(Player player, GameField field, int x, int y)
+        {
+            int dx = Math.Abs(x - player.X);
+            int dy = Math.Abs(y - player.Y);
+            if (dx > Range || dy > Range) return UseResult.Failed;
+            if (field.Fov[x, y] != ExplorationState.Visible) return UseResult.Failed;
+
+            if (!TrySpendAmmo()) return UseResult.Failed;
+            if (IsEmpty) player.Inventory.RemoveFromHotbar(this);
+
+            if (field.GetEntity(x, y) is Enemy enemy)
+            {
+                enemy.Interact(player, field, x, y);
+                return UseResult.Hit;
+            }
+            return UseResult.Missed;
         }
     }
 }

@@ -6,12 +6,13 @@ namespace GameCore.Models.Items.Weapons
 {
     public class Bow : RangedWeapon
     {
-        public Bow()
+        public Bow(int ammo)
         {
             Name = "Bow";
             Description = "Fires arrows at nearby enemies.";
             Damage = 20;
             Range = 6;
+            Ammo = ammo;
             MaxAmmo = 10;
         }
     }

@@ -35,6 +35,8 @@ namespace AvaloniaUI.Views
         private readonly SolidColorBrush _fogBrush = new(Color.FromArgb(120, 0, 0, 0));
         private readonly SolidColorBrush _floatingTextBrush = new(Color.FromArgb(255, 255, 50, 50));
         private readonly SolidColorBrush _floatingOutlineBrush = new(Color.FromArgb(255, 0, 0, 0));
+        private readonly SolidColorBrush _aimHighlightBrush = new(Color.FromArgb(80, 255, 220, 0));
+        private static readonly SolidColorBrush _aimHoverBrush = new(Color.FromArgb(180, 255, 220, 0));
         private Pen _floatingOutlinePen = null!;
         private Bitmap? GetTexture(string spriteName)
         {
@@ -89,6 +91,13 @@ namespace AvaloniaUI.Views
         private Point _dragStart;
         private double _camXAtDrag;
         private double _camYAtDrag;
+        #endregion
+
+        #region Aim Mode
+        public bool IsAimingMode { get; set; }
+        public int AimRange { get; set; }
+        private (int x, int y) _hoveredCell = (-1, -1);
+        public event Action<int, int>? AimCellClicked;
         #endregion
 
         #region Initialization Fields
@@ -226,6 +235,20 @@ namespace AvaloniaUI.Views
                 _camYAtDrag = _camY;
                 e.Handled = true;
             }
+            if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed && IsAimingMode)
+            {
+                var pos = e.GetPosition(this);
+                double tileSize = Math.Round(UIConfig.TileSize * _zoom);
+                int gridX = (int)((Math.Round(_camX) + pos.X) / tileSize);
+                int gridY = (int)((Math.Round(_camY) + pos.Y) / tileSize);
+
+                int dx = Math.Abs(gridX - _player!.X);
+                int dy = Math.Abs(gridY - _player!.Y);
+                if (dx <= AimRange && dy <= AimRange)
+                    AimCellClicked?.Invoke(gridX, gridY);
+
+                e.Handled = true;
+            }
         }
 
         protected override void OnPointerMoved(PointerEventArgs e)
@@ -237,6 +260,18 @@ namespace AvaloniaUI.Views
                 _camX = _targetCamX = _camXAtDrag - (pos.X - _dragStart.X);
                 _camY = _targetCamY = _camYAtDrag - (pos.Y - _dragStart.Y);
                 InvalidateVisual();
+            }
+            if (IsAimingMode)
+            {
+                var pos = e.GetPosition(this);
+                double tileSize = Math.Round(UIConfig.TileSize * _zoom);
+                int gx = (int)((Math.Round(_camX) + pos.X) / tileSize);
+                int gy = (int)((Math.Round(_camY) + pos.Y) / tileSize);
+                if (_hoveredCell != (gx, gy))
+                {
+                    _hoveredCell = (gx, gy);
+                    InvalidateVisual();
+                }
             }
         }
 
@@ -284,6 +319,7 @@ namespace AvaloniaUI.Views
             RenderEnemiesLayer(context, tileSize, startX, startY, endX, endY);
             RenderPlayerLayer(context, tileSize);
             RenderHPBarsLayer(context, tileSize, startX, startY, endX, endY);
+            RenderAimLayer(context, tileSize);
             RenderFloatingTextsLayer(context, tileSize);
         }
 
@@ -376,6 +412,23 @@ namespace AvaloniaUI.Views
                     }
                 }
             }
+        }
+
+        private void RenderAimLayer(DrawingContext context, double tileSize)
+        {
+            if (!IsAimingMode || _player == null) return;
+
+            for (int dy = -AimRange; dy <= AimRange; dy++)
+                for (int dx = -AimRange; dx <= AimRange; dx++)
+                {
+                    int cx = _player.X + dx;
+                    int cy = _player.Y + dy;
+                    if (cx < 0 || cx >= _field!.Width || cy < 0 || cy >= _field.Height) continue;
+                    if (_field.Fov[cx, cy] != ExplorationState.Visible) continue;
+                    var rect = GetTileRectWithGap(cx, cy, tileSize);
+                    bool isHovered = cx == _hoveredCell.x && cy == _hoveredCell.y;
+                    context.DrawRectangle(isHovered ? _aimHoverBrush : _aimHighlightBrush, null, rect);
+                }
         }
 
         private void RenderFloatingTextsLayer(DrawingContext context, double tileSize)

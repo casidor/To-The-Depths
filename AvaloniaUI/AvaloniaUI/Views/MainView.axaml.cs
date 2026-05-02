@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using AvaloniaUI.ViewModels;
+using GameCore.Models.Items;
 using System.IO;
 
 namespace AvaloniaUI.Views
@@ -19,6 +20,12 @@ namespace AvaloniaUI.Views
             if (DataContext is MainViewModel vm)
             {
                 MapRenderer.SetGameState(vm.Field, vm.Player);
+                MapRenderer.AimCellClicked += (x, y) =>
+                {
+                    vm.UseWeaponAt(x, y);
+                    MapRenderer.SetGameState(vm.Field, vm.Player);
+                    MapRenderer.InvalidateVisual();
+                };
                 vm.FloatingTextRequested += (x, y, text, icon) => MapRenderer.AddFloatingText(x, y, text, icon);
                 vm.PropertyChanged += (s, e) =>
                 {
@@ -41,6 +48,13 @@ namespace AvaloniaUI.Views
             {
                 if (e.Key == Key.Escape)
                 {
+                    if (vm.IsAimingMode)
+                    {
+                        vm.ExitAimMode();
+                        MapRenderer.IsAimingMode = false;
+                        MapRenderer.InvalidateVisual();
+                        return;
+                    }
                     if (vm.IsExitPopupOpen)
                     {
                         vm.IsExitPopupOpen = false;
@@ -65,6 +79,18 @@ namespace AvaloniaUI.Views
                     case Key.A: case Key.Left: vm.MovePlayer(-1, 0); break;
                     case Key.D: case Key.Right: vm.MovePlayer(1, 0); break;
                     case Key.Space: MapRenderer.CenterOnPlayer(); break;
+                }
+                if (e.Key == Key.E)
+                {
+                    if (vm.Player.Inventory.ActiveItem is RangedWeapon)
+                    {
+                        vm.ToggleAimMode();
+                        MapRenderer.IsAimingMode = vm.IsAimingMode;
+                        if (vm.IsAimingMode && vm.Player.Inventory.ActiveItem is RangedWeapon rw)
+                            MapRenderer.AimRange = rw.Range;
+                        MapRenderer.InvalidateVisual();
+                    }
+                    return;
                 }
                 MapRenderer.SetGameState(vm.Field, vm.Player);
                 MapRenderer.InvalidateVisual();

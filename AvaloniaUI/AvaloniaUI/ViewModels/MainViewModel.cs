@@ -187,7 +187,37 @@ namespace AvaloniaUI.ViewModels
             OnPropertyChanged(nameof(Slot4Active));
         }
         public void UpdateUIPublic() => UpdateUI();
+        // Aiming mode
+        [ObservableProperty]
+        private bool _isAimingMode;
 
+        public void ToggleAimMode()
+        {
+            if (IsAimingMode)
+            {
+                if (Player.Inventory.ActiveItem is RangedWeapon rw)
+                    ExecuteTurn(rw.Use(Player, Field));
+                ExitAimMode();
+                return;
+            }
+            if (Player.Inventory.ActiveItem is RangedWeapon)
+                IsAimingMode = true;
+        }
+
+        public void ExitAimMode()
+        {
+            IsAimingMode = false;
+            UpdateUI();
+        }
+
+        public void UseWeaponAt(int x, int y)
+        {
+            if (Player.Inventory.ActiveItem is not RangedWeapon rw) return;
+            var result = rw.UseAt(Player, Field, x, y);
+            if (result == UseResult.Hit)
+                FloatingTextRequested?.Invoke(x, y, $"-{rw.Damage}", '⚔');
+            ExecuteTurn(InteractionResult.None);
+        }
         public MainViewModel()
         {
         }
@@ -227,19 +257,28 @@ namespace AvaloniaUI.ViewModels
         public void MovePlayer(int dx, int dy)
         {
             if (IsInputBlocked()) return;
-
             var interaction = HandlePlayerTurn(dx, dy);
+            ExecuteTurn(interaction, dx, dy);
+        }
+        private void ExecuteTurn(UseResult useResult, int dx = 0, int dy = 0)
+        {
+            var interaction = useResult == UseResult.Hit
+                ? InteractionResult.EnemyAttacked
+                : InteractionResult.None;
+            ExecuteTurn(interaction, dx, dy);
+        }
+
+        private void ExecuteTurn(InteractionResult interaction = InteractionResult.None, int dx = 0, int dy = 0)
+        {
             var worldInteraction = HandleEnemyTurn();
-
             if (!Player.IsAlive) { IsGameOverPopupOpen = true; UpdateUI(); return; }
-
             HandleInteractionResult(interaction, worldInteraction, dx, dy);
             HandleWorldState();
             UpdateUI();
         }
         private bool IsInputBlocked() =>
     IsExitPopupOpen || IsGameOverPopupOpen || IsDescendingPopupOpen ||
-    IsAltarPopupOpen || IsAltarResultOpen || IsAttackPopupOpen || !Player.IsAlive;
+    IsAltarPopupOpen || IsAltarResultOpen || IsAttackPopupOpen || !Player.IsAlive || IsAimingMode;
 
         private InteractionResult HandlePlayerTurn(int dx, int dy)
         {
