@@ -82,7 +82,7 @@ namespace GameCore.World
 
             if (tx == player.X && ty == player.Y)
             {
-                enemy.Attack(player);
+                enemy.Attack(player, field);
                 return true;
             }
             MoveEnemy(field, enemy, tx, ty);

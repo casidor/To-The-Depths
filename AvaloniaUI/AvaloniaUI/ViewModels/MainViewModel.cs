@@ -213,10 +213,8 @@ namespace AvaloniaUI.ViewModels
         public void UseWeaponAt(int x, int y)
         {
             if (Player.Inventory.ActiveItem is not RangedWeapon rw) return;
-            var result = rw.UseAt(Player, Field, x, y);
-            if (result == UseResult.Hit)
-                FloatingTextRequested?.Invoke(x, y, $"-{rw.Damage}", '⚔');
-            ExecuteTurn(InteractionResult.None);
+            Field.Log.Clear();
+            ExecuteTurn(rw.UseAt(Player, Field, x, y));
         }
         public MainViewModel()
         {
@@ -257,6 +255,7 @@ namespace AvaloniaUI.ViewModels
         public void MovePlayer(int dx, int dy)
         {
             if (IsInputBlocked()) return;
+            Field.Log.Clear();
             var interaction = HandlePlayerTurn(dx, dy);
             ExecuteTurn(interaction, dx, dy);
         }
@@ -273,6 +272,14 @@ namespace AvaloniaUI.ViewModels
             var worldInteraction = HandleEnemyTurn();
             if (!Player.IsAlive) { IsGameOverPopupOpen = true; UpdateUI(); return; }
             HandleInteractionResult(interaction, worldInteraction, dx, dy);
+            foreach (var e in Field.Log.Get(GameEventType.DamageDealt, GameEventType.EnemyKilled))
+                FloatingTextRequested?.Invoke(e.X, e.Y, e.Text, e.Icon);
+
+            foreach (var e in Field.Log.Get(GameEventType.DamageTaken))
+            {
+                float offsetX = dx != 0 ? dx : -0.3f;
+                FloatingTextRequested?.Invoke(Player.X - offsetX, Player.Y, e.Text, e.Icon);
+            }
             HandleWorldState();
             UpdateUI();
         }
@@ -308,16 +315,6 @@ namespace AvaloniaUI.ViewModels
             if (interaction == InteractionResult.Altar)
                 if (Field[Player.X, Player.Y] is Altar altar)
                 { _currentAltar = altar; IsAltarPopupOpen = true; }
-
-            if (interaction is InteractionResult.EnemyAttacked or InteractionResult.EnemyKilled)
-                FloatingTextRequested?.Invoke(Player.X + dx, Player.Y + dy, $"-{Player.Damage}", '⚔');
-
-            if (world == InteractionResult.PlayerAttacked)
-            {
-                float offsetX = dx != 0 ? dx : -0.3f;
-
-                FloatingTextRequested?.Invoke(Player.X - offsetX, Player.Y, $"-{Config.EnemyDamage}", '♥');
-            }
         }
 
         private void HandleWorldState()

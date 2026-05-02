@@ -44,4 +44,17 @@ namespace GameCore
         Missed,
         Hit
     }
+    public enum GameEventType
+    {
+        DamageDealt,
+        DamageTaken,
+        EnemyKilled,
+        ItemPickedUp,
+        ItemEquipped,
+        GoldCollected,
+        KeyCollected,
+        Healed,
+        Missed,
+        NoAmmo
+    }
 }

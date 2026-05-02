@@ -11,6 +11,7 @@ namespace GameCore.World
     {
         private GameObject[,] _world;
         private Entity[,] _entities;
+        public GameLog Log { get; } = new();
 
         public int Width { get; private set; }
         public int Height { get; private set; }

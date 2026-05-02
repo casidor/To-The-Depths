@@ -24,13 +24,16 @@ namespace GameCore.Models.Entities
             if (HP <= 0)
             {
                 field.SetEntity(x, y, null);
+                field.Log.Add(GameEventType.EnemyKilled, "Enemy slain!", '☠', x, y, Amount: player.Damage);
                 return InteractionResult.EnemyKilled;
             }
+            field.Log.Add(GameEventType.DamageDealt, $"-{player.Damage}", '⚔', x, y, Amount: player.Damage);
             return InteractionResult.EnemyAttacked;
         }
-        public InteractionResult Attack (Player player)
+        public InteractionResult Attack(Player player, GameField field)
         {
             player.TakeDamage(Damage);
+            field.Log.Add(GameEventType.DamageTaken, $"-{Damage}", '♥', player.X, player.Y, Amount: Damage);
             return InteractionResult.PlayerAttacked;
         }
     }
