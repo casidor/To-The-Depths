@@ -18,6 +18,7 @@ namespace GameCore.Models.Objects
         public override InteractionResult Interact(Player player, GameField field, int x, int y)
         {
             player.AddGold(Config.GoldAmount);
+            field.Log.Add(GameEventType.GoldCollected, $"Gold: +{Config.GoldAmount}", '♦', x, y, Config.GoldAmount, color: LogColor.Good);
             field[x, y] = new Floor();
             return InteractionResult.None;
         }

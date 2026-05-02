@@ -8,6 +8,8 @@ using GameCore.World;
 using GameCore.World.Generator;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -196,7 +198,10 @@ namespace AvaloniaUI.ViewModels
             if (IsAimingMode)
             {
                 if (Player.Inventory.ActiveItem is RangedWeapon rw)
+                {
+                    Field.Log.Clear();
                     ExecuteTurn(rw.Use(Player, Field));
+                }
                 ExitAimMode();
                 return;
             }
@@ -216,6 +221,8 @@ namespace AvaloniaUI.ViewModels
             Field.Log.Clear();
             ExecuteTurn(rw.UseAt(Player, Field, x, y));
         }
+        // Log
+        public event Action<string, LogColor>? LogRequested;
         public MainViewModel()
         {
         }
@@ -272,7 +279,7 @@ namespace AvaloniaUI.ViewModels
             var worldInteraction = HandleEnemyTurn();
             if (!Player.IsAlive) { IsGameOverPopupOpen = true; UpdateUI(); return; }
             HandleInteractionResult(interaction, worldInteraction, dx, dy);
-            foreach (var e in Field.Log.Get(GameEventType.DamageDealt, GameEventType.EnemyKilled))
+            foreach (var e in Field.Log.Get(GameEventType.DamageDealt, GameEventType.EnemyKilled, GameEventType.Missed))
                 FloatingTextRequested?.Invoke(e.X, e.Y, e.Text, e.Icon);
 
             foreach (var e in Field.Log.Get(GameEventType.DamageTaken))
@@ -280,6 +287,9 @@ namespace AvaloniaUI.ViewModels
                 float offsetX = dx != 0 ? dx : -0.3f;
                 FloatingTextRequested?.Invoke(Player.X - offsetX, Player.Y, e.Text, e.Icon);
             }
+            foreach (var e in Field.Log.Get(GameEventType.KeyCollected, GameEventType.ItemPickedUp,
+                GameEventType.ItemEquipped, GameEventType.NoTarget))
+                LogRequested?.Invoke(e.Text, e.Color);
             HandleWorldState();
             UpdateUI();
         }

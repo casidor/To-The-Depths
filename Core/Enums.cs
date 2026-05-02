@@ -55,6 +55,8 @@ namespace GameCore
         KeyCollected,
         Healed,
         Missed,
-        NoAmmo
+        NoAmmo,
+        NoTarget
     }
+    public enum LogColor { Normal, Good, Bad }
 }

@@ -46,14 +46,23 @@ namespace GameCore.Models.Items
                     }
                 }
 
-            if (closest == null) return UseResult.Missed;
+            if (closest == null)
+            {
+                field.Log.Add(GameEventType.NoTarget, "No targets in range!", ' ', color: LogColor.Bad);
+                return UseResult.Missed;
+            }
 
-            if (!TrySpendAmmo()) return UseResult.Failed;
+            if (!TrySpendAmmo())
+            {
+                field.Log.Add(GameEventType.NoAmmo, "No ammo!", ' ', color: LogColor.Bad);
+                return UseResult.Failed;
+            }
             if (IsEmpty) player.Inventory.RemoveFromHotbar(this);
 
             closest.Interact(player, field, closest.X, closest.Y);
             return UseResult.Hit;
         }
+
         public UseResult UseAt(Player player, GameField field, int x, int y)
         {
             int dx = Math.Abs(x - player.X);
@@ -61,7 +70,11 @@ namespace GameCore.Models.Items
             if (dx > Range || dy > Range) return UseResult.Failed;
             if (field.Fov[x, y] != ExplorationState.Visible) return UseResult.Failed;
 
-            if (!TrySpendAmmo()) return UseResult.Failed;
+            if (!TrySpendAmmo())
+            {
+                field.Log.Add(GameEventType.NoAmmo, "No ammo!", ' ', color: LogColor.Bad);
+                return UseResult.Failed;
+            }
             if (IsEmpty) player.Inventory.RemoveFromHotbar(this);
 
             if (field.GetEntity(x, y) is Enemy enemy)
@@ -69,6 +82,7 @@ namespace GameCore.Models.Items
                 enemy.Interact(player, field, x, y);
                 return UseResult.Hit;
             }
+            field.Log.Add(GameEventType.Missed, "Missed!", ' ', x, y, color: LogColor.Bad);
             return UseResult.Missed;
         }
     }

@@ -313,14 +313,16 @@ namespace AvaloniaUI.Views
             int endX = Math.Min(_field.Width, (int)((_camX + viewW) / tileSize) + 2);
             int endY = Math.Min(_field.Height, (int)((_camY + viewH) / tileSize) + 2);
 
-            using var _ = context.PushTransform(Matrix.CreateTranslation(-Math.Round(_camX), -Math.Round(_camY)));
-
-            RenderTilesLayer(context, tileSize, startX, startY, endX, endY);
-            RenderEnemiesLayer(context, tileSize, startX, startY, endX, endY);
-            RenderPlayerLayer(context, tileSize);
-            RenderHPBarsLayer(context, tileSize, startX, startY, endX, endY);
-            RenderAimLayer(context, tileSize);
-            RenderFloatingTextsLayer(context, tileSize);
+            using (var _ = context.PushTransform(Matrix.CreateTranslation(-Math.Round(_camX), -Math.Round(_camY))))
+            {
+                RenderTilesLayer(context, tileSize, startX, startY, endX, endY);
+                RenderEnemiesLayer(context, tileSize, startX, startY, endX, endY);
+                RenderPlayerLayer(context, tileSize);
+                RenderHPBarsLayer(context, tileSize, startX, startY, endX, endY);
+                RenderAimLayer(context, tileSize);
+                RenderFloatingTextsLayer(context, tileSize);
+            }
+            RenderUILog(context);
         }
 
         private void RenderTilesLayer(DrawingContext context, double tileSize, int startX, int startY, int endX, int endY)
@@ -541,6 +543,55 @@ namespace AvaloniaUI.Views
             public string Text { get; set; } = "";
             public double Life { get; set; } = 1.0;
             public char? Icon { get; set; }
+        }
+        #endregion
+
+        #region UI Log
+        private readonly record struct LogEntry(string Text, Avalonia.Media.Color Color);
+        private readonly List<LogEntry> _logEntries = new();
+        private const int MaxLogEntries = 4;
+
+        private static readonly Dictionary<LogColor, Avalonia.Media.Color> _logColors = new()
+        {
+        { LogColor.Normal, Avalonia.Media.Color.FromRgb(192, 192, 192) },
+        { LogColor.Good,   Avalonia.Media.Color.FromRgb(90, 255, 140)  },
+        { LogColor.Bad,    Avalonia.Media.Color.FromRgb(226, 75, 74)   }
+        };
+
+        public void AddLogEntry(string text, LogColor color)
+        {
+            _logEntries.Add(new LogEntry(text, _logColors[color]));
+            if (_logEntries.Count > MaxLogEntries)
+                _logEntries.RemoveAt(0);
+            InvalidateVisual();
+        }
+
+        private void RenderUILog(DrawingContext context)
+        {
+            if (_logEntries.Count == 0) return;
+
+            double x = 10;
+            double y = Bounds.Height - 20;
+            double fontSize = UIConfig.TileSize * _zoom * 0.4;
+            fontSize = Math.Clamp(fontSize, 10, 18);
+
+            for (int i = _logEntries.Count - 1; i >= 0; i--)
+            {
+                var entry = _logEntries[i];
+                var brush = new SolidColorBrush(entry.Color);
+                var text = new FormattedText(
+                    entry.Text,
+                    System.Globalization.CultureInfo.CurrentCulture,
+                    FlowDirection.LeftToRight,
+                    UIConfig.GameFont,
+                    fontSize,
+                    brush);
+
+                var bgRect = new Avalonia.Rect(x - 2, y - 2, text.Width + 4, text.Height + 4);
+                context.DrawRectangle(new SolidColorBrush(Avalonia.Media.Color.FromArgb(120, 0, 0, 0)), null, bgRect);
+                context.DrawText(text, new Avalonia.Point(x, y));
+                y -= text.Height + 4;
+            }
         }
         #endregion
     }

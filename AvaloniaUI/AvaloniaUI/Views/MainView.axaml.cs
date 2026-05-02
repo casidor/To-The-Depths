@@ -27,6 +27,7 @@ namespace AvaloniaUI.Views
                     MapRenderer.InvalidateVisual();
                 };
                 vm.FloatingTextRequested += (x, y, text, icon) => MapRenderer.AddFloatingText(x, y, text, icon);
+                vm.LogRequested += (text, color) => MapRenderer.AddLogEntry(text, color);
                 vm.PropertyChanged += (s, e) =>
                 {
                     if (e.PropertyName is

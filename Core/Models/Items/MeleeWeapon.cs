@@ -12,6 +12,9 @@ namespace GameCore.Models.Items
     {
         public bool Equip(Player player, GameField field, int x, int y)
         {
+            if (player.Inventory.EquippedMelee != null &&
+                player.Inventory.EquippedMelee.Damage >= this.Damage)
+                return false;
             var old = player.Inventory.EquippedMelee;
             player.Inventory.EquippedMelee = this;
             field[x, y] = old ?? (GameObject)new Floor();
