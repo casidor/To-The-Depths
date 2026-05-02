@@ -100,18 +100,10 @@ namespace GameCore.World.Generator
         protected void PlaceDoors(GameField field, List<Room> rooms)
         {
             foreach (var room in rooms)
-            {
-                for (int x = room.X; x < room.X + room.W; x++)
-                {
-                    if (field[x, room.Y - 1] is Floor) field[x, room.Y - 1] = new Door();
-                    if (field[x, room.Y + room.H] is Floor) field[x, room.Y + room.H] = new Door();
-                }
-                for (int y = room.Y; y < room.Y + room.H; y++)
-                {
-                    if (field[room.X - 1, y] is Floor) field[room.X - 1, y] = new Door();
-                    if (field[room.X + room.W, y] is Floor) field[room.X + room.W, y] = new Door();
-                }
-            }
+                foreach (var (x, y) in room.Entrances)
+                    if (x >= 0 && x < field.Width && y >= 0 && y < field.Height)
+                        if (field[x, y] is Floor)
+                            field[x, y] = new Door();
         }
         protected void PlaceEnemies(GameField field, Random random, List<Room> rooms, int amount, bool excludeFirst = false)
         {
@@ -132,5 +124,47 @@ namespace GameCore.World.Generator
                 }
             }
         }
+        protected static List<(Room a, Room b)> BuildMST(List<Room> rooms)
+        {
+            var connected = new HashSet<int> { 0 };
+            var edges = new List<(Room a, Room b)>();
+
+            while (connected.Count < rooms.Count)
+            {
+                int bestA = -1, bestB = -1;
+                double bestDist = double.MaxValue;
+
+                foreach (int i in connected)
+                    for (int j = 0; j < rooms.Count; j++)
+                    {
+                        if (connected.Contains(j)) continue;
+                        double dist = RoomDistance(rooms[i], rooms[j]);
+                        if (dist < bestDist)
+                        {
+                            bestDist = dist;
+                            bestA = i;
+                            bestB = j;
+                        }
+                    }
+
+                connected.Add(bestB);
+                edges.Add((rooms[bestA], rooms[bestB]));
+            }
+            return edges;
+        }
+
+        protected static List<(Room a, Room b)> AddExtraEdges(List<Room> rooms, List<(Room a, Room b)> mst, Random random, float chance = 0.2f)
+        {
+            var result = new List<(Room a, Room b)>(mst);
+            for (int i = 0; i < rooms.Count; i++)
+                for (int j = i + 1; j < rooms.Count; j++)
+                    if (!mst.Contains((rooms[i], rooms[j])) && !mst.Contains((rooms[j], rooms[i])))
+                        if (random.NextDouble() < chance)
+                            result.Add((rooms[i], rooms[j]));
+            return result;
+        }
+
+        private static double RoomDistance(Room a, Room b)
+            => Math.Sqrt(Math.Pow(a.CenterX - b.CenterX, 2) + Math.Pow(a.CenterY - b.CenterY, 2));
     }
 }

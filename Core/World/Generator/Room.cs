@@ -21,7 +21,7 @@ namespace GameCore.World.Generator
         }
 
         public bool Overlaps(Room other) =>
-            X - 1 < other.X + other.W && X + W + 1 > other.X &&
-            Y - 1 < other.Y + other.H && Y + H + 1 > other.Y;
+            X - 2 < other.X + other.W && X + W + 2 > other.X &&
+            Y - 2 < other.Y + other.H && Y + H + 2 > other.Y;
     }
 }
