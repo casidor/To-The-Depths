@@ -24,13 +24,25 @@ namespace GameCore.World.Generator
             PlaceDoors(field, _rooms);
             PlaceInRoomCenters(field, random, _rooms, Config.AltarsAmount, () => new Altar(), excludeFirst: true);
             PlaceInFarthestRoom(field, random, _rooms, Config.ExitAmount, () => new Exit());
-            PlaceInRandomRooms(field, random, _rooms, Config.KeysAmount, () => new Key(), excludeFirst: true);
+            var data = FloorConfig.Get(floor);
+            PlaceItemsByChance(field, random, Config.GoldChance,
+                () => new Gold(random.Next(data.FloorGoldMin, data.FloorGoldMax)), _rooms);
+            PlaceInRandomRooms(field, random, _rooms, data.KeysAmount,
+                () => new Key(), excludeFirst: true);
             PlaceEnemies(field, random, _rooms, Config.EnemiesAmount, (x, y) => CreateEnemy(x, y, floor, random), excludeFirst: true);
-            PlaceItemsByChance(field, random, Config.GoldChance, () => new Gold(), _rooms);
-            PlaceInRandomRooms(field, random, _rooms, 1, () => new Dagger(), excludeFirst: true);
-            PlaceInRandomRooms(field, random, _rooms, 1, () => new Bow(10), excludeFirst: true);
+            var weaponFactory = GetWeaponForFloor(floor);
+            if (weaponFactory != null)
+                PlaceInRandomRooms(field, random, _rooms, 1, weaponFactory, excludeFirst: true);
             return (field, _rooms[0].CenterX, _rooms[0].CenterY);
         }
+        private Func<GameObject>? GetWeaponForFloor(int floor) => floor switch
+        {
+            1 => () => new Bow(8),
+            2 => () => new Dagger(),
+            3 => () => new Sword(),
+            4 => () => new Crossbow(5),
+            _ => null
+        };
 
         private void PlaceRooms(GameField field, Random random)
         {
@@ -181,9 +193,9 @@ namespace GameCore.World.Generator
                     for (int x = room.X - 1; x <= room.X + room.W; x++)
                     {
                         if (x >= room.X && x < room.X + room.W &&
-                            y >= room.Y && y < room.Y + room.H) continue; // всередині кімнати не чіпаємо
+                            y >= room.Y && y < room.Y + room.H) continue;
 
-                        if (room.Entrances.Contains((x, y))) continue; // entrances не чіпаємо
+                        if (room.Entrances.Contains((x, y))) continue;
 
                         field[x, y] = new Wall();
                     }
