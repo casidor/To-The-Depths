@@ -19,7 +19,6 @@ namespace GameCore.World.Generator
             PlaceRooms(field, random);
             ConnectRooms(field, random);
 
-            // Новий крок: визначаємо точки, де коридори перетнули межі кімнат
             CalculateEntrances(field);
 
             AddWalls(field);
@@ -28,7 +27,7 @@ namespace GameCore.World.Generator
             PlaceInRoomCenters(field, random, _rooms, Config.AltarsAmount, () => new Altar(), excludeFirst: true);
             PlaceInFarthestRoom(field, random, _rooms, Config.ExitAmount, () => new Exit());
             PlaceInRandomRooms(field, random, _rooms, Config.KeysAmount, () => new Key(), excludeFirst: true);
-            PlaceEnemies(field, random, _rooms, Config.EnemiesAmount, excludeFirst: true);
+            PlaceEnemies(field, random, _rooms, Config.EnemiesAmount, (x, y) => CreateEnemy(x, y, floor, random), excludeFirst: true);
             PlaceItemsByChance(field, random, Config.GoldChance, () => new Gold(), _rooms);
             PlaceInRandomRooms(field, random, _rooms, 1, () => new Dagger(), excludeFirst: true);
             PlaceInRandomRooms(field, random, _rooms, 1, () => new Bow(10), excludeFirst: true);
@@ -42,7 +41,7 @@ namespace GameCore.World.Generator
                 if (_rooms.Count >= Config.MaxRooms) break;
                 int rw = random.Next(Config.MinRoomSize, Config.MaxRoomSize);
                 int rh = random.Next(Config.MinRoomSize, Config.MaxRoomSize);
-                int rx = random.Next(2, field.Width - rw - 2); // Збільшено відступи від країв карти
+                int rx = random.Next(2, field.Width - rw - 2);
                 int ry = random.Next(2, field.Height - rh - 2);
                 var newRoom = new Room(rx, ry, rw, rh);
 
@@ -65,12 +64,8 @@ namespace GameCore.World.Generator
 
         private void CarveCorridorSafe(GameField field, Room a, Room b)
         {
-            // Фаза 1: Шукаємо безпечний шлях, який огинає інші кімнати
             if (TryFindPath(field, a, b, strict: true)) return;
 
-            // Фаза 2: Якщо карта надто щільна і шлях заблоковано, 
-            // прокладаємо його напролом, але за правилами BFS.
-            // Це створить акуратну "наскрізну" кімнату з додатковими дверима.
             TryFindPath(field, a, b, strict: false);
         }
 

@@ -107,7 +107,8 @@ namespace GameCore.World.Generator
                         if (field[x, y] is Floor)
                             field[x, y] = new Door();
         }
-        protected void PlaceEnemies(GameField field, Random random, List<Room> rooms, int amount, bool excludeFirst = false)
+        protected void PlaceEnemies(GameField field, Random random, List<Room> rooms,
+            int amount, Func<int, int, Enemy> factory, bool excludeFirst = false)
         {
             int startRoom = excludeFirst ? 1 : 0;
             for (int i = 0; i < amount; i++)
@@ -119,18 +120,22 @@ namespace GameCore.World.Generator
                     int y = random.Next(room.Y, room.Y + room.H);
                     if (field[x, y] is Floor && !field.HasEntity(x, y))
                     {
-                        int floor = 1;
-                        var enemy = i switch
-                        {
-                            0 => (Enemy)new TankEnemy(x, y, floor, random),
-                            1 => (Enemy)new RangedEnemy(x, y, floor, random),
-                            _ => new Enemy(x, y, floor, random)
-                        };
-                        field.SetEntity(x, y, enemy);
+                        field.SetEntity(x, y, factory(x, y));
                         break;
                     }
                 }
             }
+        }
+        protected Enemy CreateEnemy(int x, int y, int floor, Random random)
+        {
+            var config = FloorConfig.Get(floor);
+            int roll = random.Next(100);
+
+            if (config.SpawnRanged && roll < 30)
+                return new RangedEnemy(x, y, floor, random);
+            if (config.SpawnTank && roll < 40)
+                return new TankEnemy(x, y, floor, random);
+            return new Enemy(x, y, floor, random);
         }
         protected static List<(Room a, Room b)> BuildMST(List<Room> rooms)
         {

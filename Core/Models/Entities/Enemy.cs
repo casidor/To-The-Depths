@@ -38,7 +38,7 @@ namespace GameCore.Models.Entities
             if (HP <= 0)
             {
                 field.SetEntity(x, y, null);
-                if (_goldDrop > 0)
+                if (_goldDrop > 0 && field[x, y] is Floor)
                     field[x, y] = new Gold(_goldDrop);
                 field.Log.Add(GameEventType.EnemyKilled, "Enemy slain!", '☠', x, y);
                 return InteractionResult.EnemyKilled;
