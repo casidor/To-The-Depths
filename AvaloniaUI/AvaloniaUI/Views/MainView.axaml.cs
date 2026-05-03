@@ -38,6 +38,8 @@ namespace AvaloniaUI.Views
                     {
                         this.Focus();
                     }
+                    if (e.PropertyName is nameof(vm.IsShopPopupOpen) or nameof(vm.IsDescendingPopupOpen))
+                        MapRenderer.SetGameState(vm.Field, vm.Player);
                 };
             }
             this.Focus();

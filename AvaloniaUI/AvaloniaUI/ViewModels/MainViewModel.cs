@@ -223,6 +223,30 @@ namespace AvaloniaUI.ViewModels
         }
         // Log
         public event Action<string, LogColor>? LogRequested;
+        // Shop
+        public ShopViewModel Shop { get; private set; } = null!;
+        [ObservableProperty]
+        private bool _isShopPopupOpen;
+
+        private (GameField field, int x, int y)? _pendingNextFloor;
+
+        [RelayCommand]
+        private void ShopClose()
+        {
+            IsShopPopupOpen = false;
+            if (_pendingNextFloor is var (field, x, y))
+            {
+                Field = field;
+                Player.Descend(x, y);
+                EnemyAI = new EnemyAI(new Random(currentSeed + Player.CurrentFloor));
+                Field.Fov.Update(Player.X, Player.Y, Field);
+                SaveManager.Save(Player, currentSeed);
+                _hasUnsavedProgress = false;
+                IsDescendingPopupOpen = true;
+                _pendingNextFloor = null;
+            }
+            UpdateUI();
+        }
         public MainViewModel()
         {
         }
@@ -234,6 +258,7 @@ namespace AvaloniaUI.ViewModels
             var generated = generator.Generate(Config.FieldWidth, Config.FieldHeight, random, 1);
             Field = generated.field;
             Player = new Player(generated.x, generated.y);
+            Shop = new ShopViewModel(Player);
             EnemyAI = new EnemyAI(random);
             Field.Fov.Update(Player.X, Player.Y, Field);
             SaveManager.Save(Player, currentSeed);
@@ -250,6 +275,7 @@ namespace AvaloniaUI.ViewModels
                 var restored = new RoomCorridorGenerator().Generate(Config.FieldWidth, Config.FieldHeight, random, data.Floor);
                 Field = restored.field;
                 Player = new Player(restored.x, restored.y, data.HP, data.MaxHP, data.Gold, data.Keys, data.Floor);
+                Shop = new ShopViewModel(Player);
                 EnemyAI = new EnemyAI(random);
                 Field.Fov.Update(Player.X, Player.Y, Field);
                 _hasUnsavedProgress = false;
@@ -294,8 +320,8 @@ namespace AvaloniaUI.ViewModels
             UpdateUI();
         }
         private bool IsInputBlocked() =>
-    IsExitPopupOpen || IsGameOverPopupOpen || IsDescendingPopupOpen ||
-    IsAltarPopupOpen || IsAltarResultOpen || IsAttackPopupOpen || !Player.IsAlive || IsAimingMode;
+            IsExitPopupOpen || IsGameOverPopupOpen || IsDescendingPopupOpen ||IsAltarPopupOpen || IsAltarResultOpen 
+            || IsAttackPopupOpen || !Player.IsAlive || IsAimingMode || IsShopPopupOpen;
 
         private InteractionResult HandlePlayerTurn(int dx, int dy)
         {
@@ -335,14 +361,13 @@ namespace AvaloniaUI.ViewModels
             { IsWinPopupOpen = true; UpdateUI(); return; }
 
             var random = new Random(currentSeed + Player.CurrentFloor + 1);
-            var next = new RoomCorridorGenerator().Generate(Config.FieldWidth, Config.FieldHeight, random, Player.CurrentFloor + 1);
-            Field = next.field;
-            Player.Descend(next.x, next.y);
-            EnemyAI = new EnemyAI(random);
-            Field.Fov.Update(Player.X, Player.Y, Field);
-            SaveManager.Save(Player, currentSeed);
-            _hasUnsavedProgress = false;
-            IsDescendingPopupOpen = true;
+            var next = new RoomCorridorGenerator().Generate(
+                Config.FieldWidth, Config.FieldHeight, random, Player.CurrentFloor + 1);
+
+            _pendingNextFloor = next;
+            Shop.Refresh();
+            IsShopPopupOpen = true;
+            UpdateUI();
         }
         private void UpdateUI()
         {

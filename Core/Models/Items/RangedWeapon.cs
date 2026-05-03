@@ -18,12 +18,43 @@ namespace GameCore.Models.Items
         public bool IsEmpty => Ammo == 0;
 
         public override string StatLine =>
-            $"{Name} [{Damage} dmg | {Range} range | {Ammo}/{MaxAmmo}]";
+            $"{Name} {Damage} dmg | {Range} range | {Ammo}/{MaxAmmo}";
 
         public bool TrySpendAmmo()
         {
             if (!HasAmmo) return false;
             Ammo--;
+            return true;
+        }
+        public int AmmoUpgradeLevel { get; private set; } = 0;
+        public const int MaxAmmoUpgradeLevel = 2;
+
+        public int ReloadCost => 30;
+
+        public int NextAmmoCost => AmmoUpgradeLevel switch
+        {
+            0 => 80,
+            1 => 140,
+            _ => int.MaxValue
+        };
+
+        public bool IsMaxAmmoUpgrade => AmmoUpgradeLevel >= MaxAmmoUpgradeLevel;
+
+        public bool TryReload(Player player)
+        {
+            if (Ammo == MaxAmmo) return false;
+            if (!player.SpendGold(ReloadCost)) return false;
+            Ammo = MaxAmmo;
+            return true;
+        }
+
+        public bool TryUpgradeAmmo(Player player)
+        {
+            if (IsMaxAmmoUpgrade) return false;
+            if (!player.SpendGold(NextAmmoCost)) return false;
+            AmmoUpgradeLevel++;
+            MaxAmmo += 3;
+            Ammo = MaxAmmo;
             return true;
         }
 
@@ -57,7 +88,6 @@ namespace GameCore.Models.Items
                 field.Log.Add(GameEventType.NoAmmo, "No ammo!", ' ', color: LogColor.Bad);
                 return UseResult.Failed;
             }
-            if (IsEmpty) player.Inventory.RemoveFromHotbar(this);
 
             closest.TakeDamage(Damage, player, field, closest.X, closest.Y);
             return UseResult.Hit;
@@ -75,7 +105,6 @@ namespace GameCore.Models.Items
                 field.Log.Add(GameEventType.NoAmmo, "No ammo!", ' ', color: LogColor.Bad);
                 return UseResult.Failed;
             }
-            if (IsEmpty) player.Inventory.RemoveFromHotbar(this);
 
             if (field.GetEntity(x, y) is Enemy enemy)
             {
