@@ -1,4 +1,5 @@
 ﻿using GameCore.Models.Entities;
+using GameCore.Models.Entities.Enemies;
 using GameCore.Models.Objects;
 using System;
 using System.Collections.Generic;
@@ -59,7 +60,7 @@ namespace GameCore.World
                 field.SetEntity(toX, toY, enemy);
             }
         }
-        private bool Chase(Enemy enemy, GameField field, Player player)
+        private bool Chase(Enemy enemy, GameField field, Player player, bool flee = false)
         {
             int bestDistance = map![enemy.X, enemy.Y];
             (int dx, int dy) bestMove = (0, 0);
@@ -69,10 +70,15 @@ namespace GameCore.World
                 int nx = enemy.X + dx;
                 int ny = enemy.Y + dy;
                 if (nx < 0 || nx >= field.Width || ny < 0 || ny >= field.Height) continue;
-                if ((field[nx, ny].IsPassable || field[nx, ny] is Door) && !field.HasEntity(nx, ny) && map[nx, ny] != -1 && map[nx, ny] < bestDistance)
+                if ((field[nx, ny].IsPassable || field[nx, ny] is Door) &&
+                    !field.HasEntity(nx, ny) && map[nx, ny] != -1)
                 {
-                    bestDistance = map[nx, ny];
-                    bestMove = (dx, dy);
+                    bool better = flee ? map[nx, ny] > bestDistance : map[nx, ny] < bestDistance;
+                    if (better)
+                    {
+                        bestDistance = map[nx, ny];
+                        bestMove = (dx, dy);
+                    }
                 }
             }
             if (bestMove == (0, 0)) return false;
@@ -98,6 +104,21 @@ namespace GameCore.World
                 if ((field[nx, ny].IsPassable || field[nx, ny] is Door) && !field.HasEntity(nx, ny))
                     MoveEnemy(field, enemy, nx, ny);
         }
+        private void UpdateRanged(RangedEnemy enemy, GameField field, Player player)
+        {
+            bool canSee = field.Fov[enemy.X, enemy.Y] == ExplorationState.Visible;
+            int dist = Math.Abs(enemy.X - player.X) + Math.Abs(enemy.Y - player.Y);
+
+            if (canSee && dist <= enemy.Range)
+            {
+                enemy.RangedAttack(player, field);
+                Chase(enemy, field, player, flee: true);
+            }
+            else if (canSee)
+                Chase(enemy, field, player);
+            else
+                Wander(enemy, field);
+        }
         public InteractionResult UpdateEnemies(GameField field, Player player)
         {
             var enemies = new List<Enemy>();
@@ -108,6 +129,11 @@ namespace GameCore.World
             bool attacked = false;
             foreach (var enemy in enemies)
             {
+                if (enemy is RangedEnemy ranged)
+                {
+                    UpdateRanged(ranged, field, player);
+                    continue;
+                }
                 bool canSee = field.Fov[enemy.X, enemy.Y] == ExplorationState.Visible;
                 bool canHear = map![enemy.X, enemy.Y] != -1 && map[enemy.X, enemy.Y] <= Config.HearRange;
                 bool canChase = canSee && map[enemy.X, enemy.Y] <= Config.AggroRange;

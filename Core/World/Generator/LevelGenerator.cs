@@ -1,7 +1,9 @@
 ﻿using GameCore.Models.Entities;
+using GameCore.Models.Entities.Enemies;
 using GameCore.Models.Objects;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 using Void = GameCore.Models.Objects.Void;
 
@@ -117,7 +119,13 @@ namespace GameCore.World.Generator
                     int y = random.Next(room.Y, room.Y + room.H);
                     if (field[x, y] is Floor && !field.HasEntity(x, y))
                     {
-                        var enemy = new Enemy(x, y);
+                        int floor = 1;
+                        var enemy = i switch
+                        {
+                            0 => (Enemy)new TankEnemy(x, y, floor, random),
+                            1 => (Enemy)new RangedEnemy(x, y, floor, random),
+                            _ => new Enemy(x, y, floor, random)
+                        };
                         field.SetEntity(x, y, enemy);
                         break;
                     }

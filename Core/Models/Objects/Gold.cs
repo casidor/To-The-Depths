@@ -8,8 +8,13 @@ namespace GameCore.Models.Objects
 {
     public class Gold : GameObject
     {
-        public Gold()
+        public int Amount { get; }
+
+        public Gold() : this(Config.GoldAmount) { }
+
+        public Gold(int amount)
         {
+            Amount = amount;
             Symbol = GameSymbols.Gold;
             IsPassable = true;
             Color = GameColors.Gold;
@@ -17,8 +22,8 @@ namespace GameCore.Models.Objects
 
         public override InteractionResult Interact(Player player, GameField field, int x, int y)
         {
-            player.AddGold(Config.GoldAmount);
-            field.Log.Add(GameEventType.GoldCollected, $"Gold: +{Config.GoldAmount}", '♦', x, y, Config.GoldAmount, color: LogColor.Good);
+            player.AddGold(Amount);
+            field.Log.Add(GameEventType.GoldCollected, $"Gold: +{Amount}", '♦', x, y, Amount, color: LogColor.Good);
             field[x, y] = new Floor();
             return InteractionResult.None;
         }

@@ -21,6 +21,12 @@ namespace GameCore
         public const int GoldStolen = 10;
         public const int AggroRange = 7;
         public const int HearRange = 3;
+        //Enemy type settings
+        public const int TankMaxHP = 75;
+        public const int TankDamage = 3;
+        public const int RangedMaxHP = 24;
+        public const int RangedDamage = 8;
+        public const int RangedEnemyRange = 4;
         //Generation settings
         public const int MaxRooms = 10;
         public const int GenAttempts = 300;
