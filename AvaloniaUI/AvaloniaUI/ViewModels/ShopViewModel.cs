@@ -45,9 +45,12 @@ namespace AvaloniaUI.ViewModels
             OnPropertyChanged(nameof(Slot3));
             OnPropertyChanged(nameof(Slot4));
             OnPropertyChanged(nameof(Gold));
+            OnPropertyChanged(nameof(HasMelee));
+            OnPropertyChanged(nameof(Melee));
+            OnPropertyChanged(nameof(MeleeName));
+            OnPropertyChanged(nameof(MeleeStatLine));
             OnPropertyChanged(nameof(CanUpgradeMelee));
             OnPropertyChanged(nameof(MeleeUpgradeCost));
-            OnPropertyChanged(nameof(MeleeStatLine));
         }
 
         [RelayCommand]

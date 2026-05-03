@@ -18,7 +18,7 @@ namespace GameCore.Models.Objects
         public override InteractionResult Interact(Player player, GameField field, int x, int y)
         {
             player.AddKey();
-            field.Log.Add(GameEventType.KeyCollected, $"Key collected: {player.KeysCollected}/{Config.KeysAmount}", '⚷', x, y, color: LogColor.Good);
+            field.Log.Add(GameEventType.KeyCollected, $"Key collected: {player.KeysCollected}/{player.KeysRequired}", '⚷', x, y, color: LogColor.Good);
             field[x, y] = new Floor();
             return InteractionResult.None;
         }

@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AvaloniaUI.ViewModels
@@ -21,11 +22,11 @@ namespace AvaloniaUI.ViewModels
         private int currentSeed;
         public string HPText => $" {Player.HP}/{Player.MaxHP}";
         public int PlayerGold => Player.GoldCollected;
-        public string KeysText => $" {Player.KeysCollected}/{Config.KeysAmount}";
-        public bool HasAllKeys => Player.KeysCollected >= Config.KeysAmount;
+        public string KeysText => $" {Player.KeysCollected}/{Player.KeysRequired}";
+        public bool HasAllKeys => Player.KeysCollected >= Player.KeysRequired;
         public int CurrentFloor => Player.CurrentFloor;
-        public string MissionText => Player.KeysCollected >= Config.KeysAmount
-        ? "Exit is OPEN!\nFind the exit!" : $"Collect {Config.KeysAmount} keys!";
+        public string MissionText => Player.KeysCollected >= Player.KeysRequired
+            ? "Exit is OPEN!\nFind the exit!" : $"Collect {Player.KeysRequired} keys!";
         public GameField Field { get; private set; }
         public Player Player { get; private set; }
         public EnemyAI EnemyAI { get; private set; }
@@ -236,8 +237,9 @@ namespace AvaloniaUI.ViewModels
             IsShopPopupOpen = false;
             if (_pendingNextFloor is var (field, x, y))
             {
+                var data = FloorConfig.Get(Player.CurrentFloor + 1);
+                Player.Descend(x, y, data.KeysAmount);
                 Field = field;
-                Player.Descend(x, y);
                 EnemyAI = new EnemyAI(new Random(currentSeed + Player.CurrentFloor));
                 Field.Fov.Update(Player.X, Player.Y, Field);
                 SaveManager.Save(Player, currentSeed);

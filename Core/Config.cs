@@ -10,8 +10,8 @@ namespace GameCore
         public const int ConsoleWidth = 110;
         public const int ConsoleHeight = 30;
         //Field settings
-        public const int FieldWidth = 110;
-        public const int FieldHeight = 90;
+        public const int FieldWidth = 90;
+        public const int FieldHeight = 70;
         //Player settings
         public const int PlayerMaxHP = 100;
         public const int PlayerDamage = 10;

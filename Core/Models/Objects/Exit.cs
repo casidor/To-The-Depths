@@ -17,10 +17,7 @@ namespace GameCore.Models.Objects
 
         public override InteractionResult Interact(Player player, GameField field, int x, int y)
         {
-            if (player.KeysCollected == Config.KeysAmount)
-            {
-                player.Exit();
-            }
+            if (player.KeysCollected >= player.KeysRequired) player.Exit();
             return InteractionResult.ExitReached;
         }
     }

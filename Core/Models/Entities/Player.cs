@@ -22,6 +22,7 @@ namespace GameCore.Models.Entities
         }
         public bool IsExited { get; private set; } = false;
         public Inventory Inventory { get; } = new();
+        public int KeysRequired { get; private set; } = Config.KeysAmount;
         public Player(int x, int y)
         {
             X = x;
@@ -54,13 +55,14 @@ namespace GameCore.Models.Entities
             }
             return result;
         }
-        public void Descend(int startX, int startY)
+        public void Descend(int startX, int startY, int keysRequired)
         {
             X = startX;
             Y = startY;
             KeysCollected = 0;
             IsExited = false;
             CurrentFloor++;
+            KeysRequired = keysRequired;
         }
         public void AddGold(int amount) => GoldCollected += amount;
         public void AddKey() => KeysCollected++;
