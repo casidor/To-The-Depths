@@ -18,12 +18,10 @@ namespace GameCore.World.Generator
             FillEmptySpaces(field);
             PlaceRooms(field, random);
             ConnectRooms(field, random);
-
-            CalculateEntrances(field);
-
             AddWalls(field);
+            CalculateEntrances(field);
+            FixRoomWalls(field, _rooms);
             PlaceDoors(field, _rooms);
-
             PlaceInRoomCenters(field, random, _rooms, Config.AltarsAmount, () => new Altar(), excludeFirst: true);
             PlaceInFarthestRoom(field, random, _rooms, Config.ExitAmount, () => new Exit());
             PlaceInRandomRooms(field, random, _rooms, Config.KeysAmount, () => new Key(), excludeFirst: true);
@@ -147,15 +145,24 @@ namespace GameCore.World.Generator
             foreach (var room in _rooms)
             {
                 for (int x = room.X; x < room.X + room.W; x++)
-                {
-                    if (field[x, room.Y - 1] is Floor) room.Entrances.Add((x, room.Y - 1));
-                    if (field[x, room.Y + room.H] is Floor) room.Entrances.Add((x, room.Y + room.H));
-                }
+                    if (field[x, room.Y - 1] is Floor &&
+                        room.Y - 2 >= 0 && field[x, room.Y - 2] is Floor)
+                    { room.Entrances.Add((x, room.Y - 1)); break; }
+
+                for (int x = room.X; x < room.X + room.W; x++)
+                    if (field[x, room.Y + room.H] is Floor &&
+                        room.Y + room.H + 1 < field.Height && field[x, room.Y + room.H + 1] is Floor)
+                    { room.Entrances.Add((x, room.Y + room.H)); break; }
+
                 for (int y = room.Y; y < room.Y + room.H; y++)
-                {
-                    if (field[room.X - 1, y] is Floor) room.Entrances.Add((room.X - 1, y));
-                    if (field[room.X + room.W, y] is Floor) room.Entrances.Add((room.X + room.W, y));
-                }
+                    if (field[room.X - 1, y] is Floor &&
+                        room.X - 2 >= 0 && field[room.X - 2, y] is Floor)
+                    { room.Entrances.Add((room.X - 1, y)); break; }
+
+                for (int y = room.Y; y < room.Y + room.H; y++)
+                    if (field[room.X + room.W, y] is Floor &&
+                        room.X + room.W + 1 < field.Width && field[room.X + room.W + 1, y] is Floor)
+                    { room.Entrances.Add((room.X + room.W, y)); break; }
             }
         }
 
@@ -166,6 +173,20 @@ namespace GameCore.World.Generator
                 if (!(field[x, y] is Floor))
                     field[x, y] = new Floor();
             }
+        }
+        protected void FixRoomWalls(GameField field, List<Room> rooms)
+        {
+            foreach (var room in rooms)
+                for (int y = room.Y - 1; y <= room.Y + room.H; y++)
+                    for (int x = room.X - 1; x <= room.X + room.W; x++)
+                    {
+                        if (x >= room.X && x < room.X + room.W &&
+                            y >= room.Y && y < room.Y + room.H) continue; // всередині кімнати не чіпаємо
+
+                        if (room.Entrances.Contains((x, y))) continue; // entrances не чіпаємо
+
+                        field[x, y] = new Wall();
+                    }
         }
     }
 }

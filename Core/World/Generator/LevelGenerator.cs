@@ -105,7 +105,16 @@ namespace GameCore.World.Generator
                 foreach (var (x, y) in room.Entrances)
                     if (x >= 0 && x < field.Width && y >= 0 && y < field.Height)
                         if (field[x, y] is Floor)
-                            field[x, y] = new Door();
+                        {
+                            bool hasCorridorSide =
+                                (x > 0 && field[x - 1, y] is Floor) ||
+                                (x < field.Width - 1 && field[x + 1, y] is Floor) ||
+                                (y > 0 && field[x, y - 1] is Floor) ||
+                                (y < field.Height - 1 && field[x, y + 1] is Floor);
+
+                            if (hasCorridorSide)
+                                field[x, y] = new Door();
+                        }
         }
         protected void PlaceEnemies(GameField field, Random random, List<Room> rooms,
             int amount, Func<int, int, Enemy> factory, bool excludeFirst = false)

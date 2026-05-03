@@ -11,7 +11,7 @@ namespace GameCore.World
         public int Width { get; }
         public int Height { get; }
         public const int Radius = 10;
-
+        public bool IsEnabled { get; set; } = true;
         public FieldOfView(int width, int height)
         {
             Width = width;
@@ -23,6 +23,13 @@ namespace GameCore.World
 
         public void Update(int px, int py, GameField field)
         {
+            if (!IsEnabled)
+            {
+                for (int y = 0; y < Height; y++)
+                    for (int x = 0; x < Width; x++)
+                        _state[x, y] = ExplorationState.Visible;
+                return;
+            }
             for (int y = 0; y < Height; y++)
                 for (int x = 0; x < Width; x++)
                     if (_state[x, y] == ExplorationState.Visible)
