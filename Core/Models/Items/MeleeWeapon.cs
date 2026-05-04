@@ -13,7 +13,7 @@ namespace GameCore.Models.Items
         public bool Equip(Player player, GameField field, int x, int y)
         {
             if (player.Inventory.EquippedMelee != null &&
-                player.Inventory.EquippedMelee.Damage > this.Damage)
+            player.Inventory.EquippedMelee.GetMaxPossibleDamage() > this.GetMaxPossibleDamage())
                 return false;
             var old = player.Inventory.EquippedMelee;
             player.Inventory.EquippedMelee = this;

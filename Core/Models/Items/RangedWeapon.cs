@@ -18,7 +18,7 @@ namespace GameCore.Models.Items
         public bool IsEmpty => Ammo == 0;
 
         public override string StatLine =>
-            $"{Name} {Damage} dmg | {Range} range | {Ammo}/{MaxAmmo}";
+            $"{Name} {Damage} dmg | {Range} range";
 
         public bool TrySpendAmmo()
         {
@@ -113,6 +113,12 @@ namespace GameCore.Models.Items
             }
             field.Log.Add(GameEventType.Missed, "Missed!", ' ', x, y, color: LogColor.Bad);
             return UseResult.Missed;
+        }
+        internal void RestoreAmmoState(int ammo, int maxAmmo, int ammoUpgradeLevel)
+        {
+            AmmoUpgradeLevel = ammoUpgradeLevel;
+            MaxAmmo = maxAmmo;
+            Ammo = Math.Min(ammo, maxAmmo);
         }
     }
 }

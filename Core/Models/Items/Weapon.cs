@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace GameCore.Models.Items
 {
@@ -9,7 +7,7 @@ namespace GameCore.Models.Items
         public int Damage { get; protected set; }
         public int UpgradeLevel { get; private set; } = 0;
         public const int MaxUpgradeLevel = 2;
-        public virtual string StatLine => $"{Name} {Damage} dmg";
+        public virtual string StatLine => $"{Name} {Damage} DMG";
 
         public virtual int NextUpgradeCost => UpgradeLevel switch
         {
@@ -27,5 +25,15 @@ namespace GameCore.Models.Items
         }
 
         public bool IsMaxUpgrade => UpgradeLevel >= MaxUpgradeLevel;
+        public int GetMaxPossibleDamage()
+        {
+            return Damage + (MaxUpgradeLevel - UpgradeLevel) * 10;
+        }
+
+        internal void RestoreState(int upgradeLevel)
+        {
+            while (UpgradeLevel < upgradeLevel && !IsMaxUpgrade)
+                TryUpgrade();
+        }
     }
 }

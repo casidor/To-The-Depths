@@ -30,15 +30,17 @@ namespace GameCore.Models.Entities
             HP = Config.PlayerMaxHP;
             MaxHP = Config.PlayerMaxHP;
         }
-        public Player(int x, int y, int hp,int maxhp, int gold, int keys, int floor)
+        public Player(int x, int y, int hp, int maxHp, int gold, int keys, int floor, int keysRequired, SavedInventoryData inventory)
         {
             X = x;
             Y = y;
             HP = hp;
-            MaxHP = maxhp;
+            MaxHP = maxHp;
             GoldCollected = gold;
             KeysCollected = keys;
             CurrentFloor = floor;
+            KeysRequired = keysRequired;
+            Inventory.RestoreFromSave(inventory);
         }
         public InteractionResult Move(int dX, int dY, GameField field)
         {

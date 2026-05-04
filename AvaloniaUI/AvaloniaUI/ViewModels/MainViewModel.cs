@@ -270,13 +270,17 @@ namespace AvaloniaUI.ViewModels
         public SaveResult TryLoadGame()
         {
             var (data, saveResult) = SaveManager.Load();
-            if(saveResult == SaveResult.Success)
+            if (saveResult == SaveResult.Success)
             {
-                currentSeed = data.Seed;
+                currentSeed = data!.Seed;
                 var random = new Random(currentSeed + data.Floor);
-                var restored = new RoomCorridorGenerator().Generate(Config.FieldWidth, Config.FieldHeight, random, data.Floor);
+                var restored = new RoomCorridorGenerator().Generate(
+                    Config.FieldWidth, Config.FieldHeight, random, data.Floor);
                 Field = restored.field;
-                Player = new Player(restored.x, restored.y, data.HP, data.MaxHP, data.Gold, data.Keys, data.Floor);
+                Player = new Player(
+                    restored.x, restored.y,
+                    data.HP, data.MaxHP, data.Gold, data.Keys,
+                    data.Floor, data.KeysRequired, data.Inventory);
                 Shop = new ShopViewModel(Player);
                 EnemyAI = new EnemyAI(random);
                 Field.Fov.Update(Player.X, Player.Y, Field);

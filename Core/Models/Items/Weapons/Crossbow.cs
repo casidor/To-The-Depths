@@ -12,8 +12,8 @@ namespace GameCore.Models.Items.Weapons
             Description = "Fires bolts at nearby enemies.";
             Damage = 35;
             Range = 8;
-            Ammo = ammo;
-            MaxAmmo = 5;
+            MaxAmmo = ammo;
+            Ammo = MaxAmmo;
         }
     }
 }

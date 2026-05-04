@@ -1,44 +1,116 @@
 ﻿using GameCore.Models.Entities;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Text;
+using GameCore.Models.Items;
+using GameCore.Models.Items.Weapons;
+using System.Text.Json;
 
 namespace GameCore
 {
+    public record SavedItemData(
+        string Type,
+        int UpgradeLevel = 0,
+        int Ammo = 0,
+        int MaxAmmo = 0,
+        int AmmoUpgradeLevel = 0
+    );
+
+    public record SavedInventoryData(
+        SavedItemData? Melee,
+        SavedItemData?[] Hotbar,
+        int ActiveSlot
+    );
+
     public record SaveData(
         int HP,
         int MaxHP,
         int Gold,
         int Keys,
         int Floor,
-        int Seed
+        int KeysRequired,
+        int Seed,
+        SavedInventoryData Inventory,
+        int Checksum
     );
+
     public class SaveManager
     {
-        public const string SaveFile = "checkpoint.txt";
+        public const string SaveFile = "checkpoint.json";
+
+        private static int ComputeChecksum(int hp, int maxHp, int gold, int keys, int floor, int keysRequired, int seed)
+            => HashCode.Combine(hp, maxHp, gold, keys, floor, keysRequired, seed);
+
+        // Item -> SavedItemData
+        private static SavedItemData? ItemToData(Item? item) => item switch
+        {
+            null => null,
+            RangedWeapon rw => new SavedItemData(item.GetType().Name, rw.UpgradeLevel, rw.Ammo, rw.MaxAmmo, rw.AmmoUpgradeLevel),
+            Weapon w => new SavedItemData(item.GetType().Name, w.UpgradeLevel),
+            _ => null
+        };
+
+        // SavedItemData -> Item
+        internal static Item? DataToItem(SavedItemData? data)
+        {
+            if (data == null) return null;
+
+            Item? item = data.Type switch
+            {
+                nameof(Dagger) => new Dagger(),
+                nameof(Sword) => new Sword(),
+                nameof(Bow) => new Bow(data.Ammo),
+                nameof(Crossbow) => new Crossbow(data.Ammo),
+                _ => null
+            };
+
+            if (item is RangedWeapon rw)
+            {
+                rw.RestoreState(data.UpgradeLevel);
+                rw.RestoreAmmoState(data.Ammo, data.MaxAmmo, data.AmmoUpgradeLevel);
+            }
+            else if (item is Weapon w)
+            {
+                w.RestoreState(data.UpgradeLevel);
+            }
+
+            return item;
+        }
+
         public static void Save(Player player, int seed)
         {
-            int checksum = player.HP + player.MaxHP + player.GoldCollected + player.KeysCollected + player.CurrentFloor + seed;
-            string data = $"{player.HP},{player.MaxHP},{player.GoldCollected},{player.KeysCollected},{player.CurrentFloor},{seed},{checksum}";
-            File.WriteAllText(SaveFile, data);
+            int checksum = ComputeChecksum(
+                player.HP, player.MaxHP, player.GoldCollected,
+                player.KeysCollected, player.CurrentFloor, player.KeysRequired, seed);
+
+            var inv = player.Inventory;
+            var inventoryData = new SavedInventoryData(
+                Melee: ItemToData(inv.EquippedMelee),
+                Hotbar: inv.Hotbar.Select(ItemToData).ToArray(),
+                ActiveSlot: inv.ActiveSlot
+            );
+
+            var data = new SaveData(
+                player.HP, player.MaxHP, player.GoldCollected,
+                player.KeysCollected, player.CurrentFloor, player.KeysRequired,
+                seed, inventoryData, checksum);
+
+            string json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(SaveFile, json);
         }
+
         public static (SaveData? data, SaveResult result) Load()
         {
             if (!File.Exists(SaveFile)) return (null, SaveResult.NotFound);
             try
             {
-                string[] parts = File.ReadAllText(SaveFile).Split(',');
-                if (parts.Length != 7) return (null, SaveResult.Corrupted);
-                int hp = int.Parse(parts[0]);
-                int maxHp = int.Parse(parts[1]);
-                int gold = int.Parse(parts[2]);
-                int keys = int.Parse(parts[3]);
-                int floor = int.Parse(parts[4]);
-                int seed = int.Parse(parts[5]);
-                int checksum = int.Parse(parts[6]);
-                if (checksum != hp + maxHp + gold + keys + floor + seed) return (null, SaveResult.Unverified);
-                return (new SaveData(hp, maxHp, gold, keys, floor, seed), SaveResult.Success);
+                var data = JsonSerializer.Deserialize<SaveData>(File.ReadAllText(SaveFile));
+                if (data == null) return (null, SaveResult.Corrupted);
+
+                int expected = ComputeChecksum(
+                    data.HP, data.MaxHP, data.Gold,
+                    data.Keys, data.Floor, data.KeysRequired, data.Seed);
+
+                if (data.Checksum != expected) return (null, SaveResult.Unverified);
+
+                return (data, SaveResult.Success);
             }
             catch
             {

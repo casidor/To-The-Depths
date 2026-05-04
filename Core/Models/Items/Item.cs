@@ -24,7 +24,7 @@ namespace GameCore.Models.Items
                 if (equipped)
                     field.Log.Add(GameEventType.ItemEquipped, $"Equipped: {Name}", ' ', color: LogColor.Good);
                 else
-                    field.Log.Add(GameEventType.ItemEquipped, "Your weapon is already stronger", ' ', color: LogColor.Bad);
+                    field.Log.Add(GameEventType.ItemEquipped, "Equipped weapon has higher upgrade potential", ' ', color: LogColor.Normal);
                 return equipped ? InteractionResult.ItemPickedUp : InteractionResult.None;
             }
             bool added = player.Inventory.TryAddToHotbar(this);

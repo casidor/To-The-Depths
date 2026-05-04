@@ -44,5 +44,14 @@ namespace GameCore.Models.Items
                 if (Hotbar[i] == item)
                     Hotbar[i] = null;
         }
+        public void RestoreFromSave(SavedInventoryData data)
+        {
+            EquippedMelee = SaveManager.DataToItem(data.Melee) as MeleeWeapon;
+
+            for (int i = 0; i < HotbarSize && i < data.Hotbar.Length; i++)
+                Hotbar[i] = SaveManager.DataToItem(data.Hotbar[i]);
+
+            SwitchSlot(data.ActiveSlot);
+        }
     }
 }
