@@ -14,7 +14,7 @@ namespace GameCore.Models.Items
 
         public Item? ActiveItem => Hotbar[ActiveSlot];
 
-        public string MeleeStatLine => EquippedMelee?.StatLine ?? $"Deals {Config.PlayerDamage} dmg";
+        public string MeleeStatLine => EquippedMelee?.StatLine ?? $"Deals {Config.PlayerDamage} DMG";
         public string ActiveItemStatLine => (ActiveItem as Weapon)?.StatLine ?? "---";
 
         public bool IsHotbarFull => Array.TrueForAll(Hotbar, s => s != null);

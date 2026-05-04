@@ -124,6 +124,14 @@ namespace AvaloniaUI.ViewModels
 
         // Sidebar - Melee
         public Item? EquippedMelee => Player.Inventory.EquippedMelee;
+        private Item? _lastEquippedMelee;
+        private void UpdateEquippedMeleeIfChanged()
+        {
+            if (_lastEquippedMelee == Player.Inventory.EquippedMelee) return;
+            _lastEquippedMelee = Player.Inventory.EquippedMelee;
+            OnPropertyChanged(nameof(EquippedMelee));
+            OnPropertyChanged(nameof(EquippedMeleeText));
+        }
         public string EquippedMeleeText => Player.Inventory.MeleeStatLine;
 
         // Sidebar - Hotbar
@@ -368,13 +376,12 @@ namespace AvaloniaUI.ViewModels
             OnPropertyChanged(nameof(HasAllKeys));
             OnPropertyChanged(nameof(MissionText));
             UpdateHeartsIfChanged();
-            OnPropertyChanged(nameof(EquippedMeleeText));
             OnPropertyChanged(nameof(HotbarSlots));
             OnPropertyChanged(nameof(ActiveSlot));
             OnPropertyChanged(nameof(ActiveItemStatsText));
             UpdateHotbarIfChanged();
             UpdateActiveSlotIfChanged();
-            OnPropertyChanged(nameof(EquippedMelee));
+            UpdateEquippedMeleeIfChanged();
         }
     }
 }

@@ -11,8 +11,8 @@ namespace GameCore.Models.Items
 
         public virtual int NextUpgradeCost => UpgradeLevel switch
         {
-            0 => 120,
-            1 => 220,
+            0 => Config.WeaponUpgradeCostLevel1,
+            1 => Config.WeaponUpgradeCostLevel2,
             _ => int.MaxValue
         };
 
@@ -20,14 +20,14 @@ namespace GameCore.Models.Items
         {
             if (UpgradeLevel >= MaxUpgradeLevel) return false;
             UpgradeLevel++;
-            Damage += 10;
+            Damage += Config.WeaponDamageUpgradeAmount;
             return true;
         }
 
         public bool IsMaxUpgrade => UpgradeLevel >= MaxUpgradeLevel;
         public int GetMaxPossibleDamage()
         {
-            return Damage + (MaxUpgradeLevel - UpgradeLevel) * 10;
+            return Damage + (MaxUpgradeLevel - UpgradeLevel) * Config.WeaponDamageUpgradeAmount;
         }
 
         internal void RestoreState(int upgradeLevel)

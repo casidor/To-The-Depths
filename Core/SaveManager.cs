@@ -36,7 +36,20 @@ namespace GameCore
         public const string SaveFile = "checkpoint.json";
 
         private static int ComputeChecksum(int hp, int maxHp, int gold, int keys, int floor, int keysRequired, int seed)
-            => HashCode.Combine(hp, maxHp, gold, keys, floor, keysRequired, seed);
+        {
+            unchecked 
+            {
+                int hash = 17;
+                hash = hash * 31 + hp;
+                hash = hash * 31 + maxHp;
+                hash = hash * 31 + gold;
+                hash = hash * 31 + keys;
+                hash = hash * 31 + floor;
+                hash = hash * 31 + keysRequired;
+                hash = hash * 31 + seed;
+                return hash;
+            }
+        }
 
         // Item -> SavedItemData
         private static SavedItemData? ItemToData(Item? item) => item switch

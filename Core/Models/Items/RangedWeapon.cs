@@ -18,7 +18,7 @@ namespace GameCore.Models.Items
         public bool IsEmpty => Ammo == 0;
 
         public override string StatLine =>
-            $"{Name} {Damage} dmg | {Range} range";
+            $"{Name} {Damage} DMG | {Range} range | {Ammo}/{MaxAmmo} ammo";
 
         public bool TrySpendAmmo()
         {
@@ -29,12 +29,12 @@ namespace GameCore.Models.Items
         public int AmmoUpgradeLevel { get; private set; } = 0;
         public const int MaxAmmoUpgradeLevel = 2;
 
-        public int ReloadCost => 30;
+        public int ReloadCost => Config.RangedWeaponReloadCost;
 
         public int NextAmmoCost => AmmoUpgradeLevel switch
         {
-            0 => 80,
-            1 => 140,
+            0 => Config.RangedWeaponAmmoUpgradeCostLevel1,
+            1 => Config.RangedWeaponAmmoUpgradeCostLevel2,
             _ => int.MaxValue
         };
 
@@ -53,7 +53,7 @@ namespace GameCore.Models.Items
             if (IsMaxAmmoUpgrade) return false;
             if (!player.SpendGold(NextAmmoCost)) return false;
             AmmoUpgradeLevel++;
-            MaxAmmo += 3;
+            MaxAmmo += Config.RangedWeaponAmmoUpgradeAmount;
             Ammo = MaxAmmo;
             return true;
         }
