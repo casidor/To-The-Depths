@@ -94,18 +94,6 @@ namespace AvaloniaUI.ViewModels
         //Win popup
         [ObservableProperty]
         private bool _isWinPopupOpen;
-        //Attack popup
-        [ObservableProperty]
-        private bool _isAttackPopupOpen;
-        public string AttackInfoText =>
-            $"HP lost: {Config.EnemyDamage}\nGold stolen: {Config.GoldStolen}";
-
-        private async void ShowAttackPopup()
-        {
-            IsAttackPopupOpen = true;
-            await Task.Delay(1500);
-            IsAttackPopupOpen = false;
-        }
         public event Action<double, double, string, char?>? FloatingTextRequested;
         // Sidebar - Hearts
         private string GetHeartState(int index)
@@ -322,7 +310,7 @@ namespace AvaloniaUI.ViewModels
         }
         private bool IsInputBlocked() =>
             IsExitPopupOpen || IsGameOverPopupOpen || IsDescendingPopupOpen ||IsAltarPopupOpen || IsAltarResultOpen 
-            || IsAttackPopupOpen || !Player.IsAlive || IsAimingMode || IsShopPopupOpen;
+            || !Player.IsAlive || IsAimingMode || IsShopPopupOpen;
 
         private InteractionResult HandlePlayerTurn(int dx, int dy)
         {
