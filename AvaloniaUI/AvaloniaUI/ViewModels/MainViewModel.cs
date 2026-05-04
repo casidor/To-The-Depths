@@ -135,6 +135,7 @@ namespace AvaloniaUI.ViewModels
         }
 
         // Sidebar - Melee
+        public Item? EquippedMelee => Player.Inventory.EquippedMelee;
         public string EquippedMeleeText => Player.Inventory.MeleeStatLine;
 
         // Sidebar - Hotbar
@@ -142,13 +143,6 @@ namespace AvaloniaUI.ViewModels
         public int ActiveSlot => Player.Inventory.ActiveSlot;
         public string ActiveItemStatsText => Player.Inventory.ActiveItemStatLine;
         // Hotbar
-        private string GetSlotText(int i)
-        {
-            var item = Player.Inventory.Hotbar[i];
-            if (item == null) return "Empty";
-            if (item is RangedWeapon rw) return $"{item.Name} {rw.Ammo}/{rw.MaxAmmo}";
-            return item.Name;
-        }
         public Item? Slot1Item => Player.Inventory.Hotbar[0];
         public Item? Slot2Item => Player.Inventory.Hotbar[1];
         public Item? Slot3Item => Player.Inventory.Hotbar[2];
@@ -221,6 +215,7 @@ namespace AvaloniaUI.ViewModels
             if (Player.Inventory.ActiveItem is not RangedWeapon rw) return;
             Field.Log.Clear();
             ExecuteTurn(rw.UseAt(Player, Field, x, y));
+            _hasUnsavedProgress = true;
         }
         // Log
         public event Action<string, LogColor>? LogRequested;
@@ -391,6 +386,7 @@ namespace AvaloniaUI.ViewModels
             OnPropertyChanged(nameof(ActiveItemStatsText));
             UpdateHotbarIfChanged();
             UpdateActiveSlotIfChanged();
+            OnPropertyChanged(nameof(EquippedMelee));
         }
     }
 }

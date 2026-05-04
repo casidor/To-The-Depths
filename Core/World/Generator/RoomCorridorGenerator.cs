@@ -29,7 +29,7 @@ namespace GameCore.World.Generator
                 () => new Gold(random.Next(data.FloorGoldMin, data.FloorGoldMax)), _rooms);
             PlaceInRandomRooms(field, random, _rooms, data.KeysAmount,
                 () => new Key(), excludeFirst: true);
-            PlaceEnemies(field, random, _rooms, Config.EnemiesAmount, (x, y) => CreateEnemy(x, y, floor, random), excludeFirst: true);
+            PlaceEnemies(field, random, _rooms, data.EnemyCount, (x, y) => CreateEnemy(x, y, floor, random), excludeFirst: true);
             var weaponFactory = GetWeaponForFloor(floor);
             if (weaponFactory != null)
                 PlaceInRandomRooms(field, random, _rooms, 1, weaponFactory, excludeFirst: true);

@@ -140,9 +140,9 @@ namespace GameCore.World.Generator
             var config = FloorConfig.Get(floor);
             int roll = random.Next(100);
 
-            if (config.SpawnRanged && roll < 30)
+            if (config.SpawnRanged && roll < 50)
                 return new RangedEnemy(x, y, floor, random);
-            if (config.SpawnTank && roll < 40)
+            if (config.SpawnTank && roll < 60)
                 return new TankEnemy(x, y, floor, random);
             return new Enemy(x, y, floor, random);
         }

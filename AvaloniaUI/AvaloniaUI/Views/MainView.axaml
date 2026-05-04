@@ -80,21 +80,40 @@
 					<Separator Background="#3d2045" Height="1"/>
 
 					<!-- Stats -->
-					<StackPanel Spacing="2">
+					<StackPanel Spacing="4">
 						<TextBlock Text="STATS" FontSize="10" Foreground="#9060a0"/>
-						<TextBlock Text="{Binding PlayerGold, StringFormat='♦ Gold: {0}'}"
-								   Foreground="{DynamicResource BrushGold}"/>
-						<TextBlock Text="{Binding KeysText, StringFormat='⚷ Keys: {0}'}"
-								   Foreground="{DynamicResource BrushKey}"/>
+						<StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+							<Image Width="32" Height="32"
+								   Source="avares://AvaloniaUI/Assets/coin.png"
+								   RenderOptions.BitmapInterpolationMode="None"/>
+							<TextBlock Text="{Binding PlayerGold, StringFormat='Gold: {0}'}"
+									   Foreground="{DynamicResource BrushGold}" VerticalAlignment="Center"/>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+							<Image Width="32" Height="32"
+								   Source="avares://AvaloniaUI/Assets/key.png"
+								   RenderOptions.BitmapInterpolationMode="None"/>
+							<TextBlock Text="{Binding KeysText, StringFormat='Keys: {0}'}"
+									   Foreground="{DynamicResource BrushKey}" VerticalAlignment="Center"/>
+						</StackPanel>
 					</StackPanel>
 
 					<Separator Background="#3d2045" Height="1"/>
 
 					<!-- Melee -->
-					<StackPanel Spacing="2">
+					<StackPanel Spacing="4">
 						<TextBlock Text="MELEE" FontSize="10" Foreground="#9060a0"/>
-						<TextBlock Text="{Binding EquippedMeleeText}"
-								   Foreground="White" FontSize="11" TextWrapping="Wrap"/>
+						<StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+							<Border Classes="hotbarSlot">
+								<Image Width="32" Height="32"
+									   Source="{Binding EquippedMelee, Converter={StaticResource ItemToSprite}}"
+									   RenderOptions.BitmapInterpolationMode="None"
+									   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+							</Border>
+
+							<TextBlock Text="{Binding EquippedMeleeText}"
+									   Foreground="White" FontSize="11" TextWrapping="Wrap" VerticalAlignment="Center"/>
+						</StackPanel>
 					</StackPanel>
 
 					<Separator Background="#3d2045" Height="1"/>
@@ -183,8 +202,32 @@
 					<Separator Background="#3d2045" Height="1"/>
 
 					<!-- Controls -->
-					<TextBlock Text="{x:Static local:GameTexts.Controls}"
-							   FontSize="10" Foreground="#7a5a8a" TextWrapping="Wrap"/>
+					<StackPanel Spacing="4">
+						<TextBlock Text="CONTROLS" FontSize="10" Foreground="#9060a0"/>
+						<Grid ColumnDefinitions="110,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto" Margin="0,2,0,0">
+
+							<!-- Movement -->
+							<TextBlock Grid.Row="0" Grid.Column="0" Text="WASD / Arrows" Foreground="#c060e0" FontSize="10"/>
+							<TextBlock Grid.Row="0" Grid.Column="1" Text="- Move" Foreground="#aaaacc" FontSize="10"/>
+
+							<!-- Aim / Shoot -->
+							<TextBlock Grid.Row="1" Grid.Column="0" Text="E / LMB" Foreground="#c060e0" FontSize="10"/>
+							<TextBlock Grid.Row="1" Grid.Column="1" Text="- Aim / Shoot" Foreground="#aaaacc" FontSize="10"/>
+
+							<!-- Hotbar -->
+							<TextBlock Grid.Row="2" Grid.Column="0" Text="1 - 4" Foreground="#c060e0" FontSize="10"/>
+							<TextBlock Grid.Row="2" Grid.Column="1" Text="- Select Item" Foreground="#aaaacc" FontSize="10"/>
+
+							<!-- Camera -->
+							<TextBlock Grid.Row="3" Grid.Column="0" Text="Space" Foreground="#c060e0" FontSize="10"/>
+							<TextBlock Grid.Row="3" Grid.Column="1" Text="- Center Camera" Foreground="#aaaacc" FontSize="10"/>
+
+							<!-- Menu / Esc -->
+							<TextBlock Grid.Row="4" Grid.Column="0" Text="Esc" Foreground="#c060e0" FontSize="10"/>
+							<TextBlock Grid.Row="4" Grid.Column="1" Text="- Menu / Cancel" Foreground="#aaaacc" FontSize="10"/>
+
+						</Grid>
+					</StackPanel>
 
 				</StackPanel>
 			</StackPanel>
@@ -298,202 +341,202 @@
 			</StackPanel>
 		</ContentControl>
 		<ContentControl Classes="GamePopup" IsVisible="{Binding IsShopPopupOpen}">
-    <StackPanel Spacing="12" MinWidth="420">
-        
-        <!-- Header -->
-        <TextBlock Text="— SHOP —"
-                   FontSize="28" FontWeight="Bold"
-                   Foreground="{DynamicResource BrushAccent}"
-                   HorizontalAlignment="Center"/>
-        <TextBlock Text="{Binding Shop.Gold, StringFormat='Gold: {0} ♦'}"
-                   Foreground="{DynamicResource BrushGold}"
-                   HorizontalAlignment="Center" FontSize="13"/>
+			<StackPanel Spacing="12" MinWidth="420">
 
-        <Separator Background="#3d2045" Height="1"/>
+				<!-- Header -->
+				<TextBlock Text="— SHOP —"
+						   FontSize="28" FontWeight="Bold"
+						   Foreground="{DynamicResource BrushAccent}"
+						   HorizontalAlignment="Center"/>
+				<TextBlock Text="{Binding Shop.Gold, StringFormat='Gold: {0} ♦'}"
+						   Foreground="{DynamicResource BrushGold}"
+						   HorizontalAlignment="Center" FontSize="13"/>
 
-        <!-- Melee -->
-        <TextBlock Text="MELEE" FontSize="10" Foreground="#9060a0"/>
-        <Border Background="#1a0a2e" BorderBrush="{DynamicResource BrushAccent}"
-                BorderThickness="1" CornerRadius="4" Padding="10"
-                IsVisible="{Binding Shop.HasMelee}">
-            <Grid ColumnDefinitions="*,Auto">
-                <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                    <TextBlock Text="{Binding Shop.MeleeName}" Foreground="White" FontSize="13"/>
-                    <TextBlock Text="{Binding Shop.MeleeStatLine}" Foreground="#aaaacc" FontSize="10"/>
-                </StackPanel>
-                <Button Grid.Column="1"
-                        Content="{Binding Shop.MeleeUpgradeCost, StringFormat='DMG ▲  {0}'}"
-                        Focusable="False"
-                        Command="{Binding Shop.UpgradeMeleeCommand}"
-                        IsEnabled="{Binding Shop.CanUpgradeMelee}"
-                        Background="#2A2A40" Foreground="{DynamicResource BrushAccent}"
-                        FontSize="11" Padding="10,6"/>
-            </Grid>
-        </Border>
-        <TextBlock Text="No melee equipped" Foreground="#555"
-                   FontSize="11" HorizontalAlignment="Center"
-                   IsVisible="{Binding !Shop.HasMelee}"/>
+				<Separator Background="#3d2045" Height="1"/>
 
-        <Separator Background="#3d2045" Height="1"/>
+				<!-- Melee -->
+				<TextBlock Text="MELEE" FontSize="10" Foreground="#9060a0"/>
+				<Border Background="#1a0a2e" BorderBrush="{DynamicResource BrushAccent}"
+						BorderThickness="1" CornerRadius="4" Padding="10"
+						IsVisible="{Binding Shop.HasMelee}">
+					<Grid ColumnDefinitions="*,Auto">
+						<StackPanel Grid.Column="0" VerticalAlignment="Center">
+							<TextBlock Text="{Binding Shop.MeleeName}" Foreground="White" FontSize="13"/>
+							<TextBlock Text="{Binding Shop.MeleeStatLine}" Foreground="#aaaacc" FontSize="10"/>
+						</StackPanel>
+						<Button Grid.Column="1"
+								Content="{Binding Shop.MeleeUpgradeCost, StringFormat='DMG ▲  {0}'}"
+								Focusable="False"
+								Command="{Binding Shop.UpgradeMeleeCommand}"
+								IsEnabled="{Binding Shop.CanUpgradeMelee}"
+								Background="#2A2A40" Foreground="{DynamicResource BrushAccent}"
+								FontSize="11" Padding="10,6"/>
+					</Grid>
+				</Border>
+				<TextBlock Text="No melee equipped" Foreground="#555"
+						   FontSize="11" HorizontalAlignment="Center"
+						   IsVisible="{Binding !Shop.HasMelee}"/>
 
-        <!-- Hotbar -->
-        <TextBlock Text="HOTBAR" FontSize="10" Foreground="#9060a0"/>
+				<Separator Background="#3d2045" Height="1"/>
 
-        <!-- Slot 1 -->
-        <Border Background="#1a0a2e" BorderBrush="#3d2045"
-                BorderThickness="1" CornerRadius="4" Padding="10">
-            <Grid ColumnDefinitions="24,*,Auto,Auto,Auto">
-                <TextBlock Grid.Column="0" Text="1" Foreground="#9060a0"
-                           VerticalAlignment="Center" FontSize="11"/>
-                <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                    <TextBlock Text="{Binding Shop.Slot1.Name}" Foreground="White" FontSize="12"/>
-                    <TextBlock Text="{Binding Shop.Slot1.StatLine}" Foreground="#aaaacc" FontSize="10"/>
-                </StackPanel>
-                <Button Grid.Column="2" Margin="4,0,0,0" Padding="8,6"
-                        Content="{Binding Shop.Slot1.ReloadCost, StringFormat='RELOAD {0}'}"
-                        Focusable="False"
-                        Command="{Binding Shop.ReloadCommand}"
-                        CommandParameter="{Binding Shop.Slot1}"
-                        IsEnabled="{Binding Shop.Slot1.CanReload}"
-                        IsVisible="{Binding Shop.Slot1.IsRanged}"
-                        Background="#2A2A40" Foreground="White" FontSize="10"/>
-                <Button Grid.Column="3" Margin="4,0,0,0" Padding="8,6"
-                        Content="{Binding Shop.Slot1.DamageCostText, StringFormat='DMG ▲ {0}'}"
-                        Focusable="False"
-                        Command="{Binding Shop.UpgradeDamageCommand}"
-                        CommandParameter="{Binding Shop.Slot1}"
-                        IsEnabled="{Binding Shop.Slot1.CanUpgradeDamage}"
-                        IsVisible="{Binding Shop.Slot1.HasItem}"
-                        Background="#2A2A40" Foreground="{DynamicResource BrushAccent}" FontSize="10"/>
-                <Button Grid.Column="4" Margin="4,0,0,0" Padding="8,6"
-                        Content="{Binding Shop.Slot1.AmmoCostText, StringFormat='AMMO ▲ {0}'}"
-                        Focusable="False"
-                        Command="{Binding Shop.UpgradeAmmoCommand}"
-                        CommandParameter="{Binding Shop.Slot1}"
-                        IsEnabled="{Binding Shop.Slot1.CanUpgradeAmmo}"
-                        IsVisible="{Binding Shop.Slot1.IsRanged}"
-                        Background="#2A2A40" Foreground="{DynamicResource BrushKey}" FontSize="10"/>
-            </Grid>
-        </Border>
+				<!-- Hotbar -->
+				<TextBlock Text="HOTBAR" FontSize="10" Foreground="#9060a0"/>
 
-        <!-- Slot 2 -->
-        <Border Background="#1a0a2e" BorderBrush="#3d2045"
-                BorderThickness="1" CornerRadius="4" Padding="10">
-            <Grid ColumnDefinitions="24,*,Auto,Auto,Auto">
-                <TextBlock Grid.Column="0" Text="2" Foreground="#9060a0"
-                           VerticalAlignment="Center" FontSize="11"/>
-                <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                    <TextBlock Text="{Binding Shop.Slot2.Name}" Foreground="White" FontSize="12"/>
-                    <TextBlock Text="{Binding Shop.Slot2.StatLine}" Foreground="#aaaacc" FontSize="10"/>
-                </StackPanel>
-                <Button Grid.Column="2" Margin="4,0,0,0" Padding="8,6"
-                        Content="{Binding Shop.Slot2.ReloadCost, StringFormat='RELOAD {0}'}"
-                        Focusable="False"
-                        Command="{Binding Shop.ReloadCommand}"
-                        CommandParameter="{Binding Shop.Slot2}"
-                        IsEnabled="{Binding Shop.Slot2.CanReload}"
-                        IsVisible="{Binding Shop.Slot2.IsRanged}"
-                        Background="#2A2A40" Foreground="White" FontSize="10"/>
-                <Button Grid.Column="3" Margin="4,0,0,0" Padding="8,6"
-                        Content="{Binding Shop.Slot2.DamageCostText, StringFormat='DMG ▲ {0}'}"
-                        Focusable="False"
-                        Command="{Binding Shop.UpgradeDamageCommand}"
-                        CommandParameter="{Binding Shop.Slot2}"
-                        IsEnabled="{Binding Shop.Slot2.CanUpgradeDamage}"
-                        IsVisible="{Binding Shop.Slot2.HasItem}"
-                        Background="#2A2A40" Foreground="{DynamicResource BrushAccent}" FontSize="10"/>
-                <Button Grid.Column="4" Margin="4,0,0,0" Padding="8,6"
-                        Content="{Binding Shop.Slot2.AmmoCostText, StringFormat='AMMO ▲ {0}'}"
-                        Focusable="False"
-                        Command="{Binding Shop.UpgradeAmmoCommand}"
-                        CommandParameter="{Binding Shop.Slot2}"
-                        IsEnabled="{Binding Shop.Slot2.CanUpgradeAmmo}"
-                        IsVisible="{Binding Shop.Slot2.IsRanged}"
-                        Background="#2A2A40" Foreground="{DynamicResource BrushKey}" FontSize="10"/>
-            </Grid>
-        </Border>
+				<!-- Slot 1 -->
+				<Border Background="#1a0a2e" BorderBrush="#3d2045"
+						BorderThickness="1" CornerRadius="4" Padding="10">
+					<Grid ColumnDefinitions="24,*,Auto,Auto,Auto">
+						<TextBlock Grid.Column="0" Text="1" Foreground="#9060a0"
+								   VerticalAlignment="Center" FontSize="11"/>
+						<StackPanel Grid.Column="1" VerticalAlignment="Center">
+							<TextBlock Text="{Binding Shop.Slot1.Name}" Foreground="White" FontSize="12"/>
+							<TextBlock Text="{Binding Shop.Slot1.StatLine}" Foreground="#aaaacc" FontSize="10"/>
+						</StackPanel>
+						<Button Grid.Column="2" Margin="4,0,0,0" Padding="8,6"
+								Content="{Binding Shop.Slot1.ReloadCost, StringFormat='RELOAD {0}'}"
+								Focusable="False"
+								Command="{Binding Shop.ReloadCommand}"
+								CommandParameter="{Binding Shop.Slot1}"
+								IsEnabled="{Binding Shop.Slot1.CanReload}"
+								IsVisible="{Binding Shop.Slot1.IsRanged}"
+								Background="#2A2A40" Foreground="White" FontSize="10"/>
+						<Button Grid.Column="3" Margin="4,0,0,0" Padding="8,6"
+								Content="{Binding Shop.Slot1.DamageCostText, StringFormat='DMG ▲ {0}'}"
+								Focusable="False"
+								Command="{Binding Shop.UpgradeDamageCommand}"
+								CommandParameter="{Binding Shop.Slot1}"
+								IsEnabled="{Binding Shop.Slot1.CanUpgradeDamage}"
+								IsVisible="{Binding Shop.Slot1.HasItem}"
+								Background="#2A2A40" Foreground="{DynamicResource BrushAccent}" FontSize="10"/>
+						<Button Grid.Column="4" Margin="4,0,0,0" Padding="8,6"
+								Content="{Binding Shop.Slot1.AmmoCostText, StringFormat='AMMO ▲ {0}'}"
+								Focusable="False"
+								Command="{Binding Shop.UpgradeAmmoCommand}"
+								CommandParameter="{Binding Shop.Slot1}"
+								IsEnabled="{Binding Shop.Slot1.CanUpgradeAmmo}"
+								IsVisible="{Binding Shop.Slot1.IsRanged}"
+								Background="#2A2A40" Foreground="{DynamicResource BrushKey}" FontSize="10"/>
+					</Grid>
+				</Border>
 
-        <!-- Slot 3 -->
-        <Border Background="#1a0a2e" BorderBrush="#3d2045"
-                BorderThickness="1" CornerRadius="4" Padding="10">
-            <Grid ColumnDefinitions="24,*,Auto,Auto,Auto">
-                <TextBlock Grid.Column="0" Text="3" Foreground="#9060a0"
-                           VerticalAlignment="Center" FontSize="11"/>
-                <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                    <TextBlock Text="{Binding Shop.Slot3.Name}" Foreground="White" FontSize="12"/>
-                    <TextBlock Text="{Binding Shop.Slot3.StatLine}" Foreground="#aaaacc" FontSize="10"/>
-                </StackPanel>
-                <Button Grid.Column="2" Margin="4,0,0,0" Padding="8,6"
-                        Content="{Binding Shop.Slot3.ReloadCost, StringFormat='RELOAD {0}'}"
-                        Focusable="False"
-                        Command="{Binding Shop.ReloadCommand}"
-                        CommandParameter="{Binding Shop.Slot3}"
-                        IsEnabled="{Binding Shop.Slot3.CanReload}"
-                        IsVisible="{Binding Shop.Slot3.IsRanged}"
-                        Background="#2A2A40" Foreground="White" FontSize="10"/>
-                <Button Grid.Column="3" Margin="4,0,0,0" Padding="8,6"
-                        Content="{Binding Shop.Slot3.DamageCostText, StringFormat='DMG ▲ {0}'}"
-                        Focusable="False"
-                        Command="{Binding Shop.UpgradeDamageCommand}"
-                        CommandParameter="{Binding Shop.Slot3}"
-                        IsEnabled="{Binding Shop.Slot3.CanUpgradeDamage}"
-                        IsVisible="{Binding Shop.Slot3.HasItem}"
-                        Background="#2A2A40" Foreground="{DynamicResource BrushAccent}" FontSize="10"/>
-                <Button Grid.Column="4" Margin="4,0,0,0" Padding="8,6"
-                        Content="{Binding Shop.Slot3.AmmoCostText, StringFormat='AMMO ▲ {0}'}"
-                        Focusable="False"
-                        Command="{Binding Shop.UpgradeAmmoCommand}"
-                        CommandParameter="{Binding Shop.Slot3}"
-                        IsEnabled="{Binding Shop.Slot3.CanUpgradeAmmo}"
-                        IsVisible="{Binding Shop.Slot3.IsRanged}"
-                        Background="#2A2A40" Foreground="{DynamicResource BrushKey}" FontSize="10"/>
-            </Grid>
-        </Border>
+				<!-- Slot 2 -->
+				<Border Background="#1a0a2e" BorderBrush="#3d2045"
+						BorderThickness="1" CornerRadius="4" Padding="10">
+					<Grid ColumnDefinitions="24,*,Auto,Auto,Auto">
+						<TextBlock Grid.Column="0" Text="2" Foreground="#9060a0"
+								   VerticalAlignment="Center" FontSize="11"/>
+						<StackPanel Grid.Column="1" VerticalAlignment="Center">
+							<TextBlock Text="{Binding Shop.Slot2.Name}" Foreground="White" FontSize="12"/>
+							<TextBlock Text="{Binding Shop.Slot2.StatLine}" Foreground="#aaaacc" FontSize="10"/>
+						</StackPanel>
+						<Button Grid.Column="2" Margin="4,0,0,0" Padding="8,6"
+								Content="{Binding Shop.Slot2.ReloadCost, StringFormat='RELOAD {0}'}"
+								Focusable="False"
+								Command="{Binding Shop.ReloadCommand}"
+								CommandParameter="{Binding Shop.Slot2}"
+								IsEnabled="{Binding Shop.Slot2.CanReload}"
+								IsVisible="{Binding Shop.Slot2.IsRanged}"
+								Background="#2A2A40" Foreground="White" FontSize="10"/>
+						<Button Grid.Column="3" Margin="4,0,0,0" Padding="8,6"
+								Content="{Binding Shop.Slot2.DamageCostText, StringFormat='DMG ▲ {0}'}"
+								Focusable="False"
+								Command="{Binding Shop.UpgradeDamageCommand}"
+								CommandParameter="{Binding Shop.Slot2}"
+								IsEnabled="{Binding Shop.Slot2.CanUpgradeDamage}"
+								IsVisible="{Binding Shop.Slot2.HasItem}"
+								Background="#2A2A40" Foreground="{DynamicResource BrushAccent}" FontSize="10"/>
+						<Button Grid.Column="4" Margin="4,0,0,0" Padding="8,6"
+								Content="{Binding Shop.Slot2.AmmoCostText, StringFormat='AMMO ▲ {0}'}"
+								Focusable="False"
+								Command="{Binding Shop.UpgradeAmmoCommand}"
+								CommandParameter="{Binding Shop.Slot2}"
+								IsEnabled="{Binding Shop.Slot2.CanUpgradeAmmo}"
+								IsVisible="{Binding Shop.Slot2.IsRanged}"
+								Background="#2A2A40" Foreground="{DynamicResource BrushKey}" FontSize="10"/>
+					</Grid>
+				</Border>
 
-        <!-- Slot 4 -->
-        <Border Background="#1a0a2e" BorderBrush="#3d2045"
-                BorderThickness="1" CornerRadius="4" Padding="10">
-            <Grid ColumnDefinitions="24,*,Auto,Auto,Auto">
-                <TextBlock Grid.Column="0" Text="4" Foreground="#9060a0"
-                           VerticalAlignment="Center" FontSize="11"/>
-                <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                    <TextBlock Text="{Binding Shop.Slot4.Name}" Foreground="White" FontSize="12"/>
-                    <TextBlock Text="{Binding Shop.Slot4.StatLine}" Foreground="#aaaacc" FontSize="10"/>
-                </StackPanel>
-                <Button Grid.Column="2" Margin="4,0,0,0" Padding="8,6"
-                        Content="{Binding Shop.Slot4.ReloadCost, StringFormat='RELOAD {0}'}"
-                        Focusable="False"
-                        Command="{Binding Shop.ReloadCommand}"
-                        CommandParameter="{Binding Shop.Slot4}"
-                        IsEnabled="{Binding Shop.Slot4.CanReload}"
-                        IsVisible="{Binding Shop.Slot4.IsRanged}"
-                        Background="#2A2A40" Foreground="White" FontSize="10"/>
-                <Button Grid.Column="3" Margin="4,0,0,0" Padding="8,6"
-                        Content="{Binding Shop.Slot4.DamageCostText, StringFormat='DMG ▲ {0}'}"
-                        Focusable="False"
-                        Command="{Binding Shop.UpgradeDamageCommand}"
-                        CommandParameter="{Binding Shop.Slot4}"
-                        IsEnabled="{Binding Shop.Slot4.CanUpgradeDamage}"
-                        IsVisible="{Binding Shop.Slot4.HasItem}"
-                        Background="#2A2A40" Foreground="{DynamicResource BrushAccent}" FontSize="10"/>
-                <Button Grid.Column="4" Margin="4,0,0,0" Padding="8,6"
-                        Content="{Binding Shop.Slot4.AmmoCostText, StringFormat='AMMO ▲ {0}'}"
-                        Focusable="False"
-                        Command="{Binding Shop.UpgradeAmmoCommand}"
-                        CommandParameter="{Binding Shop.Slot4}"
-                        IsEnabled="{Binding Shop.Slot4.CanUpgradeAmmo}"
-                        IsVisible="{Binding Shop.Slot4.IsRanged}"
-                        Background="#2A2A40" Foreground="{DynamicResource BrushKey}" FontSize="10"/>
-            </Grid>
-        </Border>
+				<!-- Slot 3 -->
+				<Border Background="#1a0a2e" BorderBrush="#3d2045"
+						BorderThickness="1" CornerRadius="4" Padding="10">
+					<Grid ColumnDefinitions="24,*,Auto,Auto,Auto">
+						<TextBlock Grid.Column="0" Text="3" Foreground="#9060a0"
+								   VerticalAlignment="Center" FontSize="11"/>
+						<StackPanel Grid.Column="1" VerticalAlignment="Center">
+							<TextBlock Text="{Binding Shop.Slot3.Name}" Foreground="White" FontSize="12"/>
+							<TextBlock Text="{Binding Shop.Slot3.StatLine}" Foreground="#aaaacc" FontSize="10"/>
+						</StackPanel>
+						<Button Grid.Column="2" Margin="4,0,0,0" Padding="8,6"
+								Content="{Binding Shop.Slot3.ReloadCost, StringFormat='RELOAD {0}'}"
+								Focusable="False"
+								Command="{Binding Shop.ReloadCommand}"
+								CommandParameter="{Binding Shop.Slot3}"
+								IsEnabled="{Binding Shop.Slot3.CanReload}"
+								IsVisible="{Binding Shop.Slot3.IsRanged}"
+								Background="#2A2A40" Foreground="White" FontSize="10"/>
+						<Button Grid.Column="3" Margin="4,0,0,0" Padding="8,6"
+								Content="{Binding Shop.Slot3.DamageCostText, StringFormat='DMG ▲ {0}'}"
+								Focusable="False"
+								Command="{Binding Shop.UpgradeDamageCommand}"
+								CommandParameter="{Binding Shop.Slot3}"
+								IsEnabled="{Binding Shop.Slot3.CanUpgradeDamage}"
+								IsVisible="{Binding Shop.Slot3.HasItem}"
+								Background="#2A2A40" Foreground="{DynamicResource BrushAccent}" FontSize="10"/>
+						<Button Grid.Column="4" Margin="4,0,0,0" Padding="8,6"
+								Content="{Binding Shop.Slot3.AmmoCostText, StringFormat='AMMO ▲ {0}'}"
+								Focusable="False"
+								Command="{Binding Shop.UpgradeAmmoCommand}"
+								CommandParameter="{Binding Shop.Slot3}"
+								IsEnabled="{Binding Shop.Slot3.CanUpgradeAmmo}"
+								IsVisible="{Binding Shop.Slot3.IsRanged}"
+								Background="#2A2A40" Foreground="{DynamicResource BrushKey}" FontSize="10"/>
+					</Grid>
+				</Border>
 
-        <Separator Background="#3d2045" Height="1"/>
+				<!-- Slot 4 -->
+				<Border Background="#1a0a2e" BorderBrush="#3d2045"
+						BorderThickness="1" CornerRadius="4" Padding="10">
+					<Grid ColumnDefinitions="24,*,Auto,Auto,Auto">
+						<TextBlock Grid.Column="0" Text="4" Foreground="#9060a0"
+								   VerticalAlignment="Center" FontSize="11"/>
+						<StackPanel Grid.Column="1" VerticalAlignment="Center">
+							<TextBlock Text="{Binding Shop.Slot4.Name}" Foreground="White" FontSize="12"/>
+							<TextBlock Text="{Binding Shop.Slot4.StatLine}" Foreground="#aaaacc" FontSize="10"/>
+						</StackPanel>
+						<Button Grid.Column="2" Margin="4,0,0,0" Padding="8,6"
+								Content="{Binding Shop.Slot4.ReloadCost, StringFormat='RELOAD {0}'}"
+								Focusable="False"
+								Command="{Binding Shop.ReloadCommand}"
+								CommandParameter="{Binding Shop.Slot4}"
+								IsEnabled="{Binding Shop.Slot4.CanReload}"
+								IsVisible="{Binding Shop.Slot4.IsRanged}"
+								Background="#2A2A40" Foreground="White" FontSize="10"/>
+						<Button Grid.Column="3" Margin="4,0,0,0" Padding="8,6"
+								Content="{Binding Shop.Slot4.DamageCostText, StringFormat='DMG ▲ {0}'}"
+								Focusable="False"
+								Command="{Binding Shop.UpgradeDamageCommand}"
+								CommandParameter="{Binding Shop.Slot4}"
+								IsEnabled="{Binding Shop.Slot4.CanUpgradeDamage}"
+								IsVisible="{Binding Shop.Slot4.HasItem}"
+								Background="#2A2A40" Foreground="{DynamicResource BrushAccent}" FontSize="10"/>
+						<Button Grid.Column="4" Margin="4,0,0,0" Padding="8,6"
+								Content="{Binding Shop.Slot4.AmmoCostText, StringFormat='AMMO ▲ {0}'}"
+								Focusable="False"
+								Command="{Binding Shop.UpgradeAmmoCommand}"
+								CommandParameter="{Binding Shop.Slot4}"
+								IsEnabled="{Binding Shop.Slot4.CanUpgradeAmmo}"
+								IsVisible="{Binding Shop.Slot4.IsRanged}"
+								Background="#2A2A40" Foreground="{DynamicResource BrushKey}" FontSize="10"/>
+					</Grid>
+				</Border>
 
-        <Button Classes="MenuButton" Content="LEAVE SHOP"
-                Focusable="False"
-                Command="{Binding ShopCloseCommand}"/>
-    </StackPanel>
-</ContentControl>
+				<Separator Background="#3d2045" Height="1"/>
+
+				<Button Classes="MenuButton" Content="LEAVE SHOP"
+						Focusable="False"
+						Command="{Binding ShopCloseCommand}"/>
+			</StackPanel>
+		</ContentControl>
 	</Grid>
 
 
