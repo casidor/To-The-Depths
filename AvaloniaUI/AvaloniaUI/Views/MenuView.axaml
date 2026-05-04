@@ -31,6 +31,10 @@
 					Command="{Binding LoadGameCommand}"/>
 
 			<Button Classes="MenuButton"
+                    Content="HELP"
+                    Command="{Binding HelpCommand}"/>
+
+			<Button Classes="MenuButton"
 					Content="EXIT"
 					Command="{Binding ExitGameCommand}"/>
 		</StackPanel>

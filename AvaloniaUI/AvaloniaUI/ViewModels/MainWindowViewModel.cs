@@ -2,8 +2,6 @@
 using CommunityToolkit.Mvvm.Input;
 using GameCore;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace AvaloniaUI.ViewModels
 {
@@ -13,13 +11,11 @@ namespace AvaloniaUI.ViewModels
         private ViewModelBase? _currentPage;
         [ObservableProperty]
         private string _loadErrorMessage = "";
-        [ObservableProperty]    
+        [ObservableProperty]
         private bool _isLoadErrorVisible = false;
         [RelayCommand]
-        private void CloseLoadError()
-        {
-            IsLoadErrorVisible = false;
-        }
+        private void CloseLoadError() => IsLoadErrorVisible = false;
+
         public MainWindowViewModel()
         {
             ShowMenu();
@@ -30,9 +26,15 @@ namespace AvaloniaUI.ViewModels
             var menu = new MenuViewModel();
             menu.StartGameRequested += StartGame;
             menu.LoadGameRequested += LoadGame;
+            menu.HelpRequested += ShowHelp;
             CurrentPage = menu;
         }
-
+        private void ShowHelp()
+        {
+            var help = new HelpViewModel();
+            help.BackRequested += ShowMenu;
+            CurrentPage = help;
+        }
         private void LoadGame()
         {
             var game = new MainViewModel();

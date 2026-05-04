@@ -1,0 +1,339 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:AvaloniaUI.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="700"
+             x:Class="AvaloniaUI.Views.HelpView"
+             x:DataType="vm:HelpViewModel">
+    <UserControl.Styles>
+    <Style Selector="TextBlock[TextWrapping=Wrap]">
+        <Setter Property="LineHeight" Value="20"/>
+    </Style>
+
+    <Style Selector="StackPanel[Orientation=Horizontal] > StackPanel">
+        <Setter Property="Spacing" Value="6"/>
+    </Style>
+</UserControl.Styles>
+
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                <GradientStop Color="#0a0a10" Offset="0"/>
+                <GradientStop Color="#2a1a2e" Offset="1"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                      VerticalScrollBarVisibility="Auto">
+            <StackPanel MaxWidth="680"
+                        HorizontalAlignment="Center"
+                        Margin="40,40,40,40"
+                        Spacing="20">
+
+                <!-- Title -->
+                <TextBlock Text="— HELP —"
+                           FontSize="40" FontWeight="Bold"
+                           Foreground="#F0C040"
+                           HorizontalAlignment="Center"
+                           Margin="0,0,0,4"/>
+
+                <!-- GOAL -->
+                <Border Background="#70150d25" BorderBrush="#7a4a90"
+                        BorderThickness="1" CornerRadius="6" Padding="16">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="GOAL" FontSize="10" Foreground="#9060a0"/>
+                        <TextBlock TextWrapping="Wrap" Foreground="#C0C0C0" FontSize="12"
+                                   Text="Descend through 5 floors of a deadly dungeon and escape alive. Collect all keys on each floor to open the exit. Fight enemies, loot gold, upgrade your weapons in the shop between floors."/>
+                    </StackPanel>
+                </Border>
+
+                <!-- CONTROLS -->
+                <Border Background="#70150d25" BorderBrush="#7a4a90"
+                        BorderThickness="1" CornerRadius="6" Padding="16">
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="CONTROLS" FontSize="10" Foreground="#9060a0"/>
+                        <Grid ColumnDefinitions="150,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="WASD / Arrows" Foreground="#c060e0" FontSize="12"/>
+                            <TextBlock Grid.Row="0" Grid.Column="1" Text="Move" Foreground="#C0C0C0" FontSize="12"/>
+
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="E" Foreground="#c060e0" FontSize="12" Margin="0,6,0,0"/>
+                            <TextBlock Grid.Row="1" Grid.Column="1" Text="Aim mode (ranged weapon)" Foreground="#C0C0C0" FontSize="12" Margin="0,6,0,0"/>
+
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="LMB (aim mode)" Foreground="#c060e0" FontSize="12" Margin="0,6,0,0"/>
+                            <TextBlock Grid.Row="2" Grid.Column="1" Text="Shoot at selected tile" Foreground="#C0C0C0" FontSize="12" Margin="0,6,0,0"/>
+
+                            <TextBlock Grid.Row="3" Grid.Column="0" Text="1 – 4" Foreground="#c060e0" FontSize="12" Margin="0,6,0,0"/>
+                            <TextBlock Grid.Row="3" Grid.Column="1" Text="Switch hotbar slot" Foreground="#C0C0C0" FontSize="12" Margin="0,6,0,0"/>
+
+                            <TextBlock Grid.Row="4" Grid.Column="0" Text="Space" Foreground="#c060e0" FontSize="12" Margin="0,6,0,0"/>
+                            <TextBlock Grid.Row="4" Grid.Column="1" Text="Center camera on player" Foreground="#C0C0C0" FontSize="12" Margin="0,6,0,0"/>
+
+                            <TextBlock Grid.Row="5" Grid.Column="0" Text="RMB + Drag" Foreground="#c060e0" FontSize="12" Margin="0,6,0,0"/>
+                            <TextBlock Grid.Row="5" Grid.Column="1" Text="Pan camera" Foreground="#C0C0C0" FontSize="12" Margin="0,6,0,0"/>
+
+                            <TextBlock Grid.Row="6" Grid.Column="0" Text="Scroll Wheel" Foreground="#c060e0" FontSize="12" Margin="0,6,0,0"/>
+                            <TextBlock Grid.Row="6" Grid.Column="1" Text="Zoom in / out" Foreground="#C0C0C0" FontSize="12" Margin="0,6,0,0"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- WEAPONS -->
+                <Border Background="#70150d25" BorderBrush="#7a4a90"
+                        BorderThickness="1" CornerRadius="6" Padding="16">
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="WEAPONS" FontSize="10" Foreground="#9060a0"/>
+
+                        <TextBlock Text="Melee" Foreground="#F0C040" FontSize="11"/>
+
+                        <!-- Dagger -->
+                        <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                            <Border BorderBrush="#7a4a90" BorderThickness="1" CornerRadius="2"
+                                    Background="#40150d25" Width="36" Height="36"
+                                    HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <Image Width="28" Height="28"
+                                       Source="avares://AvaloniaUI/Assets/dagger.png"
+                                       RenderOptions.BitmapInterpolationMode="None"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="Dagger" Foreground="#c060e0" FontSize="12"/>
+                                <TextBlock Text="15 dmg — fast and light. Found on Floor 2." Foreground="#aaaacc" FontSize="11"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!-- Sword -->
+                        <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                            <Border BorderBrush="#7a4a90" BorderThickness="1" CornerRadius="2"
+                                    Background="#40150d25" Width="36" Height="36"
+                                    HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <Image Width="28" Height="28"
+                                       Source="avares://AvaloniaUI/Assets/sword.png"
+                                       RenderOptions.BitmapInterpolationMode="None"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="Sword" Foreground="#c060e0" FontSize="12"/>
+                                <TextBlock Text="25 dmg — standard melee. Found on Floor 3." Foreground="#aaaacc" FontSize="11"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <TextBlock Text="Walking into an enemy uses your melee. A better melee weapon found on the ground is equipped automatically."
+                                   Foreground="#888899" FontSize="11" TextWrapping="Wrap"/>
+
+                        <Separator Background="#3d2045" Height="1"/>
+
+                        <TextBlock Text="Ranged" Foreground="#F0C040" FontSize="11"/>
+
+                        <!-- Bow -->
+                        <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                            <Border BorderBrush="#7a4a90" BorderThickness="1" CornerRadius="2"
+                                    Background="#40150d25" Width="36" Height="36"
+                                    HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <Image Width="28" Height="28"
+                                       Source="avares://AvaloniaUI/Assets/bow.png"
+                                       RenderOptions.BitmapInterpolationMode="None"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="Bow" Foreground="#c060e0" FontSize="12"/>
+                                <TextBlock Text="20 dmg | 6 range | 8 ammo — Found on Floor 1." Foreground="#aaaacc" FontSize="11"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!-- Crossbow -->
+                        <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                            <Border BorderBrush="#7a4a90" BorderThickness="1" CornerRadius="2"
+                                    Background="#40150d25" Width="36" Height="36"
+                                    HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <Image Width="28" Height="28"
+                                       Source="avares://AvaloniaUI/Assets/crossbow.png"
+                                       RenderOptions.BitmapInterpolationMode="None"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="Crossbow" Foreground="#c060e0" FontSize="12"/>
+                                <TextBlock Text="35 dmg | 8 range | 5 ammo — Found on Floor 4." Foreground="#aaaacc" FontSize="11"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <TextBlock Text="Press E to enter aim mode. Yellow tiles show your range. Click a tile to shoot. Reload in the shop."
+                                   Foreground="#888899" FontSize="11" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- ENEMIES -->
+                <Border Background="#70150d25" BorderBrush="#7a4a90"
+                        BorderThickness="1" CornerRadius="6" Padding="16">
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="ENEMIES" FontSize="10" Foreground="#9060a0"/>
+
+                        <!-- Soldier -->
+                        <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                            <Border BorderBrush="#7a4a90" BorderThickness="1" CornerRadius="2"
+                                    Background="#40150d25" Width="36" Height="36"
+                                    HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <Image Width="28" Height="28"
+                                       Source="avares://AvaloniaUI/Assets/enemy.png"
+                                       RenderOptions.BitmapInterpolationMode="None"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="Soldier" Foreground="#E24B4A" FontSize="12"/>
+                                <TextBlock Text="30 HP | 5 dmg — Standard melee enemy. Chases you. Floor 1+." Foreground="#aaaacc" FontSize="11"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!-- Tank -->
+                        <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                            <Border BorderBrush="#7a4a90" BorderThickness="1" CornerRadius="2"
+                                    Background="#40150d25" Width="36" Height="36"
+                                    HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <Image Width="28" Height="28"
+                                       Source="avares://AvaloniaUI/Assets/tankenemy.png"
+                                       RenderOptions.BitmapInterpolationMode="None"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="Tank" Foreground="#E24B4A" FontSize="12"/>
+                                <TextBlock Text="75 HP | 3 dmg — Slow but tanky. Weak to ranged. Floor 3+." Foreground="#aaaacc" FontSize="11"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!-- Ranged -->
+                        <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                            <Border BorderBrush="#7a4a90" BorderThickness="1" CornerRadius="2"
+                                    Background="#40150d25" Width="36" Height="36"
+                                    HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <Image Width="28" Height="28"
+                                       Source="avares://AvaloniaUI/Assets/rangedenemy.png"
+                                       RenderOptions.BitmapInterpolationMode="None"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="Ranged Enemy" Foreground="#E24B4A" FontSize="12"/>
+                                <TextBlock Text="24 HP | 8 dmg | 4 range — Shoots and retreats. Floor 3+." Foreground="#aaaacc" FontSize="11"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <TextBlock Text="Enemies hear you from 3 tiles away through walls. Slain enemies may drop gold."
+                                   Foreground="#888899" FontSize="11" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- WORLD OBJECTS -->
+                <Border Background="#70150d25" BorderBrush="#7a4a90"
+                        BorderThickness="1" CornerRadius="6" Padding="16">
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="WORLD OBJECTS" FontSize="10" Foreground="#9060a0"/>
+
+                        <!-- Key -->
+                        <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                            <Border BorderBrush="#7a4a90" BorderThickness="1" CornerRadius="2"
+                                    Background="#40150d25" Width="36" Height="36"
+                                    HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <Image Width="28" Height="28"
+                                       Source="avares://AvaloniaUI/Assets/key.png"
+                                       RenderOptions.BitmapInterpolationMode="None"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="Key" Foreground="#40AAFF" FontSize="12"/>
+                                <TextBlock Text="Collect all keys to unlock the exit. Amount varies per floor." Foreground="#aaaacc" FontSize="11"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!-- Exit -->
+                        <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                            <Border BorderBrush="#7a4a90" BorderThickness="1" CornerRadius="2"
+                                    Background="#40150d25" Width="36" Height="36"
+                                    HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <Image Width="28" Height="28"
+                                       Source="avares://AvaloniaUI/Assets/exit.png"
+                                       RenderOptions.BitmapInterpolationMode="None"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="Exit" Foreground="#FF6B35" FontSize="12"/>
+                                <TextBlock Text="Walk into it with all keys collected to descend." Foreground="#aaaacc" FontSize="11"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!-- Gold -->
+                        <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                            <Border BorderBrush="#7a4a90" BorderThickness="1" CornerRadius="2"
+                                    Background="#40150d25" Width="36" Height="36"
+                                    HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <Image Width="28" Height="28"
+                                       Source="avares://AvaloniaUI/Assets/coin.png"
+                                       RenderOptions.BitmapInterpolationMode="None"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="Gold" Foreground="#F0C040" FontSize="12"/>
+                                <TextBlock Text="Walk over to collect. Dropped by enemies. Spent in shop." Foreground="#aaaacc" FontSize="11"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!-- Altar -->
+                        <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                            <Border BorderBrush="#7a4a90" BorderThickness="1" CornerRadius="2"
+                                    Background="#40150d25" Width="36" Height="36"
+                                    HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <Image Width="28" Height="28"
+                                       Source="avares://AvaloniaUI/Assets/altar.png"
+                                       RenderOptions.BitmapInterpolationMode="None"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="Altar" Foreground="#DC3232" FontSize="12"/>
+                                <TextBlock Text="Heal 30 HP for 50 gold. 2 charges per altar." Foreground="#aaaacc" FontSize="11"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                    </StackPanel>
+                </Border>
+
+                <!-- SHOP -->
+                <Border Background="#70150d25" BorderBrush="#7a4a90"
+                        BorderThickness="1" CornerRadius="6" Padding="16">
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="SHOP" FontSize="10" Foreground="#9060a0"/>
+                        <TextBlock TextWrapping="Wrap" Foreground="#C0C0C0" FontSize="12"
+                                   Text="Opens automatically when you reach the exit. Upgrade before the next floor."/>
+                        <Grid ColumnDefinitions="140,*" RowDefinitions="Auto,Auto,Auto" Margin="0,4,0,0">
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="DMG ▲" Foreground="#F0C040" FontSize="12"/>
+                            <TextBlock Grid.Row="0" Grid.Column="1" TextWrapping="Wrap" FontSize="12"
+                                       Text="+10 damage. Up to 2 upgrades per weapon." Foreground="#C0C0C0"/>
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="AMMO ▲" Foreground="#40AAFF" FontSize="12" Margin="0,6,0,0"/>
+                            <TextBlock Grid.Row="1" Grid.Column="1" TextWrapping="Wrap" FontSize="12" Margin="0,6,0,0"
+                                       Text="+3 max ammo and full reload. Up to 2 upgrades." Foreground="#C0C0C0"/>
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="RELOAD" Foreground="White" FontSize="12" Margin="0,6,0,0"/>
+                            <TextBlock Grid.Row="2" Grid.Column="1" TextWrapping="Wrap" FontSize="12" Margin="0,6,0,0"
+                                       Text="Full reload for 100 gold." Foreground="#C0C0C0"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- TIPS -->
+                <Border Background="#70150d25" BorderBrush="#F0C040"
+                        BorderThickness="1" CornerRadius="6" Padding="16">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="TIPS" FontSize="10" Foreground="#9060a0"/>
+                        <TextBlock TextWrapping="Wrap" Foreground="#C0C0C0" FontSize="12" Text="• Doors close after each turn — walk into them to open."/>
+                        <TextBlock TextWrapping="Wrap" Foreground="#C0C0C0" FontSize="12" Text="• Enemies hear you from 3 tiles through walls."/>
+                        <TextBlock TextWrapping="Wrap" Foreground="#C0C0C0" FontSize="12" Text="• The exit is always in the farthest room from the start."/>
+                        <TextBlock TextWrapping="Wrap" Foreground="#C0C0C0" FontSize="12" Text="• Ranged enemies retreat when you get close — corner them with melee."/>
+                        <TextBlock TextWrapping="Wrap" Foreground="#C0C0C0" FontSize="12" Text="• Progress saves automatically when you descend."/>
+                    </StackPanel>
+                </Border>
+
+                <Button Classes="MenuButton"
+                        Content="BACK TO MENU"
+                        Command="{Binding BackCommand}"
+                        Margin="0,8,0,0"/>
+
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

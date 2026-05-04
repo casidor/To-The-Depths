@@ -9,20 +9,18 @@ namespace AvaloniaUI.ViewModels
     {
         public event Action? StartGameRequested;
         public event Action? LoadGameRequested;
+        public event Action? HelpRequested;
+
         [RelayCommand]
-        private void StartGame()
-        {
-            StartGameRequested?.Invoke();
-        }
+        private void StartGame() => StartGameRequested?.Invoke();
+
         [RelayCommand]
-        private void LoadGame()
-        {
-            LoadGameRequested?.Invoke();
-        }
+        private void LoadGame() => LoadGameRequested?.Invoke();
+
         [RelayCommand]
-        private void ExitGame()
-        {
-            Environment.Exit(0);
-        }
+        private void Help() => HelpRequested?.Invoke();
+
+        [RelayCommand]
+        private void ExitGame() => Environment.Exit(0);
     }
 }
