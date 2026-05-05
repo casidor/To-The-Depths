@@ -1,26 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GameCore
+﻿namespace GameCore
 {
-    public enum GameState
-    {
-        MainMenu,
-        Generating,
-        Running,
-        AltarMenu,
-        Win,
-        LoadGame,
-        Help,
-        Exit
-    }
     public enum InteractionResult
     {
         None,
         PlayerAttacked,
+        EnemyAttacked,
+        EnemyKilled,
         Altar,
-        ExitReached
+        ExitReached,
+        ItemPickedUp
     }
     public enum SaveResult
     {
@@ -29,4 +17,31 @@ namespace GameCore
         Unverified,
         Success
     }
+    public enum ExplorationState : byte
+    {
+        Unknown = 0,
+        Explored = 1,
+        Visible = 2
+    }
+    public enum UseResult
+    {
+        Failed,
+        Missed,
+        Hit
+    }
+    public enum GameEventType
+    {
+        DamageDealt,
+        DamageTaken,
+        EnemyKilled,
+        ItemPickedUp,
+        ItemEquipped,
+        GoldCollected,
+        KeyCollected,
+        Healed,
+        Missed,
+        NoAmmo,
+        NoTarget
+    }
+    public enum LogColor { Normal, Good, Bad }
 }

@@ -1,0 +1,148 @@
+<Application xmlns="https://github.com/avaloniaui"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:local="using:AvaloniaUI"
+			 x:Class="AvaloniaUI.App"
+			 RequestedThemeVariant="Default">
+
+	<Application.DataTemplates>
+		<local:ViewLocator/>
+	</Application.DataTemplates>
+
+	<Application.Resources>
+		<ResourceDictionary>
+			<FontFamily x:Key="GameFont">avares://AvaloniaUI/Assets/PixelOperator8.ttf#Pixel Operator 8</FontFamily>
+			<SolidColorBrush x:Key="BrushText"       Color="#C0C0C0"/>
+			<SolidColorBrush x:Key="BrushAccent"     Color="#F0C040"/>
+			<SolidColorBrush x:Key="BrushHP"         Color="#E24B4A"/>
+			<SolidColorBrush x:Key="BrushGold"       Color="#F0C040"/>
+			<SolidColorBrush x:Key="BrushKey"        Color="#40AAFF"/>
+			<SolidColorBrush x:Key="BrushBackground" Color="#2a1a2e"/>
+		</ResourceDictionary>
+	</Application.Resources>
+
+	<Application.Styles>
+		<FluentTheme />
+
+		<!-- TextBlock -->
+		<Style Selector="TextBlock">
+			<Setter Property="FontFamily" Value="{DynamicResource GameFont}"/>
+			<Setter Property="Foreground"  Value="{DynamicResource BrushText}"/>
+			<Setter Property="FontSize"    Value="14"/>
+		</Style>
+
+		<!-- Backgrounds -->
+		<Style Selector="Window, UserControl">
+			<Setter Property="Background" Value="{DynamicResource BrushBackground}"/>
+		</Style>
+
+		<Style Selector="Button">
+			<Setter Property="Background"                Value="#2A2A40"/>
+			<Setter Property="Foreground"                Value="#C0C0C0"/>
+			<Setter Property="BorderBrush"               Value="#4a3a60"/>
+			<Setter Property="BorderThickness"           Value="1"/>
+			<Setter Property="CornerRadius"              Value="4"/>
+			<Setter Property="HorizontalContentAlignment" Value="Center"/>
+			<Setter Property="VerticalContentAlignment"   Value="Center"/>
+			<Setter Property="Padding"                   Value="12,6"/>
+			<Setter Property="Cursor"                    Value="Hand"/>
+		</Style>
+
+		<Style Selector="Button /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background"   Value="#2A2A40"/>
+			<Setter Property="BorderBrush"  Value="#4a3a60"/>
+			<Setter Property="CornerRadius" Value="4"/>
+			<Setter Property="Transitions">
+				<Transitions>
+					<BrushTransition Property="Background"  Duration="0:0:0.15"/>
+				</Transitions>
+			</Setter>
+		</Style>
+
+		<Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background"  Value="#3D3D5C"/>
+			<Setter Property="BorderBrush" Value="#9060a0"/>
+			<Setter Property="TextBlock.Foreground" Value="White"/>
+		</Style>
+
+		<Style Selector="Button:pressed /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background"  Value="#1A1A2A"/>
+			<Setter Property="BorderBrush" Value="{DynamicResource BrushAccent}"/>
+			<Setter Property="TextBlock.Foreground" Value="#aaaacc"/>
+		</Style>
+
+		<Style Selector="Button:disabled /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background"  Value="#1a1a28"/>
+			<Setter Property="BorderBrush" Value="#2a2a3a"/>
+			<Setter Property="TextBlock.Foreground" Value="#555566"/>
+			<Setter Property="Opacity"     Value="1"/>
+		</Style>
+
+
+		<Style Selector="Button.MenuButton">
+			<Setter Property="Background"                Value="#2A2A40"/>
+			<Setter Property="Foreground"                Value="White"/>
+			<Setter Property="BorderBrush"               Value="{DynamicResource BrushAccent}"/>
+			<Setter Property="BorderThickness"           Value="1"/>
+			<Setter Property="CornerRadius"              Value="4"/>
+			<Setter Property="Width"                     Value="200"/>
+			<Setter Property="Height"                    Value="40"/>
+			<Setter Property="HorizontalAlignment"       Value="Center"/>
+			<Setter Property="HorizontalContentAlignment" Value="Center"/>
+			<Setter Property="VerticalContentAlignment"   Value="Center"/>
+			<Setter Property="Cursor"                    Value="Hand"/>
+		</Style>
+
+		<Style Selector="Button.MenuButton /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background"   Value="#2A2A40"/>
+			<Setter Property="BorderBrush"  Value="{DynamicResource BrushAccent}"/>
+			<Setter Property="CornerRadius" Value="4"/>
+			<Setter Property="Transitions">
+				<Transitions>
+					<BrushTransition Property="Background" Duration="0:0:0.2"/>
+				</Transitions>
+			</Setter>
+		</Style>
+
+		<Style Selector="Button.MenuButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background"  Value="#3D3D5C"/>
+			<Setter Property="BorderBrush" Value="White"/>
+			<Setter Property="TextBlock.Foreground" Value="White"/>
+		</Style>
+
+		<Style Selector="Button.MenuButton:pressed /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background"  Value="#1A1A2A"/>
+			<Setter Property="BorderBrush" Value="{DynamicResource BrushAccent}"/>
+			<Setter Property="TextBlock.Foreground" Value="Gray"/>
+		</Style>
+
+		<Style Selector="Button.MenuButton:disabled /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background"  Value="#1a1a28"/>
+			<Setter Property="BorderBrush" Value="#3a2a10"/>
+			<Setter Property="TextBlock.Foreground" Value="#555544"/>
+			<Setter Property="Opacity"     Value="1"/>
+		</Style>
+
+		<Style Selector="ContentControl.GamePopup">
+			<Setter Property="ZIndex" Value="100"/>
+			<Setter Property="Template">
+				<ControlTemplate>
+					<Border Background="#B0000000">
+						<Border BorderBrush="{DynamicResource BrushAccent}"
+								BorderThickness="2"
+								CornerRadius="8"
+								Padding="30"
+								HorizontalAlignment="Center"
+								VerticalAlignment="Center">
+							<Border.Background>
+								<ImageBrush Source="avares://AvaloniaUI/Assets/floor.png"
+											Stretch="Fill"/>
+							</Border.Background>
+							<ContentPresenter Content="{TemplateBinding Content}" />
+						</Border>
+					</Border>
+				</ControlTemplate>
+			</Setter>
+		</Style>
+
+	</Application.Styles>
+</Application>

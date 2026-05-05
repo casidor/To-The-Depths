@@ -1,0 +1,42 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:vm="using:AvaloniaUI.ViewModels"
+			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 x:Class="AvaloniaUI.Views.MenuView"
+			 x:DataType="vm:MenuViewModel">
+
+	<Grid Background="{DynamicResource BrushBackground}">
+		<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="20">
+			<Image Source="/Assets/logo.png"
+				   RenderOptions.BitmapInterpolationMode="HighQuality"
+				   Width="500"
+				   Height="300"
+				   HorizontalAlignment="Center"
+				   Margin="0,0,0,40"/>
+			<!-- <TextBlock Text="TO THE DEPTHS"
+					   FontSize="80"
+					   FontWeight="Bold"
+					   HorizontalAlignment="Center"
+					   Foreground="{DynamicResource BrushAccent}"
+					   Margin="0,0,0,20"/> -->
+
+			<Button Classes="MenuButton"
+					Content="START GAME"
+					Command="{Binding StartGameCommand}"/>
+
+			<Button Classes="MenuButton"
+					Content="LOAD GAME"
+					Command="{Binding LoadGameCommand}"/>
+
+			<Button Classes="MenuButton"
+                    Content="HELP"
+                    Command="{Binding HelpCommand}"/>
+
+			<Button Classes="MenuButton"
+					Content="EXIT"
+					Command="{Binding ExitGameCommand}"/>
+		</StackPanel>
+	</Grid>
+</UserControl>

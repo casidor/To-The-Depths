@@ -1,25 +1,35 @@
-﻿using GameCore.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using GameCore.Models.Entities;
+using GameCore.Models.Objects;
 
 namespace GameCore.World
 {
     public class GameField
     {
-        private GameObject[,] Field;
+        private GameObject[,] _world;
+        private Entity[,] _entities;
+        public GameLog Log { get; } = new();
+
         public int Width { get; private set; }
         public int Height { get; private set; }
-        public GameField(int width, int height )
+        public FieldOfView Fov { get; private set; }
+
+        public GameField(int width, int height)
         {
             Width = width;
             Height = height;
-            Field = new GameObject[height, width];
+            _world = new GameObject[height, width];
+            _entities = new Entity[height, width];
+            Fov = new FieldOfView(width, height);
         }
+
         public GameObject this[int x, int y]
         {
-            get { return Field[y, x]; }
-            set { Field[y, x] = value; }
+            get => _world[y, x];
+            set => _world[y, x] = value;
         }
+
+        public Entity? GetEntity(int x, int y) => _entities[y, x];
+        public void SetEntity(int x, int y, Entity? entity) => _entities[y, x] = entity;
+        public bool HasEntity(int x, int y) => _entities[y, x] != null;
     }
 }

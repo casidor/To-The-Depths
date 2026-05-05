@@ -1,25 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GameCore
+﻿namespace GameCore
 {
     public static class Config
     {
-        //Console settings
-        public const int ConsoleWidth = 110;
-        public const int ConsoleHeight = 30;
         //Field settings
-        public const int FieldWidth = 80;
-        public const int FieldHeight = 25;
+        public const int FieldWidth = 90;
+        public const int FieldHeight = 70;
         //Player settings
         public const int PlayerMaxHP = 100;
+        public const int PlayerDamage = 10;
         //Enemy settings
-        public const int EnemyDamage = 15;
-        public const int GoldStolen = 10;
+        public const int EnemyMaxHP = 30;
+        public const int EnemyDamage = 5;
         public const int AggroRange = 7;
+        public const int HearRange = 3;
+        //Enemy type settings
+        public const int TankMaxHP = 75;
+        public const int TankDamage = 3;
+        public const int RangedMaxHP = 24;
+        public const int RangedDamage = 8;
+        public const int RangedEnemyRange = 4;
         //Generation settings
-        public const int MaxRooms = 10;
+        public const int MaxRooms = 15;
         public const int GenAttempts = 300;
         public const int MinRoomSize = 3;
         public const int MaxRoomSize = 10;
@@ -32,7 +33,15 @@ namespace GameCore
         public const int MaxFloor = 5;
         //Tiles settings
         public const int AltarCharges = 2;
-        public const int AltarHeal = 20;
-        public const int HealCost = 20;
+        public const int AltarHeal = 30;
+        public const int HealCost = 50;
+        //Items settings
+        public const int WeaponUpgradeCostLevel1 = 450;
+        public const int WeaponUpgradeCostLevel2 = 1180;
+        public const int RangedWeaponAmmoUpgradeCostLevel1 = 200;
+        public const int RangedWeaponAmmoUpgradeCostLevel2 = 420;
+        public const int RangedWeaponReloadCost = 100;
+        public const int WeaponDamageUpgradeAmount = 10;
+        public const int RangedWeaponAmmoUpgradeAmount = 3;
     }
 }
