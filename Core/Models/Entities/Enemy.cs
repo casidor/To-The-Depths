@@ -1,8 +1,5 @@
 ﻿using GameCore.Models.Objects;
 using GameCore.World;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace GameCore.Models.Entities
 {
@@ -16,8 +13,6 @@ namespace GameCore.Models.Entities
         public Enemy(int x, int y)
         {
             X = x; Y = y;
-            Symbol = GameSymbols.Enemy;
-            Color = GameColors.Enemy;
             MaxHP = Config.EnemyMaxHP;
             HP = MaxHP;
         }

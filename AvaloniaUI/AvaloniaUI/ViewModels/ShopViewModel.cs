@@ -2,9 +2,6 @@
 using CommunityToolkit.Mvvm.Input;
 using GameCore.Models.Entities;
 using GameCore.Models.Items;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace AvaloniaUI.ViewModels
 {

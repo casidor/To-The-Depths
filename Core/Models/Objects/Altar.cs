@@ -1,8 +1,5 @@
 ﻿using GameCore.Models.Entities;
 using GameCore.World;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace GameCore.Models.Objects
 {
@@ -11,9 +8,7 @@ namespace GameCore.Models.Objects
         int Charges { get; set; } = Config.AltarCharges;
         public Altar()
         {
-            Symbol = GameSymbols.Altar;
             IsPassable = true;
-            Color = GameColors.Altar;
         }
         public override InteractionResult Interact(Player player, GameField field, int x, int y)
         {

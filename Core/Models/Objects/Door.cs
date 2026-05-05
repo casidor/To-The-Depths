@@ -1,8 +1,5 @@
 ﻿using GameCore.Models.Entities;
 using GameCore.World;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace GameCore.Models.Objects
 {
@@ -11,9 +8,7 @@ namespace GameCore.Models.Objects
         public bool IsOpen { get; private set; } = false;
         public Door()
         {
-            Symbol = '+';
             IsPassable = false;
-            Color = GameColors.Wall;
         }
         public override InteractionResult Interact(Player player, GameField field, int x, int y)
         {

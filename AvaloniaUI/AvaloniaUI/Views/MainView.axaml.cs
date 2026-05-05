@@ -3,7 +3,6 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using AvaloniaUI.ViewModels;
 using GameCore.Models.Items;
-using System.IO;
 
 namespace AvaloniaUI.Views
 {

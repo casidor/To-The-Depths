@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GameCore.Models.Items.Weapons
+﻿namespace GameCore.Models.Items.Weapons
 {
     public class Crossbow : RangedWeapon
     {
-        public Crossbow(int ammo) 
-        { 
+        public Crossbow(int ammo)
+        {
             Name = "Crossbow";
             Description = "Fires bolts at nearby enemies.";
             Damage = 35;

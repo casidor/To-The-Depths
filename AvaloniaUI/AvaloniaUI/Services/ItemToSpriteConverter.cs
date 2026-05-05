@@ -5,7 +5,6 @@ using GameCore.Models.Items;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 
 namespace AvaloniaUI.Services
 {

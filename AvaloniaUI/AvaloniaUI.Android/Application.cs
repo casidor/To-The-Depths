@@ -1,9 +1,4 @@
-﻿using Android.App;
-using Android.Runtime;
-using Avalonia;
-using Avalonia.Android;
-
-namespace AvaloniaUI.Android
+﻿namespace AvaloniaUI.Android
 {
     [Application]
     public class Application : AvaloniaAndroidApplication<App>

@@ -1,8 +1,5 @@
 ﻿using GameCore.Models.Entities;
 using GameCore.World;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace GameCore.Models.Objects
 {
@@ -15,9 +12,7 @@ namespace GameCore.Models.Objects
         public Gold(int amount)
         {
             Amount = amount;
-            Symbol = GameSymbols.Gold;
             IsPassable = true;
-            Color = GameColors.Gold;
         }
 
         public override InteractionResult Interact(Player player, GameField field, int x, int y)

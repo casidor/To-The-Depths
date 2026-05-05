@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GameCore.Models.Items.Weapons
+﻿namespace GameCore.Models.Items.Weapons
 {
     public class Bow : RangedWeapon
     {

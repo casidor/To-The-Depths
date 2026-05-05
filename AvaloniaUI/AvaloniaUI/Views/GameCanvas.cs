@@ -7,12 +7,12 @@ using Avalonia.Platform;
 using Avalonia.Threading;
 using GameCore;
 using GameCore.Models.Entities;
-using GameCore.Models.Items.Weapons;
 using GameCore.Models.Objects;
 using GameCore.World;
 using System;
 using System.Collections.Generic;
-using System.IO;
+using Key = GameCore.Models.Objects.Key;
+using Void = GameCore.Models.Objects.Void;
 
 namespace AvaloniaUI.Views
 {
@@ -70,12 +70,12 @@ namespace AvaloniaUI.Views
             { typeof(Wall),                 TileColors.Wall       },
             { typeof(Floor),                TileColors.Floor      },
             { typeof(Gold),                 TileColors.Gold       },
-            { typeof(GameCore.Models.Objects.Key),  TileColors.Key        },
+            { typeof(Key),                  TileColors.Key        },
             { typeof(Exit),                 TileColors.Exit       },
             { typeof(Enemy),                TileColors.Enemy      },
             { typeof(Altar),                TileColors.Altar      },
-            { typeof(GameCore.Models.Objects.Void), TileColors.Background },
-            { typeof(Door),                 TileColors.Door      },
+            { typeof(Void),                 TileColors.Background },
+            { typeof(Door),                 TileColors.Door       },
         };
         #endregion
 
@@ -497,17 +497,8 @@ namespace AvaloniaUI.Views
         private void DrawFallbackTile(DrawingContext context, GameObject? tile, bool isPlayer, Avalonia.Rect destRect, int x, int y)
         {
             IBrush brush = isPlayer ? TileColors.Player : GetFallbackBrush(tile);
-            char symbol = isPlayer ? GameSymbols.Player : tile!.Symbol;
 
             context.DrawRectangle(brush, null, destRect);
-            var text = new FormattedText(
-                symbol.ToString(),
-                System.Globalization.CultureInfo.CurrentCulture,
-                FlowDirection.LeftToRight,
-                UIConfig.GameFont,
-                UIConfig.TileSize,
-                brush);
-            context.DrawText(text, new Point(x * UIConfig.TileSize, y * UIConfig.TileSize));
         }
         #endregion
 

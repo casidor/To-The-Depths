@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GameCore.World.Generator
+﻿namespace GameCore.World.Generator
 {
     public class Room
     {

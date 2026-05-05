@@ -1,9 +1,4 @@
-﻿using Android.App;
-using Android.Content.PM;
-using Avalonia;
-using Avalonia.Android;
-
-namespace AvaloniaUI.Android
+﻿namespace AvaloniaUI.Android
 {
     [Activity(
         Label = "AvaloniaUI.Android",

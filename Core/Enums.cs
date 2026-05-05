@@ -1,20 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GameCore
+﻿namespace GameCore
 {
-    public enum GameState
-    {
-        MainMenu,
-        Generating,
-        Running,
-        AltarMenu,
-        Win,
-        LoadGame,
-        Help,
-        Exit
-    }
     public enum InteractionResult
     {
         None,

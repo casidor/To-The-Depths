@@ -7,13 +7,6 @@ using GameCore.Models.Objects;
 using GameCore.World;
 using GameCore.World.Generator;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Numerics;
-using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AvaloniaUI.ViewModels
 {
@@ -317,7 +310,7 @@ namespace AvaloniaUI.ViewModels
             UpdateUI();
         }
         private bool IsInputBlocked() =>
-            IsExitPopupOpen || IsGameOverPopupOpen || IsDescendingPopupOpen ||IsAltarPopupOpen || IsAltarResultOpen 
+            IsExitPopupOpen || IsGameOverPopupOpen || IsDescendingPopupOpen || IsAltarPopupOpen || IsAltarResultOpen
             || !Player.IsAlive || IsAimingMode || IsShopPopupOpen;
 
         private InteractionResult HandlePlayerTurn(int dx, int dy)

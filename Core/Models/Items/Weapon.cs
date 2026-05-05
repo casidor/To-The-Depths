@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GameCore.Models.Items
+﻿namespace GameCore.Models.Items
 {
     public abstract class Weapon : Item
     {

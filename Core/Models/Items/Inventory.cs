@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GameCore.Models.Items
+﻿namespace GameCore.Models.Items
 {
     public class Inventory
     {

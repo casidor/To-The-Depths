@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GameCore;
-using System;
 
 namespace AvaloniaUI.ViewModels
 {

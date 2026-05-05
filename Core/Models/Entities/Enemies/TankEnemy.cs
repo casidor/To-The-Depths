@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GameCore.Models.Entities.Enemies
+﻿namespace GameCore.Models.Entities.Enemies
 {
     public class TankEnemy : Enemy
     {

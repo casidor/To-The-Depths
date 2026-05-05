@@ -1,8 +1,5 @@
 ﻿using GameCore.Models.Items;
 using GameCore.World;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace GameCore.Models.Entities
 {

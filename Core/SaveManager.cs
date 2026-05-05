@@ -37,7 +37,7 @@ namespace GameCore
 
         private static int ComputeChecksum(int hp, int maxHp, int gold, int keys, int floor, int keysRequired, int seed)
         {
-            unchecked 
+            unchecked
             {
                 int hash = 17;
                 hash = hash * 31 + hp;
