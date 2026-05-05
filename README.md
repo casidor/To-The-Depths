@@ -1,163 +1,173 @@
 # 🏚️ To the Depths
 
-A console-based dungeon crawler written in C# (.NET 10). Explore procedurally generated dungeons, collect keys and gold, avoid enemies, and find your way out.
+> *The exit is sealed. The keys are scattered. The dark is watching.*
 
----
-
-## 🎮 Gameplay
-
-You wake up deep underground. The exit is sealed — you'll need to collect **3 keys** scattered across the dungeon before you can escape. Watch out for thieves lurking in the dark, spend gold at altars to restore health, and descend as deep as possible to find freedom.
-
-### Win Condition
-Reach **Floor 5**, collect all **3 keys**, then step onto the **Exit tile (`▥`)**.
-
-### Death Condition
-Your HP reaches **0**. Progress is lost — you return to the main menu.
-
----
-
-## 🗺️ Legend
-
-| Symbol | Meaning                        |
-|--------|--------------------------------|
-| `☺`    | Player (you)                   |
-| `☻`    | Enemy (Thief)                  |
-| `⚷`    | Key                            |
-| `♦`    | Gold (+10 per pickup)          |
-| `+`    | Altar (healing for gold)       |
-| `▥`    | Exit                           |
-| `█`    | Wall                           |
-| `·`    | Floor                          |
-
----
-
-## 🕹️ Controls
-
-| Key              | Action                  |
-|------------------|-------------------------|
-| `W` / `↑`        | Move Up                 |
-| `S` / `↓`        | Move Down               |
-| `A` / `←`        | Move Left               |
-| `D` / `→`        | Move Right              |
-| `ESC`            | Return to Menu / Cancel |
-| `Enter`          | Confirm (in menus)      |
-
----
-
-## ⚔️ Game Mechanics
-
-### 🔑 Keys & Exit
-Collect all **3 keys** scattered across the dungeon to unlock the exit. The sidebar tracks your progress. Once all keys are collected, the exit becomes active — find it and step in.
-
-### 👿 Enemies (Thieves)
-Enemies patrol the dungeon and turn aggressive when you get within **7 tiles**. When an enemy reaches you:
-- You lose **15 HP**
-- You lose **10 Gold**
-- The enemy disappears
-
-Enemies wander randomly when out of range, and chase you using pathfinding when close.
-
-### ⛪ Altars
-Ancient altars are scattered across each floor (up to 3 per level). When you step onto an altar, a menu appears:
-- **Heal**: Spend **20 Gold** to restore **20 HP** (up to your maximum)
-- Each altar has **2 charges** — after that, it fades away
-
-### ♥ Health
-You start with **100 HP**. Damage is taken from enemy attacks. Health can be restored only at altars. If HP drops to 0, it's game over.
-
-### 🪙 Gold
-Gold is scattered across floor tiles (~15% chance per tile). It's used to pay for healing at altars. Enemies can steal gold when they attack you, but your gold can never go below 0.
-
-### 🪜 Descending
-Step onto an active exit tile to descend to the next floor. Your **HP, Gold, and current floor** are carried over, but your **keys reset** — you'll need to collect them again on each floor. Progress is **autosaved** on descent.
-
----
-
-## 💾 Save System
-
-- The game **autosaves** when you descend to the next floor
-- From the main menu, choose **Load Save** to resume where you left off
-- If you exit mid-floor, that floor's progress is lost (you restart the floor from the same seed)
-- A confirmation prompt appears if you try to exit with unsaved progress
-- Save data includes a checksum — corrupted or tampered saves are deleted automatically
-
----
-
-## ⚙️ Level Generation
-
-Each floor is procedurally generated using a seeded random:
-
-1. Up to **10 rooms** are placed randomly (no overlaps)
-2. Rooms are connected with **L-shaped corridors**
-3. **Walls** are added around all floor tiles
-4. **Gold** is scattered by chance (~10% per floor tile)
-5. **3 Keys** are placed in random rooms (never the starting room)
-6. **1 Exit** is placed in the room farthest from the start
-7. **7 Enemies** are placed in random rooms (never the starting room)
-8. **2 Altars** are placed at room centers (never the starting room)
-9. The player starts at the center of the first room
-
-The same seed produces the same dungeon layout, which means loading a save restores the same map.
-
----
-
-## 🚀 Getting Started
-
-### ⬇️ Just play
-Download `ToTheDepths.exe` from the [Releases](https://github.com/casidor/To-The-Depths/releases/latest) page and run it. No installation needed.
-
-> Windows only.
-
-### 🔧 Build from source
-```bash
-git clone https://github.com/casidor/To-The-Depths.git
-cd To-The-Depths
-dotnet run --project ConsoleUI
-```
-
----
-
-## 🔧 Configuration
-
-All game parameters live in `Core/Config.cs`:
-
-| Constant         | Default | Description                              |
-|------------------|---------|------------------------------------------|
-| `ConsoleWidth`   | 110     | Console window width                     |
-| `ConsoleHeight`  | 30      | Console window height                    |
-| `FieldWidth`     | 80      | Dungeon grid width                       |
-| `FieldHeight`    | 25      | Dungeon grid height                      |
-| `PlayerMaxHP`    | 100     | Player starting and maximum HP           |
-| `MaxRooms`       | 10      | Maximum number of rooms per floor        |
-| `KeysAmount`     | 3       | Keys required to open the exit           |
-| `EnemiesAmount`  | 7       | Number of enemies per floor              |
-| `AltarsAmount`   | 2       | Number of altars per floor               |
-| `ExitAmount`     | 1       | Number of exits per floor                |
-| `GoldAmount`     | 5       | Gold value per pickup                    |
-| `GoldChance`     | 15      | % chance of gold on each floor tile      |
-| `EnemyDamage`    | 15      | HP lost when attacked by an enemy        |
-| `GoldStolen`     | 10      | Gold lost when attacked by an enemy      |
-| `AggroRange`     | 7       | Tile distance at which enemies chase     |
-| `AltarHeal`      | 20      | HP restored per altar use                |
-| `HealCost`       | 20      | Gold cost per altar heal                 |
-| `AltarCharges`   | 2       | Uses per altar before it fades           |
-| `MaxFloor`       | 5       | Total number of floors                   |
-| `MinRoomSize`    | 3       | Minimum room dimension                   |
-| `MaxRoomSize`    | 10       | Maximum room dimension                   |
-| `GenAttempts`    | 300     | Room placement attempts per generation   |
+A dungeon crawler built with **AvaloniaUI** and **C# (.NET 10)**. Descend through five procedurally generated floors, collect keys, loot gold, fight increasingly dangerous enemies, and upgrade your weapons in the shop between floors. Every run uses a unique seed — but your saves always restore the exact same map.
 
 ---
 
 ## 📸 Screenshots
 
-### Main Menu
-![Main Menu](docs/images/menu.png)
+| Main Menu | Gameplay |
+|-----------|----------|
+| ![Menu](docs/images/menu.png) | ![Gameplay](docs/images/gameplay.png) |
 
-### Gameplay & Sidebar
-![Gameplay](docs/images/gameplay.png)
+---
 
-### Escape
-![Win Screen](docs/images/win.png)
+## 🚀 Getting Started
+
+**Just play** — download the latest release from the [Releases page](https://github.com/casidor/To-The-Depths/releases/latest) and run the executable. No installation required.
+
+> Windows only.
+
+**Build from source:**
+```bash
+git clone https://github.com/casidor/To-The-Depths.git
+cd To-The-Depths
+dotnet run --project AvaloniaUI/AvaloniaUI.Desktop
+```
+
+---
+
+## 🎮 How to Play
+
+Each floor has a set number of **keys** hidden across the dungeon. Find them all, then reach the **exit** — which is always tucked away in the room farthest from where you start. The exit opens the **shop**, where you can spend your hard-earned gold before dropping to the next floor.
+
+Make it through all **5 floors** and you're out. Die anywhere and it's back to the menu.
+
+---
+
+## 🕹️ Controls
+
+| Input | Action |
+|---|---|
+| `W A S D` / Arrow Keys | Move |
+| `1` `2` `3` `4` | Switch hotbar slot |
+| `E` | Toggle aim mode (ranged weapons) |
+| Left Click *(aim mode)* | Shoot at tile |
+| `Space` | Snap camera to player |
+| Right Click + Drag | Pan camera freely |
+| Scroll Wheel | Zoom in / out |
+| `Esc` | Cancel aim / Exit menu |
+
+---
+
+## ⚔️ Combat
+
+### Melee
+Walk into an enemy to hit them with your equipped melee weapon. If you find a better melee weapon on the ground, it's **equipped automatically** (as long as it has a higher damage ceiling than what you have).
+
+| Weapon | Damage | Floor |
+|--------|--------|-------|
+| Dagger | 15     | 2     |
+| Sword  | 25     | 3     |
+
+No melee equipped? You still punch for **10 damage**.
+
+### Ranged
+Press `E` to enter aim mode — visible tiles within range light up yellow. Click one to shoot. Press `E` again or `Esc` to cancel.
+
+| Weapon    | Damage | Range | Base Ammo | Floor |
+|-----------|--------|-------|-----------|-------|
+| Bow       | 20     | 6     | 8         | 1     |
+| Crossbow  | 35     | 8     | 5         | 4     |
+
+Ammo doesn't refill between floors unless you reload in the shop.
+
+---
+
+## 👹 Enemies
+
+Enemy HP scales with floor depth, reaching up to **×2.5** on the fifth floor.
+
+### Soldier
+The standard enemy. Chases you on sight (within 7 tiles) or if it hears you within 3 tiles — even through walls. Wanders randomly otherwise. Drops gold on death.
+
+`30 HP · 5 DMG · Floor 1+`
+
+### Tank
+Slow and massive. Takes a beating before going down, so ranged weapons are your friend here. Same AI as the Soldier.
+
+`75 HP · 3 DMG · Floor 3+`
+
+### Ranged Enemy
+The most annoying one. Shoots you from a distance and actively retreats when you close in. Corner it with melee if you can.
+
+`24 HP · 8 DMG · 4 range · Floor 3+`
+
+---
+
+## 🛒 Shop
+
+After every floor you get access to the shop before descending. Upgrades are permanent and carry through the rest of the run.
+
+| Upgrade | Effect | Cost |
+|---------|--------|------|
+| **DMG ▲** | +10 damage to a weapon (up to 2× per weapon) | 450 / 1180 ♦ |
+| **AMMO ▲** | +3 max ammo + instant reload (up to 2× per weapon) | 200 / 420 ♦ |
+| **RELOAD** | Refill ammo to current max | 100 ♦ |
+| **Melee DMG ▲** | Upgrade your equipped melee weapon | 450 / 1180 ♦ |
+
+---
+
+## ⛪ Altars
+
+Two altars are placed on each floor (never in the starting room). Walk into one and you'll be offered a heal:
+
+**Restore 30 HP** for **50 gold** — each altar has 2 charges before it goes dark.
+
+---
+
+## 🗺️ Floor Progression
+
+| Floor | Enemies | Keys | Enemy HP | Notable |
+|-------|---------|------|----------|---------|
+| 1     | 7       | 3    | ×1.0     | Bow appears |
+| 2     | 9       | 3    | ×1.3     | Dagger appears |
+| 3     | 12      | 4    | ×1.6     | Tanks & ranged enemies spawn · Sword appears |
+| 4     | 15      | 4    | ×2.0     | Crossbow appears |
+| 5     | 18      | 5    | ×2.5     | Final floor — reach the exit to win |
+
+---
+
+## 💾 Saving & Loading
+
+Progress is **autosaved the moment you descend** to a new floor. If you quit mid-floor, that floor's progress is lost — you'll restart it from scratch (same map, same seed). The game warns you before you exit with unsaved progress.
+
+Save files include a **checksum** — modified or corrupted saves are detected and deleted automatically.
+
+---
+
+## 🗺️ World Generation
+
+Each floor is built fresh from a seeded random — same seed, same dungeon, every time.
+
+1. Up to **15 non-overlapping rooms** are scattered across the map
+2. Rooms are connected by a **Minimum Spanning Tree**, with a 20% chance of extra random connections for variety
+3. Corridors are carved with **BFS pathfinding** — strict routing first, relaxed fallback if needed
+4. **Doors** are placed at room entrances — they close each turn and open when walked into
+5. **Gold**, **keys**, **weapons**, **altars**, **enemies**, and the **exit** are placed by the rules above
+6. The player always starts at the **center of the first room**; the exit is always in the **farthest room**
+
+---
+
+## 🔧 Configuration
+
+Everything is tunable in `Core/Config.cs`. Key values:
+
+| Constant | Default | What it controls |
+|----------|---------|-----------------|
+| `FieldWidth` / `FieldHeight` | 90 / 70 | Map size |
+| `PlayerMaxHP` | 100 | Starting HP |
+| `PlayerDamage` | 10 | Unarmed damage |
+| `MaxRooms` | 15 | Rooms per floor |
+| `AggroRange` | 7 | Enemy sight range |
+| `HearRange` | 3 | Enemy hearing range (through walls) |
+| `AltarHeal` / `HealCost` | 30 / 50 | Altar heal amount and gold cost |
+| `AltarCharges` | 2 | Uses before altar fades |
+| `MaxFloor` | 5 | Number of floors |
+| `WeaponDamageUpgradeAmount` | 10 | DMG gained per shop upgrade |
+| `RangedWeaponReloadCost` | 100 | Gold to reload |
 
 ---
 
