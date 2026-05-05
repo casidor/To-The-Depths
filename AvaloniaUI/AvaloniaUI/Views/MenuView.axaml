@@ -38,5 +38,13 @@
 					Content="EXIT"
 					Command="{Binding ExitGameCommand}"/>
 		</StackPanel>
+		<TextBlock
+        Grid.Row="1"
+        Text="{Binding AppVersion}"
+		VerticalAlignment="Bottom"
+        HorizontalAlignment="Right"
+        Margin="0,0,20,20"  
+        Foreground="Gray"
+    />
 	</Grid>
 </UserControl>
