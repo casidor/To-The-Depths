@@ -17,7 +17,7 @@
         }
 
         public bool Overlaps(Room other) =>
-            X - 2 < other.X + other.W && X + W + 2 > other.X &&
-            Y - 2 < other.Y + other.H && Y + H + 2 > other.Y;
+            X - 5 < other.X + other.W && X + W + 5 > other.X &&
+            Y - 5 < other.Y + other.H && Y + H + 5 > other.Y;
     }
 }

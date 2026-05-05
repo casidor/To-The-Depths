@@ -16,7 +16,6 @@ namespace GameCore.World.Generator
             ConnectRooms(field, random);
             AddWalls(field);
             CalculateEntrances(field);
-            FixRoomWalls(field, _rooms);
             PlaceDoors(field, _rooms);
             PlaceInRoomCenters(field, random, _rooms, Config.AltarsAmount, () => new Altar(), excludeFirst: true);
             PlaceInFarthestRoom(field, random, _rooms, Config.ExitAmount, () => new Exit());
@@ -63,7 +62,7 @@ namespace GameCore.World.Generator
         private void ConnectRooms(GameField field, Random random)
         {
             var edges = BuildMST(_rooms);
-            edges = AddExtraEdges(_rooms, edges, random, 0.2f);
+            edges = AddExtraEdges(_rooms, edges, random, 0.1f);
             foreach (var (a, b) in edges)
                 CarveCorridorSafe(field, a, b);
         }
@@ -100,8 +99,8 @@ namespace GameCore.World.Generator
 
                 var neighbors = new (int x, int y)[]
                 {
-                    (current.x + 1, current.y), (current.x - 1, current.y),
-                    (current.x, current.y + 1), (current.x, current.y - 1)
+            (current.x + 1, current.y), (current.x - 1, current.y),
+            (current.x, current.y + 1), (current.x, current.y - 1)
                 };
 
                 foreach (var n in neighbors)
@@ -114,11 +113,15 @@ namespace GameCore.World.Generator
 
                     bool isObstacle = false;
 
-                    if (strict)
+                    foreach (var room in _rooms)
                     {
-                        foreach (var room in _rooms)
+                        if (IsPerimeter(current.x, current.y, room) && IsPerimeter(n.x, n.y, room))
                         {
-                            if (room == a || room == b) continue;
+                            isObstacle = true;
+                            break;
+                        }
+                        if (strict && room != a && room != b)
+                        {
                             if (n.x >= room.X - 1 && n.x <= room.X + room.W &&
                                 n.y >= room.Y - 1 && n.y <= room.Y + room.H)
                             {
@@ -148,6 +151,16 @@ namespace GameCore.World.Generator
 
             return false;
         }
+        private bool IsPerimeter(int x, int y, Room room)
+        {
+            bool inBounds = x >= room.X - 1 && x <= room.X + room.W &&
+                            y >= room.Y - 1 && y <= room.Y + room.H;
+
+            bool inFloor = x >= room.X && x < room.X + room.W &&
+                           y >= room.Y && y < room.Y + room.H;
+
+            return inBounds && !inFloor;
+        }
         private void CalculateEntrances(GameField field)
         {
             foreach (var room in _rooms)
@@ -155,22 +168,22 @@ namespace GameCore.World.Generator
                 for (int x = room.X; x < room.X + room.W; x++)
                     if (field[x, room.Y - 1] is Floor &&
                         room.Y - 2 >= 0 && field[x, room.Y - 2] is Floor)
-                    { room.Entrances.Add((x, room.Y - 1)); break; }
+                    { room.Entrances.Add((x, room.Y - 1));}
 
                 for (int x = room.X; x < room.X + room.W; x++)
                     if (field[x, room.Y + room.H] is Floor &&
                         room.Y + room.H + 1 < field.Height && field[x, room.Y + room.H + 1] is Floor)
-                    { room.Entrances.Add((x, room.Y + room.H)); break; }
+                    { room.Entrances.Add((x, room.Y + room.H));}
 
                 for (int y = room.Y; y < room.Y + room.H; y++)
                     if (field[room.X - 1, y] is Floor &&
                         room.X - 2 >= 0 && field[room.X - 2, y] is Floor)
-                    { room.Entrances.Add((room.X - 1, y)); break; }
+                    { room.Entrances.Add((room.X - 1, y));}
 
                 for (int y = room.Y; y < room.Y + room.H; y++)
                     if (field[room.X + room.W, y] is Floor &&
                         room.X + room.W + 1 < field.Width && field[room.X + room.W + 1, y] is Floor)
-                    { room.Entrances.Add((room.X + room.W, y)); break; }
+                    { room.Entrances.Add((room.X + room.W, y));}
             }
         }
 
@@ -181,20 +194,6 @@ namespace GameCore.World.Generator
                 if (!(field[x, y] is Floor))
                     field[x, y] = new Floor();
             }
-        }
-        protected void FixRoomWalls(GameField field, List<Room> rooms)
-        {
-            foreach (var room in rooms)
-                for (int y = room.Y - 1; y <= room.Y + room.H; y++)
-                    for (int x = room.X - 1; x <= room.X + room.W; x++)
-                    {
-                        if (x >= room.X && x < room.X + room.W &&
-                            y >= room.Y && y < room.Y + room.H) continue;
-
-                        if (room.Entrances.Contains((x, y))) continue;
-
-                        field[x, y] = new Wall();
-                    }
         }
     }
 }
