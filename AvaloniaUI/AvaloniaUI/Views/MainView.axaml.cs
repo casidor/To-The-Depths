@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using AvaloniaUI.ViewModels;
 using GameCore.Models.Items;
+using GameCore.Models.Items.Weapons;
 
 namespace AvaloniaUI.Views
 {
@@ -48,6 +49,13 @@ namespace AvaloniaUI.Views
         {
             if (DataContext is MainViewModel vm)
             {
+                if (e.Key == Key.Q && vm.Player.Inventory.ActiveItem is Hammer hammer)
+                {
+                    hammer.ToggleMode();
+                    vm.UpdateUIPublic();
+                    MapRenderer.InvalidateVisual();
+                    return;
+                }
                 if (e.Key == Key.Escape)
                 {
                     if (vm.IsAimingMode)

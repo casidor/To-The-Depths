@@ -11,7 +11,7 @@ namespace GameCore.Models.Items
         public int Ammo { get; protected set; }
         public bool HasAmmo => Ammo > 0;
         public bool IsEmpty => Ammo == 0;
-
+        public virtual AimShape AimShape => AimShape.Square;
         public override string StatLine =>
             $"{Name} {Damage} DMG | {Range} range | {Ammo}/{MaxAmmo} ammo";
 
@@ -53,7 +53,7 @@ namespace GameCore.Models.Items
             return true;
         }
 
-        public UseResult Use(Player player, GameField field)
+        public virtual UseResult Use(Player player, GameField field)
         {
             Enemy? closest = null;
             int minDist = int.MaxValue;
@@ -88,7 +88,7 @@ namespace GameCore.Models.Items
             return UseResult.Hit;
         }
 
-        public UseResult UseAt(Player player, GameField field, int x, int y)
+        public virtual UseResult UseAt(Player player, GameField field, int x, int y)
         {
             int dx = Math.Abs(x - player.X);
             int dy = Math.Abs(y - player.Y);

@@ -7,10 +7,13 @@ using Avalonia.Platform;
 using Avalonia.Threading;
 using GameCore;
 using GameCore.Models.Entities;
+using GameCore.Models.Items;
+using GameCore.Models.Items.Weapons;
 using GameCore.Models.Objects;
 using GameCore.World;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Key = GameCore.Models.Objects.Key;
 using Void = GameCore.Models.Objects.Void;
 
@@ -420,6 +423,21 @@ namespace AvaloniaUI.Views
         {
             if (!IsAimingMode || _player == null) return;
 
+            var shape = (_player.Inventory.ActiveItem as RangedWeapon)?.AimShape ?? AimShape.Square;
+
+            if (shape == AimShape.LineBreak && _hoveredCell.x >= 0)
+            {
+                foreach (var (x, y) in Hammer.GetAxisLine(_player.X, _player.Y, _hoveredCell.x, _hoveredCell.y).Skip(1))
+                {
+                    if (x < 0 || x >= _field!.Width || y < 0 || y >= _field.Height) break;
+                    if (Math.Abs(x - _player.X) > AimRange || Math.Abs(y - _player.Y) > AimRange) break;
+
+                    var rect = GetTileRectWithGap(x, y, tileSize);
+                    bool isHovered = x == _hoveredCell.x && y == _hoveredCell.y;
+                    context.DrawRectangle(isHovered ? _aimHoverBrush : _aimHighlightBrush, null, rect);
+                }
+                return;
+            }
             for (int dy = -AimRange; dy <= AimRange; dy++)
                 for (int dx = -AimRange; dx <= AimRange; dx++)
                 {

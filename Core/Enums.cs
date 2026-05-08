@@ -44,4 +44,5 @@
         NoTarget
     }
     public enum LogColor { Normal, Good, Bad }
+    public enum AimShape { Square, LineBreak }
 }

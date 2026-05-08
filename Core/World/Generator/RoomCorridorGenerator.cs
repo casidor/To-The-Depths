@@ -34,8 +34,9 @@ namespace GameCore.World.Generator
         {
             1 => () => new Bow(8),
             2 => () => new Dagger(),
-            3 => () => new Sword(),
-            4 => () => new Crossbow(5),
+            3 => () => new Hammer(4),
+            4 => () => new Sword(),
+            5 => () => new Crossbow(5),
             _ => null
         };
 

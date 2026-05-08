@@ -71,6 +71,7 @@ namespace GameCore
                 nameof(Sword) => new Sword(),
                 nameof(Bow) => new Bow(data.Ammo),
                 nameof(Crossbow) => new Crossbow(data.Ammo),
+                nameof(Hammer) => new Hammer(data.Ammo),
                 _ => null
             };
 

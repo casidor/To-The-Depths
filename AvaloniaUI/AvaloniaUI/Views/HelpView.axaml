@@ -53,7 +53,7 @@
                         BorderThickness="1" CornerRadius="6" Padding="16">
                     <StackPanel Spacing="10">
                         <TextBlock Text="CONTROLS" FontSize="10" Foreground="#9060a0"/>
-                        <Grid ColumnDefinitions="150,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+                        <Grid ColumnDefinitions="150,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
                             <TextBlock Grid.Row="0" Grid.Column="0" Text="WASD / Arrows" Foreground="#c060e0" FontSize="12"/>
                             <TextBlock Grid.Row="0" Grid.Column="1" Text="Move" Foreground="#C0C0C0" FontSize="12"/>
 
@@ -63,17 +63,20 @@
                             <TextBlock Grid.Row="2" Grid.Column="0" Text="LMB (aim mode)" Foreground="#c060e0" FontSize="12" Margin="0,6,0,0"/>
                             <TextBlock Grid.Row="2" Grid.Column="1" Text="Shoot at selected tile" Foreground="#C0C0C0" FontSize="12" Margin="0,6,0,0"/>
 
-                            <TextBlock Grid.Row="3" Grid.Column="0" Text="1 – 4" Foreground="#c060e0" FontSize="12" Margin="0,6,0,0"/>
-                            <TextBlock Grid.Row="3" Grid.Column="1" Text="Switch hotbar slot" Foreground="#C0C0C0" FontSize="12" Margin="0,6,0,0"/>
+                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Q (aim mode)" Foreground="#c060e0" FontSize="12" Margin="0,6,0,0"/>
+                            <TextBlock Grid.Row="3" Grid.Column="1" Text="Switch weapon mode" Foreground="#C0C0C0" FontSize="12" Margin="0,6,0,0"/>
 
-                            <TextBlock Grid.Row="4" Grid.Column="0" Text="Space" Foreground="#c060e0" FontSize="12" Margin="0,6,0,0"/>
-                            <TextBlock Grid.Row="4" Grid.Column="1" Text="Center camera on player" Foreground="#C0C0C0" FontSize="12" Margin="0,6,0,0"/>
+                            <TextBlock Grid.Row="4" Grid.Column="0" Text="1 – 4" Foreground="#c060e0" FontSize="12" Margin="0,6,0,0"/>
+                            <TextBlock Grid.Row="4" Grid.Column="1" Text="Switch hotbar slot" Foreground="#C0C0C0" FontSize="12" Margin="0,6,0,0"/>
 
-                            <TextBlock Grid.Row="5" Grid.Column="0" Text="RMB + Drag" Foreground="#c060e0" FontSize="12" Margin="0,6,0,0"/>
-                            <TextBlock Grid.Row="5" Grid.Column="1" Text="Pan camera" Foreground="#C0C0C0" FontSize="12" Margin="0,6,0,0"/>
+                            <TextBlock Grid.Row="5" Grid.Column="0" Text="Space" Foreground="#c060e0" FontSize="12" Margin="0,6,0,0"/>
+                            <TextBlock Grid.Row="5" Grid.Column="1" Text="Center camera on player" Foreground="#C0C0C0" FontSize="12" Margin="0,6,0,0"/>
 
-                            <TextBlock Grid.Row="6" Grid.Column="0" Text="Scroll Wheel" Foreground="#c060e0" FontSize="12" Margin="0,6,0,0"/>
-                            <TextBlock Grid.Row="6" Grid.Column="1" Text="Zoom in / out" Foreground="#C0C0C0" FontSize="12" Margin="0,6,0,0"/>
+                            <TextBlock Grid.Row="6" Grid.Column="0" Text="RMB + Drag" Foreground="#c060e0" FontSize="12" Margin="0,6,0,0"/>
+                            <TextBlock Grid.Row="6" Grid.Column="1" Text="Pan camera" Foreground="#C0C0C0" FontSize="12" Margin="0,6,0,0"/>
+
+                            <TextBlock Grid.Row="7" Grid.Column="0" Text="Scroll Wheel" Foreground="#c060e0" FontSize="12" Margin="0,6,0,0"/>
+                            <TextBlock Grid.Row="7" Grid.Column="1" Text="Zoom in / out" Foreground="#C0C0C0" FontSize="12" Margin="0,6,0,0"/>
                         </Grid>
                     </StackPanel>
                 </Border>
@@ -114,7 +117,7 @@
                             </Border>
                             <StackPanel VerticalAlignment="Center">
                                 <TextBlock Text="Sword" Foreground="#c060e0" FontSize="12"/>
-                                <TextBlock Text="25 dmg — standard melee. Found on Floor 3." Foreground="#aaaacc" FontSize="11"/>
+                                <TextBlock Text="25 dmg — standard melee. Found on Floor 4." Foreground="#aaaacc" FontSize="11"/>
                             </StackPanel>
                         </StackPanel>
 
@@ -153,7 +156,23 @@
                             </Border>
                             <StackPanel VerticalAlignment="Center">
                                 <TextBlock Text="Crossbow" Foreground="#c060e0" FontSize="12"/>
-                                <TextBlock Text="35 dmg | 8 range | 5 ammo — Found on Floor 4." Foreground="#aaaacc" FontSize="11"/>
+                                <TextBlock Text="35 dmg | 8 range | 5 ammo — Found on Floor 5." Foreground="#aaaacc" FontSize="11"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                         <!-- Hammer -->
+                        <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                            <Border BorderBrush="#7a4a90" BorderThickness="1" CornerRadius="2"
+                                    Background="#40150d25" Width="36" Height="36"
+                                    HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <Image Width="28" Height="28"
+                                       Source="avares://AvaloniaUI/Assets/hammer.png"
+                                       RenderOptions.BitmapInterpolationMode="None"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="Hammer" Foreground="#c060e0" FontSize="12"/>
+                                <TextBlock Text="30 dmg | 7 range | 4 ammo — Found on Floor 3. Can break walls." Foreground="#aaaacc" FontSize="11"/>
                             </StackPanel>
                         </StackPanel>
 

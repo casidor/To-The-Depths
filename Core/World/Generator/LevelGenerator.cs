@@ -35,7 +35,7 @@ namespace GameCore.World.Generator
         {
             for (int y = 0; y < field.Height; y++)
                 for (int x = 0; x < field.Width; x++)
-                    field[x, y] = new Void();
+                    field[x, y] = new Wall();
         }
 
         protected void PlaceItemsByChance(GameField field, Random random, int chance, Func<GameObject> factory, List<Room> rooms)// Place items in rooms based on a chance percentage

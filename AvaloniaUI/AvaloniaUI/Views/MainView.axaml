@@ -204,7 +204,7 @@
 					<!-- Controls -->
 					<StackPanel Spacing="4">
 						<TextBlock Text="CONTROLS" FontSize="10" Foreground="#9060a0"/>
-						<Grid ColumnDefinitions="110,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto" Margin="0,2,0,0">
+						<Grid ColumnDefinitions="110,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" Margin="0,2,0,0">
 
 							<!-- Movement -->
 							<TextBlock Grid.Row="0" Grid.Column="0" Text="WASD / Arrows" Foreground="#c060e0" FontSize="10"/>
@@ -214,17 +214,27 @@
 							<TextBlock Grid.Row="1" Grid.Column="0" Text="E / LMB" Foreground="#c060e0" FontSize="10"/>
 							<TextBlock Grid.Row="1" Grid.Column="1" Text="- Aim / Shoot" Foreground="#aaaacc" FontSize="10"/>
 
+							<!-- Aim / Switch mode -->
+							<TextBlock Grid.Row="2" Grid.Column="0" Text="Q" Foreground="#c060e0" FontSize="10" VerticalAlignment="Top"/>
+							<Grid Grid.Row="2" Grid.Column="1">
+								<StackPanel Spacing="0">
+									<TextBlock Text="- Switch weapon" Foreground="#aaaacc" FontSize="10"/>
+
+									<TextBlock Text="  mode" Margin="3,0,0,0" Foreground="#aaaacc" FontSize="10"/>
+								</StackPanel>
+							</Grid>
+
 							<!-- Hotbar -->
-							<TextBlock Grid.Row="2" Grid.Column="0" Text="1 - 4" Foreground="#c060e0" FontSize="10"/>
-							<TextBlock Grid.Row="2" Grid.Column="1" Text="- Select Item" Foreground="#aaaacc" FontSize="10"/>
+							<TextBlock Grid.Row="3" Grid.Column="0" Text="1 - 4" Foreground="#c060e0" FontSize="10"/>
+							<TextBlock Grid.Row="3" Grid.Column="1" Text="- Select Item" Foreground="#aaaacc" FontSize="10"/>
 
 							<!-- Camera -->
-							<TextBlock Grid.Row="3" Grid.Column="0" Text="Space" Foreground="#c060e0" FontSize="10"/>
-							<TextBlock Grid.Row="3" Grid.Column="1" Text="- Center Camera" Foreground="#aaaacc" FontSize="10"/>
+							<TextBlock Grid.Row="4" Grid.Column="0" Text="Space" Foreground="#c060e0" FontSize="10"/>
+							<TextBlock Grid.Row="4" Grid.Column="1" Text="- Center Camera" Foreground="#aaaacc" FontSize="10"/>
 
 							<!-- Menu / Esc -->
-							<TextBlock Grid.Row="4" Grid.Column="0" Text="Esc" Foreground="#c060e0" FontSize="10"/>
-							<TextBlock Grid.Row="4" Grid.Column="1" Text="- Menu / Cancel" Foreground="#aaaacc" FontSize="10"/>
+							<TextBlock Grid.Row="5" Grid.Column="0" Text="Esc" Foreground="#c060e0" FontSize="10"/>
+							<TextBlock Grid.Row="5" Grid.Column="1" Text="- Menu / Cancel" Foreground="#aaaacc" FontSize="10"/>
 
 						</Grid>
 					</StackPanel>
