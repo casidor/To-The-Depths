@@ -16,9 +16,7 @@ A dungeon crawler built with **AvaloniaUI** and **C# (.NET 10)**. Descend throug
 
 ## 🚀 Getting Started
 
-**Just play** — download the latest release from the [Releases page](https://github.com/casidor/To-The-Depths/releases/latest) and run the executable. No installation required.
-
-> Windows only.
+**Just play** — download the latest release from the [Releases page](https://github.com/casidor/To-The-Depths/releases/latest) and run. No installation required.
 
 **Build from source:**
 ```bash
