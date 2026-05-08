@@ -44,6 +44,7 @@ Make it through all **5 floors** and you're out. Die anywhere and it's back to t
 | `W A S D` / Arrow Keys | Move |
 | `1` `2` `3` `4` | Switch hotbar slot |
 | `E` | Toggle aim mode (ranged weapons) |
+| `Q` | Switch weapon mode |
 | Left Click *(aim mode)* | Shoot at tile |
 | `Space` | Snap camera to player |
 | Right Click + Drag | Pan camera freely |
@@ -60,7 +61,7 @@ Walk into an enemy to hit them with your equipped melee weapon. If you find a be
 | Weapon | Damage | Floor |
 |--------|--------|-------|
 | Dagger | 15     | 2     |
-| Sword  | 25     | 3     |
+| Sword  | 25     | 4     |
 
 No melee equipped? You still punch for **10 damage**.
 
@@ -70,7 +71,8 @@ Press `E` to enter aim mode — visible tiles within range light up yellow. Clic
 | Weapon    | Damage | Range | Base Ammo | Floor |
 |-----------|--------|-------|-----------|-------|
 | Bow       | 20     | 6     | 8         | 1     |
-| Crossbow  | 35     | 8     | 5         | 4     |
+| Hammer    | 30     | 7     | 4         | 3     |
+| Crossbow  | 35     | 8     | 5         | 5     |
 
 Ammo doesn't refill between floors unless you reload in the shop.
 
