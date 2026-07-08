@@ -5,6 +5,7 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Avalonia.Threading;
+using AvaloniaUI.Rendering;
 using GameCore;
 using GameCore.Models.Entities;
 using GameCore.Models.Items;
@@ -34,30 +35,12 @@ namespace AvaloniaUI.Views
         #endregion
 
         #region Texture Cache
-        private static readonly Dictionary<string, Bitmap> _textures = new();
         private readonly SolidColorBrush _fogBrush = new(Color.FromArgb(120, 0, 0, 0));
         private readonly SolidColorBrush _floatingTextBrush = new(Color.FromArgb(255, 255, 50, 50));
         private readonly SolidColorBrush _floatingOutlineBrush = new(Color.FromArgb(255, 0, 0, 0));
         private readonly SolidColorBrush _aimHighlightBrush = new(Color.FromArgb(80, 255, 220, 0));
         private static readonly SolidColorBrush _aimHoverBrush = new(Color.FromArgb(180, 255, 220, 0));
         private Pen _floatingOutlinePen = null!;
-        private Bitmap? GetTexture(string spriteName)
-        {
-            string fileName = $"{spriteName}.png";
-            if (!_textures.TryGetValue(fileName, out var bitmap))
-            {
-                try
-                {
-                    bitmap = new Bitmap(AssetLoader.Open(new Uri($"avares://AvaloniaUI/Assets/{fileName}")));
-                    _textures[fileName] = bitmap;
-                }
-                catch
-                {
-                    return null;
-                }
-            }
-            return bitmap;
-        }
         #endregion
 
         #region Game State Fields
@@ -380,7 +363,7 @@ namespace AvaloniaUI.Views
                         continue;
 
                     var destRect = GetTileRectWithGap(x, y, tileSize);
-                    var bitmap = GetTexture(entity.SpriteName);
+                    var bitmap = TextureCache.Get(entity.SpriteName);
 
                     if (bitmap != null)
                         context.DrawImage(bitmap, destRect);
@@ -393,7 +376,7 @@ namespace AvaloniaUI.Views
         private void RenderPlayerLayer(DrawingContext context, double tileSize)
         {
             var destRect = GetTileRectWithGap(_player!.X, _player.Y, tileSize);
-            var bitmap = GetTexture(_player.SpriteName);
+            var bitmap = TextureCache.Get(_player.SpriteName);
 
             if (bitmap != null)
                 context.DrawImage(bitmap, destRect);
@@ -464,7 +447,7 @@ namespace AvaloniaUI.Views
                 ? "floor"
                 : tile.SpriteName;
 
-            var bitmap = GetTexture(spriteName);
+            var bitmap = TextureCache.Get(spriteName);
             if (bitmap != null)
             {
                 context.DrawImage(bitmap, destRect);

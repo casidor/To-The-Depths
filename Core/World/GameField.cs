@@ -1,4 +1,5 @@
 ﻿using GameCore.Models.Entities;
+using GameCore.Models.Items;
 using GameCore.Models.Objects;
 
 namespace GameCore.World
@@ -7,6 +8,7 @@ namespace GameCore.World
     {
         private GameObject[,] _world;
         private Entity[,] _entities;
+        private Item[,] _items;
         public GameLog Log { get; } = new();
 
         public int Width { get; private set; }
@@ -19,6 +21,7 @@ namespace GameCore.World
             Height = height;
             _world = new GameObject[height, width];
             _entities = new Entity[height, width];
+            _items = new Item[height, width];
             Fov = new FieldOfView(width, height);
         }
 
@@ -31,5 +34,8 @@ namespace GameCore.World
         public Entity? GetEntity(int x, int y) => _entities[y, x];
         public void SetEntity(int x, int y, Entity? entity) => _entities[y, x] = entity;
         public bool HasEntity(int x, int y) => _entities[y, x] != null;
+        public Item? GetItem(int x, int y) => _items[y, x];
+        public void SetItem(int x, int y, Item? item) => _items[y, x] = item;
+        public bool HasItem(int x, int y) => _items[y, x] != null;
     }
 }
