@@ -308,7 +308,7 @@ namespace AvaloniaUI.Views
                 RenderAimLayer(context, tileSize);
                 RenderFloatingTextsLayer(context, tileSize);
             }
-            RenderUILog(context);
+            _uiLog.Draw(context, Bounds.Size, UIConfig.GameFont, _zoom);
         }
 
         private void RenderTilesLayer(DrawingContext context, double tileSize, int startX, int startY, int endX, int endY)
@@ -539,51 +539,11 @@ namespace AvaloniaUI.Views
         #endregion
 
         #region UI Log
-        private readonly record struct LogEntry(string Text, Avalonia.Media.Color Color);
-        private readonly List<LogEntry> _logEntries = new();
-        private const int MaxLogEntries = 4;
-
-        private static readonly Dictionary<LogColor, Avalonia.Media.Color> _logColors = new()
-        {
-        { LogColor.Normal, Avalonia.Media.Color.FromRgb(192, 192, 192) },
-        { LogColor.Good,   Avalonia.Media.Color.FromRgb(90, 255, 140)  },
-        { LogColor.Bad,    Avalonia.Media.Color.FromRgb(226, 75, 74)   }
-        };
-
+        private readonly UILogRenderer _uiLog = new();
         public void AddLogEntry(string text, LogColor color)
         {
-            _logEntries.Add(new LogEntry(text, _logColors[color]));
-            if (_logEntries.Count > MaxLogEntries)
-                _logEntries.RemoveAt(0);
+            _uiLog.AddLogEntry(text, color);
             InvalidateVisual();
-        }
-
-        private void RenderUILog(DrawingContext context)
-        {
-            if (_logEntries.Count == 0) return;
-
-            double x = 10;
-            double y = Bounds.Height - 20;
-            double fontSize = UIConfig.TileSize * _zoom * 0.4;
-            fontSize = Math.Clamp(fontSize, 10, 18);
-
-            for (int i = _logEntries.Count - 1; i >= 0; i--)
-            {
-                var entry = _logEntries[i];
-                var brush = new SolidColorBrush(entry.Color);
-                var text = new FormattedText(
-                    entry.Text,
-                    System.Globalization.CultureInfo.CurrentCulture,
-                    FlowDirection.LeftToRight,
-                    UIConfig.GameFont,
-                    fontSize,
-                    brush);
-
-                var bgRect = new Avalonia.Rect(x - 2, y - 2, text.Width + 4, text.Height + 4);
-                context.DrawRectangle(new SolidColorBrush(Avalonia.Media.Color.FromArgb(120, 0, 0, 0)), null, bgRect);
-                context.DrawText(text, new Avalonia.Point(x, y));
-                y -= text.Height + 4;
-            }
         }
         #endregion
     }
